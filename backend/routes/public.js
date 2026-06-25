@@ -7,6 +7,8 @@ import Project from '../models/Project.js';
 import PageContent from '../models/PageContent.js';
 import Setting from '../models/Setting.js';
 import ContactMessage from '../models/ContactMessage.js';
+import Contact from '../models/Contact.js';
+import Interaction from '../models/Interaction.js';
 
 const router = express.Router();
 
@@ -102,6 +104,20 @@ router.post('/contact', async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
     const contactMessage = await ContactMessage.create({ name, email, subject, message });
+
+    // Auto-create/update unified contact profile
+    let contact = await Contact.findOne({ email: email.toLowerCase() });
+    if (!contact) {
+      contact = await Contact.create({ name, email: email.toLowerCase(), source: 'contact_form' });
+    }
+    await Interaction.create({
+      contact: contact._id,
+      type: 'form_submission',
+      subject,
+      description: message,
+      linkedMessage: contactMessage._id,
+    });
+
     res.status(201).json({ message: 'Message sent successfully', id: contactMessage._id });
   } catch (error) {
     res.status(500).json({ message: error.message });
