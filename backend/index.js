@@ -225,22 +225,14 @@ const seedLegalPages = async () => {
 seedLegalPages().catch(console.error);
 
 const seedSuperAdmin = async () => {
-  const user = await User.findOne({ email: 'evangel@vangitech.com' });
-  if (user) {
-    user.password = 'admin123';
-    user.role = 'superadmin';
-    user.name = 'Evangel';
-    await user.save();
-    console.log('Superadmin updated');
-  } else {
-    await User.create({
-      name: 'Evangel',
-      email: 'evangel@vangitech.com',
-      password: 'admin123',
-      role: 'superadmin',
-    });
-    console.log('Superadmin seeded');
-  }
+  await User.deleteOne({ email: 'evangel@vangitech.com' });
+  await User.create({
+    name: 'Evangel',
+    email: 'evangel@vangitech.com',
+    password: 'admin123',
+    role: 'superadmin',
+  });
+  console.log('Superadmin seeded');
 };
 
 const seedSettings = async () => {
