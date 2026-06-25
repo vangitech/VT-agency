@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
+import API from '../../api';
 import { useAuth } from '../../context/AuthContext';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Textarea } from '../../components/ui/textarea';
+import { Label } from '../../components/ui/label';
+import { Card, CardContent } from '../../components/ui/card';
 import {
   Mail, MessageSquare, CheckCircle, Send, Trash2,
   Loader2, Inbox, Reply, ArrowLeft, Clock, User,
