@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Image, Users, Newspaper, Briefcase,
-  Settings, FileText, LogOut, ChevronLeft, Menu, X, ScrollText, Shield,
+  Settings, FileText, LogOut, ChevronLeft, Menu, X, ScrollText, Shield, MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { imageUrl } from '../../api';
@@ -16,6 +16,7 @@ const navItems = [
   { name: 'Clients', path: '/admin/clients', icon: Briefcase },
   { name: 'Projects', path: '/admin/projects', icon: FileText },
   { name: 'Legal Pages', path: '/admin/legal', icon: ScrollText },
+  { name: 'CRM', path: '/admin/crm', icon: MessageSquare },
   { name: 'Users', path: '/admin/users', icon: Shield, superadmin: true },
   { name: 'Settings', path: '/admin/settings', icon: Settings },
 ];

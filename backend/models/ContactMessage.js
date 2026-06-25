@@ -7,6 +7,13 @@ const contactMessageSchema = new mongoose.Schema(
     subject: { type: String, required: true },
     message: { type: String, required: true },
     read: { type: Boolean, default: false },
+    replied: { type: Boolean, default: false },
+    replies: [{
+      body: { type: String, required: true },
+      adminName: { type: String, required: true },
+      sentAt: { type: Date, default: Date.now },
+      provider: { type: String },
+    }],
   },
   { timestamps: true }
 );

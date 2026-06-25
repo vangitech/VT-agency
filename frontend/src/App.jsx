@@ -24,6 +24,7 @@ import ProjectManager from './pages/admin/ProjectManager';
 import SettingsManager from './pages/admin/SettingsManager';
 import LegalPagesManager from './pages/admin/LegalPagesManager';
 import UserManager from './pages/admin/UserManager';
+import CRMManager from './pages/admin/CRMManager';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -131,6 +132,11 @@ const AppRoutes = () => {
         <Route path="/admin/users" element={
           <ProtectedRoute>
             <AdminLayout><UserManager /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/crm" element={
+          <ProtectedRoute>
+            <AdminLayout><CRMManager /></AdminLayout>
           </ProtectedRoute>
         } />
       </Routes>
