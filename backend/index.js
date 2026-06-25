@@ -14,7 +14,6 @@ import Setting from './models/Setting.js';
 import { startNewsScheduler } from './services/newsScheduler.js';
 
 dotenv.config();
-connectDB();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -222,9 +221,11 @@ const seedLegalPages = async () => {
   console.log('Legal pages seeded');
 };
 
-seedLegalPages().catch(console.error);
+const start = async () => {
+  await connectDB();
 
-const seedSuperAdmin = async () => {
+  await seedLegalPages();
+
   await User.deleteOne({ email: 'evangel@vangitech.com' });
   await User.create({
     name: 'Evangel',
@@ -233,9 +234,7 @@ const seedSuperAdmin = async () => {
     role: 'superadmin',
   });
   console.log('Superadmin seeded');
-};
 
-const seedSettings = async () => {
   const defaults = {
     companyEmail: 'support@vangitech.com',
     companyAddress: 'House C18A FRSC Estate Lokogoma FCT-Abuja',
@@ -250,10 +249,14 @@ const seedSettings = async () => {
     );
   }
   console.log('Settings seeded');
-};
-seedSettings().catch(console.error);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  startNewsScheduler();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    startNewsScheduler();
+  });
+};
+
+start().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
