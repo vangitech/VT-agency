@@ -39,11 +39,11 @@ const AdminSidebar = () => {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-gray-800/50">
-        <Link to="/admin/dashboard" className="flex items-center gap-2">
+        <Link to="/admin/dashboard" className="flex flex-col items-center">
+          <span className="text-[8px] text-gray-500 font-medium leading-tight tracking-wider">RC 1803640</span>
           <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-green rounded-lg flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-xs leading-none tracking-tight">VT</span>
           </div>
-          <span className="text-[9px] text-gray-500 font-medium leading-tight">RC 1803640</span>
         </Link>
         <button
           onClick={() => setCollapsed(!collapsed)}
