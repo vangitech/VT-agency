@@ -1,4 +1,5 @@
 import React from 'react';
+import { imageUrl } from '../../api';
 
 const fallbackClients = [
   { _id: '1', name: 'TechVault Inc.' },
@@ -35,7 +36,7 @@ const Clients = ({ clients }) => {
             >
               {client.logo ? (
                 <img
-                  src={client.logo}
+                  src={imageUrl(client.logo)}
                   alt={client.name}
                   className="max-w-full h-24 object-contain transition-all duration-300"
                 />

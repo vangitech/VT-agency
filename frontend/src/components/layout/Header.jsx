@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Mail, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAuth } from '../../context/AuthContext';
+import { imageUrl } from '../../api';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,7 +77,7 @@ const Header = () => {
                   className="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors"
                 >
                   {user.avatar ? (
-                    <img src={user.avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
+                    <img src={imageUrl(user.avatar)} alt="" className="w-8 h-8 rounded-full object-cover" />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center text-white text-xs font-bold">
                       {initials}
@@ -146,7 +147,7 @@ const Header = () => {
                 <>
                   <div className="flex items-center gap-3 px-4 py-3">
                     {user.avatar ? (
-                      <img src={user.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+                      <img src={imageUrl(user.avatar)} alt="" className="w-10 h-10 rounded-full object-cover" />
                     ) : (
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                         {initials}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import API from '../api';
+import API, { imageUrl } from '../api';
 import { Search, Code, FolderOpen } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
@@ -236,7 +236,7 @@ const Projects = () => {
                         </div>
                       ) : (
                         <img
-                          src={project.image}
+                          src={imageUrl(project.image)}
                           alt={project.title}
                           onError={() => setFailedImages((prev) => new Set(prev).add(project._id))}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

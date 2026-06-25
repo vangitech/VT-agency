@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../api';
+import API, { imageUrl } from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
@@ -235,7 +235,7 @@ const ProjectManager = () => {
                   <div className="flex flex-col md:flex-row md:items-center gap-4">
                     {item.image && (
                       <div className="w-full md:w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                        <img src={imageUrl(item.image)} alt={item.title} className="w-full h-full object-cover" />
                       </div>
                     )}
                     <div className="flex-1">

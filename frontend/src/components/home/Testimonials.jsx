@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { imageUrl } from '../../api';
 
 const mockTestimonials = [
   {
@@ -115,7 +116,7 @@ const Testimonials = ({ testimonials }) => {
                   <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                     {testimonial.avatar ? (
                       <img
-                        src={testimonial.avatar}
+                        src={imageUrl(testimonial.avatar)}
                         alt={testimonial.name}
                         className="w-11 h-11 rounded-full object-cover"
                       />

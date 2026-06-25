@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Code, Shield, BarChart3, GraduationCap, HeartHandshake, PenTool } from 'lucide-react';
+import { imageUrl } from '../../api';
 
 const categoryConfig = {
   software: { label: 'Software', color: 'bg-blue-100 text-blue-700', icon: Code },
@@ -107,7 +108,7 @@ const ProjectsSection = ({ projects = [] }) => {
                     </div>
                   ) : (
                     <img
-                      src={project.image}
+                      src={imageUrl(project.image)}
                       alt={project.title}
                       onError={() => setFailedImages((prev) => new Set(prev).add(project._id))}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

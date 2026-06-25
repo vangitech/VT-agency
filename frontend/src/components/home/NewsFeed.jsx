@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight } from 'lucide-react';
+import { imageUrl } from '../../api';
 
 const fallbackNews = [
   {
@@ -61,7 +62,7 @@ const NewsFeed = ({ news }) => {
               {item.image && (
                 <div className="h-48 overflow-hidden">
                   <img
-                    src={item.image}
+                    src={imageUrl(item.image)}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />

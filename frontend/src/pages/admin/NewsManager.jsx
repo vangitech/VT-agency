@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import API from '../../api';
+import API, { imageUrl } from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
@@ -287,7 +287,7 @@ const NewsManager = () => {
                     <div className="flex flex-col sm:flex-row gap-4">
                       {item.image && (
                         <div className="w-full sm:w-28 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
-                          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                          <img src={imageUrl(item.image)} alt={item.title} className="w-full h-full object-cover" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -443,7 +443,7 @@ const NewsManager = () => {
                       <div className="h-40 bg-gray-100 overflow-hidden relative">
                         {article.urlToImage ? (
                           <img
-                            src={article.urlToImage}
+                            src={imageUrl(article.urlToImage)}
                             alt={article.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onError={(e) => { e.target.style.display = 'none'; }}

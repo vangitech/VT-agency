@@ -5,6 +5,7 @@ import {
   Settings, FileText, LogOut, ChevronLeft, Menu, X, ScrollText,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { imageUrl } from '../../api';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -76,7 +77,7 @@ const AdminSidebar = () => {
       <div className="border-t border-gray-800/50 p-3">
         <div className="flex items-center gap-3 px-1">
           {user?.avatar ? (
-            <img src={user.avatar} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+            <img src={imageUrl(user.avatar)} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
           ) : (
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {initials}

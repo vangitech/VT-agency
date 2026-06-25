@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import API from '../../api';
+import API, { imageUrl } from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
@@ -379,7 +379,7 @@ const HeroManager = () => {
                     {slide.image && (
                       <div className="w-full md:w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
                         <img
-                          src={slide.image}
+                          src={imageUrl(slide.image)}
                           alt={slide.title}
                           className="w-full h-full object-cover"
                         />

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import API from '../../api';
+import API, { imageUrl } from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -286,7 +286,7 @@ const ClientManager = () => {
                 <CardContent className="p-4 text-center">
                   {item.logo && (
                     <div className="h-16 flex items-center justify-center mb-3">
-                      <img src={item.logo} alt={item.name} className="max-h-full max-w-full object-contain" />
+                      <img src={imageUrl(item.logo)} alt={item.name} className="max-h-full max-w-full object-contain" />
                     </div>
                   )}
                   <h3 className="font-bold text-gray-800 text-sm">{item.name}</h3>

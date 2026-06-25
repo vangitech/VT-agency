@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD ? 'https://vt-agency.onrender.com' : '/api');
 
 const API = axios.create({
   baseURL: API_BASE,
@@ -23,8 +24,7 @@ API.interceptors.request.use(
 export const imageUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  const base = import.meta.env.VITE_API_URL || '';
-  return `${base}${path}`;
+  return `${API_BASE}${path}`;
 };
 
 export default API;

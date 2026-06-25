@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Newspaper, Loader2, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import API from '../api';
+import API, { imageUrl } from '../api';
 
 const NewsDetail = () => {
   const { id } = useParams();
@@ -80,7 +80,7 @@ const NewsDetail = () => {
           {article.image && (
             <div className="rounded-2xl overflow-hidden mb-8 shadow-lg">
               <img
-                src={article.image}
+                src={imageUrl(article.image)}
                 alt={article.title}
                 className="w-full h-64 sm:h-80 md:h-96 object-cover"
               />

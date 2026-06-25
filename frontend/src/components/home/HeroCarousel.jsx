@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
+import { imageUrl } from '../../api';
 
 const HeroCarousel = ({ slides }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -47,7 +48,7 @@ const HeroCarousel = ({ slides }) => {
     <div className="relative w-full h-[70vh] min-h-[500px] overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out hero-slide-enter"
-        style={{ backgroundImage: `url(${slide.image})` }}
+        style={{ backgroundImage: `url(${imageUrl(slide.image)})` }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
 
