@@ -128,7 +128,7 @@ const Projects = () => {
     const fetchProjects = async () => {
       try {
         const res = await API.get('/public/projects');
-        const data = res.data.length > 0 ? res.data : fallbackProjects;
+        const data = Array.isArray(res.data) && res.data.length > 0 ? res.data : fallbackProjects;
         setProjects(data);
         setFilteredProjects(data);
       } catch {

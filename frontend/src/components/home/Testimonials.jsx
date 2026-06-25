@@ -57,7 +57,7 @@ const Testimonials = ({ testimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(3);
 
-  const items = testimonials?.length > 0 ? testimonials : mockTestimonials;
+  const items = Array.isArray(testimonials) && testimonials.length > 0 ? testimonials : mockTestimonials;
 
   useEffect(() => {
     const handleResize = () => {

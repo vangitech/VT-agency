@@ -71,7 +71,7 @@ const fallbackProjects = [
 
 const ProjectsSection = ({ projects = [] }) => {
   const [failedImages, setFailedImages] = useState(new Set());
-  const items = projects.length > 0 ? projects : fallbackProjects;
+  const items = Array.isArray(projects) && projects.length > 0 ? projects : fallbackProjects;
   const displayed = items.slice(0, 6);
 
   return (

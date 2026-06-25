@@ -10,7 +10,7 @@ const fallbackClients = [
 ];
 
 const Clients = ({ clients }) => {
-  const items = clients?.length > 0 ? clients : fallbackClients;
+  const items = Array.isArray(clients) && clients.length > 0 ? clients : fallbackClients;
 
   return (
     <section className="py-20 lg:py-28 bg-gray-50">

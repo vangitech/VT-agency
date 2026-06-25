@@ -6,6 +6,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import AdminSidebar from './components/layout/AdminSidebar';
 import CookieConsent from './components/CookieConsent';
+import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -133,10 +134,12 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
-      <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppRoutes />
+        <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

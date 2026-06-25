@@ -15,7 +15,7 @@ const fallbackNews = [
     summary: 'African fintech startups raised over $3B in 2025, with mobile payments and digital banking leading the charge.',
     source: 'Forbes Africa',
     publishedAt: '2026-06-10',
-    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f2?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80',
   },
   {
     title: 'Cloud Migration Best Practices for Enterprise Organizations',
@@ -27,7 +27,7 @@ const fallbackNews = [
 ];
 
 const NewsFeed = ({ news }) => {
-  const items = news?.length > 0 ? news : fallbackNews;
+  const items = Array.isArray(news) && news.length > 0 ? news : fallbackNews;
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {

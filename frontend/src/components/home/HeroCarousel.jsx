@@ -23,12 +23,12 @@ const HeroCarousel = ({ slides }) => {
   }, [currentIndex, slides.length, goToSlide]);
 
   useEffect(() => {
-    if (!slides || slides.length === 0) return;
+    if (!Array.isArray(slides) || slides.length === 0) return;
     const interval = setInterval(nextSlide, 6000);
     return () => clearInterval(interval);
   }, [nextSlide, slides]);
 
-  if (!slides || slides.length === 0) {
+  if (!Array.isArray(slides) || slides.length === 0) {
     return (
       <div className="min-h-[70vh] bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
         <div className="text-center text-white px-4">
