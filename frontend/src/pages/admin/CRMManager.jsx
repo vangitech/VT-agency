@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import {
-  Mail, MessageSquare, Users, Merge, Phone,
-  Calendar, MessageCircle, Smartphone, Inbox,
+  Mail, MessageSquare, CheckCircle, Send, Trash2,
+  Loader2, Inbox, Reply, ArrowLeft, Clock, User,
+  Users, Phone, Building2, Globe, MapPin, Link2,
+  AtSign, Tags, Plus, Search, Merge, AlertTriangle,
+  FileText, Calendar, MessageCircle, Smartphone,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import EmailTab from './crm/EmailTab';
