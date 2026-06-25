@@ -42,6 +42,13 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Vangitech API is running' });
 });
 
+// Serve frontend in production
+const frontendDist = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDist));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
+});
+
 // Seed legal pages
 const seedLegalPages = async () => {
   const legalPages = [
