@@ -9,8 +9,8 @@ import { Card, CardContent } from '../../components/ui/card';
 import {
   Mail, MessageSquare, CheckCircle, Send, Trash2,
   Loader2, Inbox, Reply, ArrowLeft, Clock, User,
-  Users, Phone, Building2, Globe, MapPin, Linkedin,
-  Twitter, Tags, Plus, Search, Merge, AlertTriangle,
+  Users, Phone, Building2, Globe, MapPin, Link2,
+  AtSign, Tags, Plus, Search, Merge, AlertTriangle,
   FileText, Calendar,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -415,13 +415,13 @@ const ContactsTab = () => {
                   )}
                   {contact.socialLinks?.linkedin && (
                     <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
-                      <Linkedin size={14} className="text-brand-blue flex-shrink-0" />
+                      <Link2 size={14} className="text-brand-blue flex-shrink-0" />
                       <a href={contact.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="truncate hover:text-brand-blue">LinkedIn</a>
                     </div>
                   )}
                   {contact.socialLinks?.twitter && (
                     <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
-                      <Twitter size={14} className="text-brand-blue flex-shrink-0" />
+                      <AtSign size={14} className="text-brand-blue flex-shrink-0" />
                       <a href={contact.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="truncate hover:text-brand-blue">Twitter</a>
                     </div>
                   )}
