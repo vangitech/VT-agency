@@ -53,11 +53,9 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex flex-col items-center">
+            <span className="text-[9px] text-gray-400 font-medium leading-tight tracking-wider">RC 1803640</span>
             <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-green rounded-xl flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-base leading-none tracking-tight">VT</span>
-              <div className='flex items-center'>
-                <span className="text-[9px] text-gray-400 font-medium leading-tight tracking-wider">RC 1803640</span>
-              </div>
             </div>
           </Link>
 
