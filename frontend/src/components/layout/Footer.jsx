@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, ChevronRight } from 'lucide-react';
 import { FaFacebook, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import API from '../../api';
+import { useLoading } from '../../context/LoadingContext';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [settings, setSettings] = useState({});
+  const { navigateWithLoader } = useLoading();
 
   useEffect(() => {
     API.get('/public/settings')
@@ -50,12 +51,12 @@ const Footer = () => {
           {/* Brand card */}
           <div className="sm:col-span-2 xl:col-span-1">
             <div className="h-full bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 backdrop-blur-sm hover:bg-white/[0.05] transition-colors">
-              <Link to="/" className="inline-flex items-center gap-3 mb-5">
+              <button onClick={() => navigateWithLoader('/')} className="inline-flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-green rounded-xl flex items-center justify-center shadow-lg shadow-brand-blue/20">
                   <span className="text-white font-bold text-base leading-none tracking-tight">VT</span>
                 </div>
                 <span className="text-white font-semibold text-lg">{s('companyName', 'Vangitech')}</span>
-              </Link>
+              </button>
               <p className="text-sm text-gray-400 leading-relaxed mb-6">
                 {s('companyDescription', 'Empowering businesses through innovative software solutions, cybersecurity, and IT consulting services.')}
               </p>
@@ -86,13 +87,13 @@ const Footer = () => {
               <ul className="space-y-2.5">
                 {footerLinks.company.map((link) => (
                   <li key={link.path}>
-                    <Link
-                      to={link.path}
+                    <button
+                      onClick={() => navigateWithLoader(link.path)}
                       className="group flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
                     >
                       <ChevronRight size={12} className="text-brand-blue/0 group-hover:text-brand-blue transition-all" />
                       {link.name}
-                    </Link>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -109,13 +110,13 @@ const Footer = () => {
               <ul className="space-y-2.5">
                 {footerLinks.services.map((link) => (
                   <li key={link.path}>
-                    <Link
-                      to={link.path}
+                    <button
+                      onClick={() => navigateWithLoader(link.path)}
                       className="group flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
                     >
                       <ChevronRight size={12} className="text-brand-green/0 group-hover:text-brand-green transition-all" />
                       {link.name}
-                    </Link>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -160,13 +161,13 @@ const Footer = () => {
               <ul className="space-y-2">
                 {footerLinks.legal.map((link) => (
                   <li key={link.path}>
-                    <Link
-                      to={link.path}
+                    <button
+                      onClick={() => navigateWithLoader(link.path)}
                       className="group flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
                     >
                       <ChevronRight size={12} className="text-brand-green/0 group-hover:text-brand-green transition-all" />
                       {link.name}
-                    </Link>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -180,10 +181,10 @@ const Footer = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
             <p>&copy; {currentYear} {s('companyName', 'Vangitech Limited')}. All rights reserved.</p>
             <div className="flex gap-6">
-              <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
-              <Link to="/faq" className="hover:text-white transition-colors">FAQ</Link>
-              <Link to="/policy" className="hover:text-white transition-colors">Policy</Link>
+              <button onClick={() => navigateWithLoader('/privacy')} className="hover:text-white transition-colors">Privacy</button>
+              <button onClick={() => navigateWithLoader('/terms')} className="hover:text-white transition-colors">Terms</button>
+              <button onClick={() => navigateWithLoader('/faq')} className="hover:text-white transition-colors">FAQ</button>
+              <button onClick={() => navigateWithLoader('/policy')} className="hover:text-white transition-colors">Policy</button>
             </div>
           </div>
         </div>

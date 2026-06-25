@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LoadingProvider } from './context/LoadingContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import AdminSidebar from './components/layout/AdminSidebar';
@@ -142,8 +143,10 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <AppRoutes />
-        <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
+        <LoadingProvider>
+          <AppRoutes />
+          <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
+        </LoadingProvider>
       </AuthProvider>
     </ErrorBoundary>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import API from '../../api';
 import { useAuth } from '../../context/AuthContext';
+import { useLoading } from '../../context/LoadingContext';
 import toast from 'react-hot-toast';
 import {
   Image, Users, Newspaper, Briefcase,
@@ -15,6 +16,7 @@ import { Label } from '../../components/ui/label';
 
 const Dashboard = () => {
   const { user, updateProfile } = useAuth();
+  const { navigateWithLoader } = useLoading();
   const navigate = useNavigate();
   const [stats, setStats] = useState({});
   const [profileName, setProfileName] = useState(user?.name || '');
@@ -99,12 +101,12 @@ const Dashboard = () => {
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-500 mt-1">Manage your website content and settings</p>
         </div>
-        <Link
-          to="/"
+        <button
+          onClick={() => navigateWithLoader('/')}
           className="inline-flex items-center gap-1.5 text-sm text-brand-blue font-medium hover:text-brand-blue/80 transition-colors"
         >
           View site <ArrowUpRight size={14} />
-        </Link>
+        </button>
       </div>
 
       {/* Profile card */}

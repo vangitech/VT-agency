@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Mail, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAuth } from '../../context/AuthContext';
+import { useLoading } from '../../context/LoadingContext';
 import { imageUrl } from '../../api';
 
 const Header = () => {
@@ -12,6 +13,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { navigateWithLoader } = useLoading();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -59,9 +61,9 @@ const Header = () => {
 
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <Link
+              <button
                 key={link.path}
-                to={link.path}
+                onClick={() => navigateWithLoader(link.path)}
                 className={`text-sm font-medium transition-colors hover:text-brand-blue ${
                   isActive(link.path)
                     ? 'text-brand-blue'
@@ -69,7 +71,7 @@ const Header = () => {
                 }`}
               >
                 {link.name}
-              </Link>
+              </button>
             ))}
             {user ? (
               <div className="relative" ref={dropdownRef}>
@@ -130,18 +132,17 @@ const Header = () => {
         <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
           <div className="container mx-auto px-4 py-5 space-y-1">
             {navLinks.map((link) => (
-              <Link
+              <button
                 key={link.path}
-                to={link.path}
-                className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                onClick={() => { setIsOpen(false); navigateWithLoader(link.path); }}
+                className={`block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                   isActive(link.path)
                     ? 'bg-brand-blue/10 text-brand-blue'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
-                onClick={() => setIsOpen(false)}
               >
                 {link.name}
-              </Link>
+              </button>
             ))}
             <div className="pt-3 mt-3 border-t border-gray-100">
               {user ? (

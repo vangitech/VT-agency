@@ -10,6 +10,7 @@ import publicRoutes from './routes/public.js';
 import rateLimit from 'express-rate-limit';
 import PageContent from './models/PageContent.js';
 import User from './models/User.js';
+import Setting from './models/Setting.js';
 import { startNewsScheduler } from './services/newsScheduler.js';
 
 dotenv.config();
@@ -235,7 +236,24 @@ const seedSuperAdmin = async () => {
     console.log('Superadmin seeded');
   }
 };
-seedSuperAdmin().catch(console.error);
+
+const seedSettings = async () => {
+  const defaults = {
+    companyEmail: 'support@vangitech.com',
+    companyAddress: 'House C18A FRSC Estate Lokogoma FCT-Abuja',
+    companyPhone: '+234 806 975 2912',
+    companyName: 'Vangitech Limited',
+  };
+  for (const [key, value] of Object.entries(defaults)) {
+    await Setting.findOneAndUpdate(
+      { key },
+      { key, value },
+      { upsert: true }
+    );
+  }
+  console.log('Settings seeded');
+};
+seedSettings().catch(console.error);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
