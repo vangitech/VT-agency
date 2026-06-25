@@ -9,6 +9,8 @@ import adminRoutes from './routes/admin.js';
 import publicRoutes from './routes/public.js';
 import rateLimit from 'express-rate-limit';
 import PageContent from './models/PageContent.js';
+import User from './models/User.js';
+import { startNewsScheduler } from './services/newsScheduler.js';
 
 dotenv.config();
 connectDB();
@@ -87,7 +89,7 @@ const seedLegalPages = async () => {
           },
           {
             heading: 'Contact Us',
-            body: 'If you have any questions about this privacy policy or our data practices, please contact us at support@vangitech.online or write to 123 Tech Park, Silicon Valley, CA.',
+            body: 'If you have any questions about this privacy policy or our data practices, please contact us at support@vangitech.com or write to 123 Tech Park, Silicon Valley, CA.',
           },
         ],
       },
@@ -141,7 +143,7 @@ const seedLegalPages = async () => {
           },
           {
             heading: 'How can I get a quote for my project?',
-            body: 'Simply fill out the contact form on our website or email us at support@vangitech.online with details about your project. Our team will review your requirements and get back to you within 24-48 hours with a preliminary estimate. For complex projects, we may schedule a discovery call to better understand your needs.',
+            body: 'Simply fill out the contact form on our website or email us at support@vangitech.com with details about your project. Our team will review your requirements and get back to you within 24-48 hours with a preliminary estimate. For complex projects, we may schedule a discovery call to better understand your needs.',
           },
           {
             heading: 'What industries do you serve?',
@@ -202,7 +204,7 @@ const seedLegalPages = async () => {
           },
           {
             heading: 'Contact',
-            body: 'If you have any questions about our use of cookies, please contact us at support@vangitech.online. We are happy to provide more information about how we handle your data and privacy.',
+            body: 'If you have any questions about our use of cookies, please contact us at support@vangitech.com. We are happy to provide more information about how we handle your data and privacy.',
           },
         ],
       },
@@ -221,6 +223,21 @@ const seedLegalPages = async () => {
 
 seedLegalPages().catch(console.error);
 
+const seedSuperAdmin = async () => {
+  const exists = await User.findOne({ email: 'evangel@vangitech.com' });
+  if (!exists) {
+    await User.create({
+      name: 'Evangel',
+      email: 'evangel@vangitech.com',
+      password: 'admin123',
+      role: 'superadmin',
+    });
+    console.log('Superadmin seeded');
+  }
+};
+seedSuperAdmin().catch(console.error);
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  startNewsScheduler();
 });

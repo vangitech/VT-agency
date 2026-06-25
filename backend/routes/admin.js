@@ -30,6 +30,8 @@ router.route('/testimonials/:id')
 // News
 router.get('/news/fetch-from-api', adminController.fetchNewsFromAPI);
 router.post('/news/import-from-api', adminController.importNewsFromAPI);
+router.post('/news/auto-fetch', adminController.triggerAutoFetch);
+router.get('/news/auto-fetch-info', adminController.getAutoFetchInfo);
 router.route('/news')
   .get(adminController.getNews)
   .post(adminController.createNews);

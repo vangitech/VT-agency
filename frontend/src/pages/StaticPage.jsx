@@ -18,7 +18,7 @@ const pageFallback = {
       { heading: 'Introduction', body: 'Your privacy is important to us. This privacy policy outlines how Vangitech collects, uses, and protects your personal information when you use our website and services.' },
       { heading: 'Information We Collect', body: 'We may collect your name, contact information, and other details when you fill out forms or correspond with us.' },
       { heading: 'How We Use Your Information', body: 'We use your information to provide services, improve our offerings, and communicate with you.' },
-      { heading: 'Contact Us', body: 'If you have any questions, please contact us at support@vangitech.online.' },
+      { heading: 'Contact Us', body: 'If you have any questions, please contact us at support@vangitech.com.' },
     ],
   },
   terms: {
@@ -28,7 +28,7 @@ const pageFallback = {
       { heading: 'Acceptance of Terms', body: 'By using our website and services, you accept these terms and conditions.' },
       { heading: 'Services', body: 'Vangitech provides technology services as defined in each engagement agreement.' },
       { heading: 'Intellectual Property', body: 'All IP rights remain with Vangitech until full payment is received.' },
-      { heading: 'Contact', body: 'For questions, contact us at support@vangitech.online.' },
+      { heading: 'Contact', body: 'For questions, contact us at support@vangitech.com.' },
     ],
   },
   faq: {
@@ -48,7 +48,7 @@ const pageFallback = {
       { heading: 'What Are Cookies', body: 'Cookies are small text files stored on your device when you visit a website.' },
       { heading: 'How We Use Cookies', body: 'We use cookies for essential functionality, analytics, and preferences.' },
       { heading: 'Managing Cookies', body: 'You can accept or reject cookies through your browser settings.' },
-      { heading: 'Contact', body: 'For questions, contact us at support@vangitech.online.' },
+      { heading: 'Contact', body: 'For questions, contact us at support@vangitech.com.' },
     ],
   },
 };

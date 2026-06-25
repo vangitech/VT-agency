@@ -22,6 +22,7 @@ import ClientManager from './pages/admin/ClientManager';
 import ProjectManager from './pages/admin/ProjectManager';
 import SettingsManager from './pages/admin/SettingsManager';
 import LegalPagesManager from './pages/admin/LegalPagesManager';
+import UserManager from './pages/admin/UserManager';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -124,6 +125,11 @@ const AppRoutes = () => {
         <Route path="/admin/legal" element={
           <ProtectedRoute>
             <AdminLayout><LegalPagesManager /></AdminLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/users" element={
+          <ProtectedRoute>
+            <AdminLayout><UserManager /></AdminLayout>
           </ProtectedRoute>
         } />
       </Routes>

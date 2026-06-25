@@ -6,6 +6,7 @@ import Project from '../models/Project.js';
 import PageContent from '../models/PageContent.js';
 import Setting from '../models/Setting.js';
 import ContactMessage from '../models/ContactMessage.js';
+import { fetchAndImport } from '../services/newsScheduler.js';
 
 // ===== Hero Slides =====
 export const getHeroSlides = async (req, res) => {
@@ -430,6 +431,31 @@ export const updateSettings = async (req, res) => {
       results.push(setting);
     }
     res.json(results);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const triggerAutoFetch = async (req, res) => {
+  try {
+    await fetchAndImport();
+    const lastFetch = await Setting.findOne({ key: 'lastAutoFetch' });
+    res.json({ message: 'Auto-fetch completed', lastFetch: lastFetch?.value || null });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAutoFetchInfo = async (req, res) => {
+  try {
+    const lastFetch = await Setting.findOne({ key: 'lastAutoFetch' });
+    const apiKey = await Setting.findOne({ key: 'newsApiKey' });
+    res.json({
+      lastFetch: lastFetch?.value || null,
+      hasApiKey: !!apiKey?.value,
+      schedule: '0 6 * * *',
+      scheduleText: 'Daily at 6:00 AM',
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

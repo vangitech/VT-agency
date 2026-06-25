@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import {
   Image, Users, Newspaper, Briefcase,
   Settings, FileText, Upload, ScrollText,
-  ArrowUpRight, Loader2,
+  ArrowUpRight, Loader2, Key, Eye, EyeOff,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -21,6 +21,9 @@ const Dashboard = () => {
   const [profileAvatar, setProfileAvatar] = useState(user?.avatar || '');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '' });
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState({ current: false, new: false });
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -58,6 +61,20 @@ const Dashboard = () => {
       toast.error('Failed to update profile');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setChangingPassword(true);
+    try {
+      await API.put('/auth/change-password', passwordData);
+      toast.success('Password changed successfully');
+      setPasswordData({ currentPassword: '', newPassword: '' });
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to change password');
+    } finally {
+      setChangingPassword(false);
     }
   };
 
@@ -163,6 +180,58 @@ const Dashboard = () => {
               </Button>
             </form>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Password change card */}
+      <Card className="mb-8 border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-brand-blue/10 flex items-center justify-center">
+              <Key size={20} className="text-brand-blue" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">Change Password</h2>
+              <p className="text-sm text-gray-500">Must contain at least 8 characters, a capital letter, a number, and a special character</p>
+            </div>
+          </div>
+          <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
+            <div className="space-y-1.5">
+              <Label htmlFor="currentPassword" className="text-sm font-medium text-gray-700">Current Password</Label>
+              <div className="relative">
+                <Input
+                  id="currentPassword"
+                  type={showPassword.current ? 'text' : 'password'}
+                  value={passwordData.currentPassword}
+                  onChange={(e) => setPasswordData((p) => ({ ...p, currentPassword: e.target.value }))}
+                  required
+                  className="h-11 rounded-xl border-gray-200 pr-10"
+                />
+                <button type="button" onClick={() => setShowPassword((p) => ({ ...p, current: !p.current }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  {showPassword.current ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="newPassword" className="text-sm font-medium text-gray-700">New Password</Label>
+              <div className="relative">
+                <Input
+                  id="newPassword"
+                  type={showPassword.new ? 'text' : 'password'}
+                  value={passwordData.newPassword}
+                  onChange={(e) => setPasswordData((p) => ({ ...p, newPassword: e.target.value }))}
+                  required
+                  className="h-11 rounded-xl border-gray-200 pr-10"
+                />
+                <button type="button" onClick={() => setShowPassword((p) => ({ ...p, new: !p.new }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  {showPassword.new ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+            <Button type="submit" variant="blue" size="sm" disabled={changingPassword}>
+              {changingPassword ? 'Changing...' : 'Change Password'}
+            </Button>
+          </form>
         </CardContent>
       </Card>
 

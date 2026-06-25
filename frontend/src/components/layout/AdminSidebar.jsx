@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Image, Users, Newspaper, Briefcase,
-  Settings, FileText, LogOut, ChevronLeft, Menu, X, ScrollText,
+  Settings, FileText, LogOut, ChevronLeft, Menu, X, ScrollText, Shield,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { imageUrl } from '../../api';
@@ -16,6 +16,7 @@ const navItems = [
   { name: 'Clients', path: '/admin/clients', icon: Briefcase },
   { name: 'Projects', path: '/admin/projects', icon: FileText },
   { name: 'Legal Pages', path: '/admin/legal', icon: ScrollText },
+  { name: 'Users', path: '/admin/users', icon: Shield, superadmin: true },
   { name: 'Settings', path: '/admin/settings', icon: Settings },
 ];
 
@@ -53,7 +54,7 @@ const AdminSidebar = () => {
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-        {navItems.map((item) => {
+        {navItems.filter((item) => !item.superadmin || user?.role === 'superadmin').map((item) => {
           const active = location.pathname === item.path;
           return (
             <Link

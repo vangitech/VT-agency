@@ -46,6 +46,10 @@ const NewsManager = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(formDefaults);
 
+  // Auto-fetch state
+  const [autoFetchInfo, setAutoFetchInfo] = useState(null);
+  const [autoFetching, setAutoFetching] = useState(false);
+
   // NewsAPI state
   const [apiCategoryId, setApiCategoryId] = useState('technology');
   const [apiQuery, setApiQuery] = useState('');
@@ -57,7 +61,31 @@ const NewsManager = () => {
 
   useEffect(() => {
     fetchNews();
+    fetchAutoFetchInfo();
   }, []);
+
+  const fetchAutoFetchInfo = async () => {
+    try {
+      const res = await API.get('/admin/news/auto-fetch-info');
+      setAutoFetchInfo(res.data);
+    } catch {
+      // silently fail
+    }
+  };
+
+  const triggerAutoFetch = async () => {
+    setAutoFetching(true);
+    try {
+      const res = await API.post('/admin/news/auto-fetch');
+      toast.success(res.data.message || 'Auto-fetch complete');
+      fetchNews();
+      fetchAutoFetchInfo();
+    } catch {
+      toast.error('Auto-fetch failed');
+    } finally {
+      setAutoFetching(false);
+    }
+  };
 
   const fetchNews = async () => {
     try {
@@ -238,6 +266,36 @@ const NewsManager = () => {
           </Button>
         )}
       </div>
+
+      {/* Auto-fetch info */}
+      {autoFetchInfo && (
+        <div className="flex flex-wrap items-center gap-3 mb-6 p-4 bg-gradient-to-r from-brand-blue/5 to-purple-500/5 rounded-2xl border border-brand-blue/10">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <RefreshCw size={16} className="text-brand-blue" />
+            <span className="font-medium">Auto-fetch:</span>
+            {autoFetchInfo.lastAutoFetch ? (
+              <span>Last run {formatDate(autoFetchInfo.lastAutoFetch)}</span>
+            ) : (
+              <span>Not yet run</span>
+            )}
+            <span className="text-gray-400">•</span>
+            <span className="text-gray-500">{autoFetchInfo.articleCount || 0} articles imported</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={triggerAutoFetch}
+            disabled={autoFetching}
+            className="ml-auto rounded-xl text-xs"
+          >
+            {autoFetching ? (
+              <><Loader2 size={12} className="mr-1 animate-spin" /> Running...</>
+            ) : (
+              <><RefreshCw size={12} className="mr-1" /> Run Auto-Fetch</>
+            )}
+          </Button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-2 mb-8">

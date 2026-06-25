@@ -134,8 +134,8 @@ const Footer = () => {
                   <span className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
                     <Mail size={14} className="text-brand-blue" />
                   </span>
-                  <a href={`mailto:${s('companyEmail', 'info@vangitech.online')}`} className="text-gray-400 hover:text-white transition-colors">
-                    {s('companyEmail', 'info@vangitech.online')}
+                  <a href={`mailto:${s('companyEmail', 'info@vangitech.com')}`} className="text-gray-400 hover:text-white transition-colors">
+                    {s('companyEmail', 'info@vangitech.com')}
                   </a>
                 </p>
                 <p className="flex items-center gap-3">

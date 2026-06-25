@@ -40,8 +40,8 @@ const Contact = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'info@vangitech.online',
-      href: 'mailto:info@vangitech.online',
+      value: 'info@vangitech.com',
+      href: 'mailto:info@vangitech.com',
     },
     {
       icon: Phone,

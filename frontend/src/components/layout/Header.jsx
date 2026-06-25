@@ -107,7 +107,7 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              <a href="mailto:info@vangitech.online?subject=Let's%20Work%20Together">
+              <a href="mailto:info@vangitech.com?subject=Let's%20Work%20Together">
                 <Button variant="blue" size="sm" className="shadow-sm">
                   <Mail size={16} className="mr-2" /> Get in Touch
                 </Button>
@@ -174,7 +174,7 @@ const Header = () => {
                 </>
               ) : (
                 <a
-                  href="mailto:info@vangitech.online?subject=Let's%20Work%20Together"
+                  href="mailto:info@vangitech.com?subject=Let's%20Work%20Together"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-brand-blue hover:bg-brand-blue/5 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >

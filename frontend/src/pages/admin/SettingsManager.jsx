@@ -10,7 +10,7 @@ import { Mail, Trash2, CheckCircle, ExternalLink } from 'lucide-react';
 const SettingsManager = () => {
   const [settings, setSettings] = useState({
     companyName: 'Vangitech Limited',
-    companyEmail: 'info@vangitech.online',
+    companyEmail: 'info@vangitech.com',
     companyPhone: '+234 806 975 2912',
     companyAddress: 'No 38 Mike Akhigbe Way Jabi FCT-Abuja',
     facebookUrl: '',
