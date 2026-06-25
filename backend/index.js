@@ -225,8 +225,14 @@ const seedLegalPages = async () => {
 seedLegalPages().catch(console.error);
 
 const seedSuperAdmin = async () => {
-  const exists = await User.findOne({ email: 'evangel@vangitech.com' });
-  if (!exists) {
+  const user = await User.findOne({ email: 'evangel@vangitech.com' });
+  if (user) {
+    user.password = 'admin123';
+    user.role = 'superadmin';
+    user.name = 'Evangel';
+    await user.save();
+    console.log('Superadmin updated');
+  } else {
     await User.create({
       name: 'Evangel',
       email: 'evangel@vangitech.com',
