@@ -76,7 +76,7 @@ const About = () => {
             About Vangitech
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto text-white/80">
-            Empowering businesses with innovative technology solutions since 2020.
+            Empowering businesses with innovative technology solutions.
           </p>
         </div>
       </section>
@@ -190,7 +190,7 @@ const About = () => {
               <div className="text-sm text-white/80 font-medium">Industries Served</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1">4+</div>
+              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1">10+</div>
               <div className="text-sm text-white/80 font-medium">Years of Excellence</div>
             </div>
           </div>
