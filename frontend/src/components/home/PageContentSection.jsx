@@ -44,7 +44,7 @@ const fallbackStats = [
   { value: '50+', label: 'Projects Delivered' },
   { value: '30+', label: 'Happy Clients' },
   { value: '6+', label: 'Industries Served' },
-  { value: '4+', label: 'Years of Excellence' },
+  { value: '10+', label: 'Years of Excellence' },
 ];
 
 const PageContentSection = ({ content }) => {
