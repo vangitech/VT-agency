@@ -1,29 +1,20 @@
-import { Resend } from 'resend';
-import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { Octomailer, ResendProvider, BrevoProvider } from 'octomailer';
 
 dotenv.config();
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const BREVO_SMTP_USER = process.env.BREVO_SMTP_USER || 'info@vangitech.com';
-
-const resend = new Resend(RESEND_API_KEY);
-
-const brevoTransport = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: BREVO_SMTP_USER,
-    pass: BREVO_API_KEY,
-  },
-});
 
 const FROM_NAME = 'Vangitech';
 const FROM_EMAIL = 'info@vangitech.com';
 
-function buildTemplate({ name, recipientEmail, subject, messageBody, replyTo }) {
+const mailer = new Octomailer([
+  new ResendProvider(RESEND_API_KEY, 3),
+  new BrevoProvider(BREVO_API_KEY, 1),
+]);
+
+function buildTemplate({ name, recipientEmail, subject, messageBody }) {
   const year = new Date().getFullYear();
   return `
 <!DOCTYPE html>
@@ -37,7 +28,6 @@ function buildTemplate({ name, recipientEmail, subject, messageBody, replyTo }) 
     <tr>
       <td align="center">
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
-          <!-- Header -->
           <tr>
             <td style="background:linear-gradient(135deg,#1a56db,#059669);border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;">
               <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
@@ -51,7 +41,6 @@ function buildTemplate({ name, recipientEmail, subject, messageBody, replyTo }) 
               <h1 style="color:#ffffff;font-size:24px;font-weight:700;margin:24px 0 0;line-height:1.3;">${subject}</h1>
             </td>
           </tr>
-          <!-- Body -->
           <tr>
             <td style="background:#ffffff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb;">
               <p style="color:#374151;font-size:16px;line-height:1.7;margin:0 0 24px;">Dear <strong style="color:#111827;">${name}</strong>,</p>
@@ -76,7 +65,6 @@ function buildTemplate({ name, recipientEmail, subject, messageBody, replyTo }) 
               </p>
             </td>
           </tr>
-          <!-- Footer -->
           <tr>
             <td style="background:#f9fafb;border-radius:0 0 16px 16px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;padding:24px 40px;text-align:center;">
               <p style="color:#9ca3af;font-size:12px;margin:0 0 8px;line-height:1.5;">
@@ -137,7 +125,6 @@ function buildReplyTemplate({ originalSubject, originalMessage, replyBody, admin
               <p style="color:#059669;font-size:13px;margin:0 0 24px;">
                 <a href="https://vangitech.com" style="color:#059669;text-decoration:none;">vangitech.com</a>
               </p>
-              <!-- Original message -->
               <div style="border-left:3px solid #e5e7eb;padding:16px 20px;background:#f9fafb;border-radius:8px;">
                 <p style="color:#6b7280;font-size:12px;font-weight:600;margin:0 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Original Message</p>
                 <p style="color:#374151;font-size:13px;font-style:italic;margin:0;line-height:1.6;">${originalMessage}</p>
@@ -163,64 +150,31 @@ function buildReplyTemplate({ originalSubject, originalMessage, replyBody, admin
 </html>`;
 }
 
-export async function sendWithResend({ to, subject, html, replyTo }) {
-  const { data, error } = await resend.emails.send({
+export async function sendEmail({ to, name, subject, messageBody, replyTo }) {
+  const html = buildTemplate({ name, recipientEmail: to, subject, messageBody });
+
+  const result = await mailer.send({
     from: `${FROM_NAME} <${FROM_EMAIL}>`,
-    to,
+    to: [to],
     subject,
     html,
     replyTo: replyTo || FROM_EMAIL,
   });
-  if (error) throw new Error(`Resend: ${error.message}`);
-  return { provider: 'resend', id: data?.id };
-}
 
-async function sendWithBrevo({ to, subject, html, replyTo }) {
-  const info = await brevoTransport.sendMail({
-    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
-    to,
-    subject,
-    html,
-    replyTo: replyTo || FROM_EMAIL,
-  });
-  return { provider: 'brevo', id: info.messageId };
-}
-
-export async function sendEmail({ to, name, subject, messageBody, replyTo, adminName }) {
-  const html = buildTemplate({ name, recipientEmail: to, subject, messageBody, replyTo });
-  const errors = [];
-
-  try {
-    return await sendWithResend({ to, subject, html, replyTo });
-  } catch (err) {
-    errors.push(`Resend: ${err.message}`);
-  }
-
-  try {
-    return await sendWithBrevo({ to, subject, html, replyTo });
-  } catch (err) {
-    errors.push(`Brevo: ${err.message}`);
-  }
-
-  throw new Error(`All mail providers failed: ${errors.join('; ')}`);
+  return { provider: result.provider, id: result.id };
 }
 
 export async function sendReply({ to, name, originalSubject, originalMessage, replyBody, adminName }) {
   const subject = `Re: ${originalSubject}`;
   const html = buildReplyTemplate({ originalSubject, originalMessage, replyBody, adminName });
-  const errors = [];
 
-  try {
-    return await sendWithResend({ to, subject, html });
-  } catch (err) {
-    errors.push(`Resend: ${err.message}`);
-  }
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [to],
+    subject,
+    html,
+    replyTo: FROM_EMAIL,
+  });
 
-  try {
-    return await sendWithBrevo({ to, subject, html });
-  } catch (err) {
-    errors.push(`Brevo: ${err.message}`);
-  }
-
-  throw new Error(`All mail providers failed: ${errors.join('; ')}`);
+  return { provider: result.provider, id: result.id };
 }
