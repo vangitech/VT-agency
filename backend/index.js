@@ -8,6 +8,11 @@ import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import publicRoutes from './routes/public.js';
 import crmRoutes from './routes/crm.js';
+import emailRoutes from './routes/email.js';
+import calendarRoutes from './routes/calendar.js';
+import callRoutes from './routes/call.js';
+import chatRoutes from './routes/chat.js';
+import smsRoutes from './routes/sms.js';
 import rateLimit from 'express-rate-limit';
 import PageContent from './models/PageContent.js';
 import User from './models/User.js';
@@ -43,6 +48,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
+app.use('/api/email', emailRoutes);
+app.use('/api/calendar', calendarRoutes);
+app.use('/api/calls', callRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/sms', smsRoutes);
 app.use('/api/public', publicRoutes);
 
 app.get('/api/health', (req, res) => {

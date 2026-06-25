@@ -1,19 +1,15 @@
 import { useState, useEffect } from 'react';
-import API from '../../api';
 import { useAuth } from '../../context/AuthContext';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
-import { Label } from '../../components/ui/label';
-import { Card, CardContent } from '../../components/ui/card';
 import {
-  Mail, MessageSquare, CheckCircle, Send, Trash2,
-  Loader2, Inbox, Reply, ArrowLeft, Clock, User,
-  Users, Phone, Building2, Globe, MapPin, Link2,
-  AtSign, Tags, Plus, Search, Merge, AlertTriangle,
-  FileText, Calendar,
+  Mail, MessageSquare, Users, Merge, Phone,
+  Calendar, MessageCircle, Smartphone, Inbox,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import EmailTab from './crm/EmailTab';
+import CalendarTab from './crm/CalendarTab';
+import CallsTab from './crm/CallsTab';
+import ChatTab from './crm/ChatTab';
+import SMSTab from './crm/SMSTab';
 
 const formatDate = (date) => {
   if (!date) return '';
@@ -26,6 +22,11 @@ const TABS = [
   { id: 'messages', label: 'Messages', icon: Inbox },
   { id: 'contacts', label: 'Contacts', icon: Users },
   { id: 'dedup', label: 'Dedup', icon: Merge },
+  { id: 'email', label: 'Email', icon: Mail },
+  { id: 'calendar', label: 'Calendar', icon: Calendar },
+  { id: 'calls', label: 'Calls', icon: Phone },
+  { id: 'chat', label: 'Chat', icon: MessageCircle },
+  { id: 'sms', label: 'SMS', icon: Smartphone },
 ];
 
 // ── Messages Tab ──
@@ -707,6 +708,11 @@ const CRMManager = () => {
       {activeTab === 'messages' && <MessagesTab user={user} />}
       {activeTab === 'contacts' && <ContactsTab />}
       {activeTab === 'dedup' && <DedupTab />}
+      {activeTab === 'email' && <EmailTab />}
+      {activeTab === 'calendar' && <CalendarTab />}
+      {activeTab === 'calls' && <CallsTab />}
+      {activeTab === 'chat' && <ChatTab />}
+      {activeTab === 'sms' && <SMSTab />}
     </div>
   );
 };
