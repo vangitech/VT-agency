@@ -66,7 +66,7 @@ async function fetchAndImport() {
           url: article.url || '',
           category: cat.id,
           isActive: true,
-          publishedAt: article.publishedAt ? new Date(article.publishedAt) : new Date(),
+          publishedAt: new Date(),
         });
         totalImported++;
       }

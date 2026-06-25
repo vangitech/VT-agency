@@ -224,7 +224,7 @@ export const importNewsFromAPI = async (req, res) => {
         url: article.url || '',
         category: req.query.category || 'Technology',
         isActive: true,
-        publishedAt: article.publishedAt ? new Date(article.publishedAt) : new Date(),
+        publishedAt: new Date(),
       });
       created.push(news);
     }
