@@ -1,0 +1,9 @@
+{
+  "name": "vangitech",
+  "private": true,
+  "scripts": {
+    "postinstall": "cd backend && npm install && cd ../frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && node index.js"
+  }
+}
