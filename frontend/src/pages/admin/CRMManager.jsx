@@ -32,9 +32,10 @@ const CRMManager = () => {
   const fetchMessages = async () => {
     try {
       const res = await API.get('/crm/messages');
-      setMessages(res.data);
+      setMessages(Array.isArray(res.data) ? res.data : []);
     } catch {
       toast.error('Failed to fetch messages');
+      setMessages([]);
     } finally {
       setLoading(false);
     }
@@ -137,13 +138,13 @@ const CRMManager = () => {
         <div className={`${showMobileList ? 'flex' : 'hidden'} lg:flex w-full lg:w-96 flex-shrink-0 flex-col`}>
           <Card className="flex-1 border border-gray-100 shadow-sm overflow-hidden">
             <div className="overflow-y-auto flex-1">
-              {messages.length === 0 ? (
+              {!Array.isArray(messages) || messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                   <Inbox size={40} className="text-gray-300 mb-3" />
                   <p className="text-gray-500 text-sm">No messages yet</p>
                   <p className="text-gray-400 text-xs mt-1">Contact form submissions will appear here</p>
                 </div>
-              ) : (
+              ) : Array.isArray(messages) && (
                 messages.map((msg) => (
                   <button
                     key={msg._id}
