@@ -20,7 +20,7 @@ const fallbackProjects = [
     category: 'fintech',
     technologies: ['React', 'Node.js', 'MongoDB', 'AWS'],
     image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80',
-    completionDate: '2025-08-01',
+    // completionDate: '2025-08-01',
   },
   {
     _id: '2',
@@ -29,7 +29,7 @@ const fallbackProjects = [
     category: 'medical',
     technologies: ['Next.js', 'Python', 'PostgreSQL', 'Docker'],
     image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80',
-    completionDate: '2025-05-01',
+    // completionDate: '2025-05-01',
   },
   {
     _id: '3',
@@ -38,7 +38,7 @@ const fallbackProjects = [
     category: 'cybersecurity',
     technologies: ['Go', 'React', 'Elasticsearch', 'Kubernetes'],
     image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80',
-    completionDate: '2025-03-01',
+    // completionDate: '2025-03-01',
   },
   {
     _id: '4',
@@ -47,7 +47,7 @@ const fallbackProjects = [
     category: 'edutech',
     technologies: ['Vue.js', 'Django', 'Redis', 'GCP'],
     image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80',
-    completionDate: '2024-12-01',
+    // completionDate: '2024-12-01',
   },
   {
     _id: '5',
@@ -56,7 +56,7 @@ const fallbackProjects = [
     category: 'software',
     technologies: ['Flutter', 'Node.js', 'PostgreSQL', 'Firebase'],
     image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&q=80',
-    completionDate: '2024-10-01',
+    // completionDate: '2024-10-01',
   },
   {
     _id: '6',
@@ -65,7 +65,7 @@ const fallbackProjects = [
     category: 'consulting',
     technologies: ['AWS', 'Terraform', 'Prometheus', 'Grafana'],
     image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80',
-    completionDate: '2024-09-01',
+    // completionDate: '2024-09-01',
   },
 ];
 
