@@ -89,7 +89,7 @@ const seedLegalPages = async () => {
           },
           {
             heading: 'Contact Us',
-            body: 'If you have any questions about this privacy policy or our data practices, please contact us at support@vangitech.com or write to 123 Tech Park, Silicon Valley, CA.',
+            body: 'If you have any questions about this privacy policy or our data practices, please contact us at support@vangitech.com or write to House C18A FRSC Estate Lokogoma FCT-Abuja.',
           },
         ],
       },

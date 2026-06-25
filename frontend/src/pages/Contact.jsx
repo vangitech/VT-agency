@@ -40,19 +40,19 @@ const Contact = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'info@vangitech.com',
-      href: 'mailto:info@vangitech.com',
+      value: 'support@vangitech.com',
+      href: 'mailto:support@vangitech.com',
     },
     {
       icon: Phone,
       label: 'Phone',
       value: '+234 806 975 2912',
-      href: 'tel:+1234567890',
+      href: 'tel:+2348069752912',
     },
     {
       icon: MapPin,
       label: 'Address',
-      value: '38 Mike Akhigbe Way, Jabi, Abuja, Nigeria',
+      value: 'House C18A FRSC Estate Lokogoma FCT-Abuja',
       href: null,
     },
     {

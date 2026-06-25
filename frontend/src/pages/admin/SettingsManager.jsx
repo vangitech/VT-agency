@@ -12,7 +12,7 @@ const SettingsManager = () => {
     companyName: 'Vangitech Limited',
     companyEmail: 'info@vangitech.com',
     companyPhone: '+234 806 975 2912',
-    companyAddress: 'No 38 Mike Akhigbe Way Jabi FCT-Abuja',
+    companyAddress: 'House C18A FRSC Estate Lokogoma FCT-Abuja',
     facebookUrl: '',
     twitterUrl: '',
     linkedinUrl: '',

@@ -50,10 +50,11 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-green rounded-xl flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-base leading-none tracking-tight">VT</span>
             </div>
+            <span className="text-[10px] text-gray-400 font-medium hidden sm:block leading-tight">RC 1803640</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">

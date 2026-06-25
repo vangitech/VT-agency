@@ -150,7 +150,7 @@ const Footer = () => {
                   <span className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
                     <MapPin size={14} className="text-brand-blue" />
                   </span>
-                  <span className="text-gray-400">{s('companyAddress', '123 Tech Park, Silicon Valley, CA')}</span>
+                  <span className="text-gray-400">{s('companyAddress', 'House C18A FRSC Estate Lokogoma FCT-Abuja')}</span>
                 </p>
               </div>
               <h3 className="text-white font-semibold text-sm tracking-widest uppercase mb-3 flex items-center gap-2">

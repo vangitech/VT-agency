@@ -43,6 +43,7 @@ const AdminSidebar = () => {
           <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-green rounded-lg flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-xs leading-none tracking-tight">VT</span>
           </div>
+          <span className="text-[9px] text-gray-500 font-medium leading-tight">RC 1803640</span>
         </Link>
         <button
           onClick={() => setCollapsed(!collapsed)}
