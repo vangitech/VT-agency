@@ -13,6 +13,13 @@ import calendarRoutes from './routes/calendar.js';
 import callRoutes from './routes/call.js';
 import chatRoutes from './routes/chat.js';
 import smsRoutes from './routes/sms.js';
+import dealRoutes from './routes/deals.js';
+import projectRoutes from './routes/projects.js';
+import timesheetRoutes from './routes/timesheets.js';
+import expenseRoutes from './routes/expenses.js';
+import resourceRoutes from './routes/resources.js';
+import analyticsRoutes from './routes/analytics.js';
+import workflowRoutes from './routes/workflows.js';
 import rateLimit from 'express-rate-limit';
 import PageContent from './models/PageContent.js';
 import User from './models/User.js';
@@ -53,6 +60,13 @@ app.use('/api/calendar', calendarRoutes);
 app.use('/api/calls', callRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/sms', smsRoutes);
+app.use('/api/deals', dealRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/timesheets', timesheetRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/workflows', workflowRoutes);
 app.use('/api/public', publicRoutes);
 
 app.get('/api/health', (req, res) => {

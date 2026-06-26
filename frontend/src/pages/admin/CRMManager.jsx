@@ -12,6 +12,8 @@ import {
   Users, Phone, Building2, Globe, MapPin, Link2,
   AtSign, Tags, Plus, Search, Merge, AlertTriangle,
   FileText, Calendar, MessageCircle, Smartphone,
+  LayoutDashboard, FolderKanban, BarChart3, Zap,
+  DollarSign,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import EmailTab from './crm/EmailTab';
@@ -19,6 +21,13 @@ import CalendarTab from './crm/CalendarTab';
 import CallsTab from './crm/CallsTab';
 import ChatTab from './crm/ChatTab';
 import SMSTab from './crm/SMSTab';
+import DealsTab from './crm/DealsTab';
+import ProjectsTab from './crm/ProjectsTab';
+import TimesheetTab from './crm/TimesheetTab';
+import ExpensesTab from './crm/ExpensesTab';
+import ResourcesTab from './crm/ResourcesTab';
+import ReportsTab from './crm/ReportsTab';
+import WorkflowsTab from './crm/WorkflowsTab';
 
 const formatDate = (date) => {
   if (!date) return '';
@@ -31,6 +40,13 @@ const TABS = [
   { id: 'messages', label: 'Messages', icon: Inbox },
   { id: 'contacts', label: 'Contacts', icon: Users },
   { id: 'dedup', label: 'Dedup', icon: Merge },
+  { id: 'deals', label: 'Deals', icon: LayoutDashboard },
+  { id: 'projects', label: 'Projects', icon: FolderKanban },
+  { id: 'timesheets', label: 'Timesheets', icon: Clock },
+  { id: 'expenses', label: 'Expenses', icon: DollarSign },
+  { id: 'resources', label: 'Resources', icon: Users },
+  { id: 'reports', label: 'Reports', icon: BarChart3 },
+  { id: 'workflows', label: 'Workflows', icon: Zap },
   { id: 'email', label: 'Email', icon: Mail },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
   { id: 'calls', label: 'Calls', icon: Phone },
@@ -717,6 +733,13 @@ const CRMManager = () => {
       {activeTab === 'messages' && <MessagesTab user={user} />}
       {activeTab === 'contacts' && <ContactsTab />}
       {activeTab === 'dedup' && <DedupTab />}
+      {activeTab === 'deals' && <DealsTab />}
+      {activeTab === 'projects' && <ProjectsTab />}
+      {activeTab === 'timesheets' && <TimesheetTab />}
+      {activeTab === 'expenses' && <ExpensesTab />}
+      {activeTab === 'resources' && <ResourcesTab />}
+      {activeTab === 'reports' && <ReportsTab />}
+      {activeTab === 'workflows' && <WorkflowsTab />}
       {activeTab === 'email' && <EmailTab />}
       {activeTab === 'calendar' && <CalendarTab />}
       {activeTab === 'calls' && <CallsTab />}
