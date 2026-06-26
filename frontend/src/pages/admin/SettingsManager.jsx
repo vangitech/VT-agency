@@ -19,6 +19,7 @@ const SettingsManager = () => {
     youtubeUrl: '',
     footerCopyright: 'All rights reserved.',
     newsApiKey: '',
+    aiApiKey: '',
   });
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -198,6 +199,21 @@ const SettingsManager = () => {
                   type="password"
                   placeholder="Enter your NewsAPI API key"
                   value={settings.newsApiKey}
+                  onChange={handleChange}
+                  className="h-11 rounded-xl border-gray-200"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="aiApiKey" className="text-sm font-medium text-gray-700">
+                  AI (DeepSeek) API Key
+                  <span className="text-xs text-gray-400 ml-2 font-normal">(get one at platform.deepseek.com)</span>
+                </Label>
+                <Input
+                  id="aiApiKey"
+                  name="aiApiKey"
+                  type="password"
+                  placeholder="sk-..."
+                  value={settings.aiApiKey}
                   onChange={handleChange}
                   className="h-11 rounded-xl border-gray-200"
                 />

@@ -7,9 +7,9 @@ import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
   Mail, Inbox, Send, Trash2, Star, Search,
-  Loader2, Plus, Reply, Forward, ArrowLeft,
-  Paperclip, Clock, User, CheckCircle, RefreshCw,
-  FileText, Download,
+  Loader2, Plus, Reply, Paperclip, Clock,
+  FileText, Download, RefreshCw, Sparkles,
+  ChevronDown, ChevronUp,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -31,6 +31,14 @@ const FOLDERS = [
   { id: 'TRASH', label: 'Trash', icon: Trash2 },
 ];
 
+const TONES = [
+  { id: 'professional', label: 'Professional' },
+  { id: 'friendly', label: 'Friendly' },
+  { id: 'formal', label: 'Formal' },
+  { id: 'casual', label: 'Casual' },
+  { id: 'persuasive', label: 'Persuasive' },
+];
+
 const EmailTab = () => {
   const [accounts, setAccounts] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -40,8 +48,10 @@ const EmailTab = () => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [showCompose, setShowCompose] = useState(false);
   const [search, setSearch] = useState('');
-  const [composeData, setComposeData] = useState({ to: '', cc: '', bcc: '', subject: '', body: '' });
+  const [composeData, setComposeData] = useState({ to: '', cc: '', bcc: '', subject: '', body: '', tone: 'professional', context: '' });
   const [sending, setSending] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [showCcBcc, setShowCcBcc] = useState(false);
   const [syncingAccount, setSyncingAccount] = useState(null);
   const [showAccountSetup, setShowAccountSetup] = useState(false);
   const [accountForm, setAccountForm] = useState({
@@ -66,14 +76,8 @@ const EmailTab = () => {
     }).catch(() => {}).finally(() => setLoading(false));
   };
 
-  useEffect(() => {
-    fetchAccounts();
-  }, []);
-
-  useEffect(() => {
-    fetchMessages();
-  }, [currentAccount, currentFolder]);
-
+  useEffect(() => { fetchAccounts(); }, []);
+  useEffect(() => { fetchMessages(); }, [currentAccount, currentFolder]);
   useEffect(() => {
     if (!search) return;
     const timer = setTimeout(fetchMessages, 300);
@@ -107,6 +111,25 @@ const EmailTab = () => {
     } catch { toast.error('Failed to delete'); }
   };
 
+  const handleGenerate = async () => {
+    if (!composeData.subject) { toast.error('Subject required for AI generation'); return; }
+    setGenerating(true);
+    try {
+      const res = await API.post('/ai/generate-email', {
+        to: composeData.to,
+        subject: composeData.subject,
+        tone: composeData.tone,
+        context: composeData.context,
+      });
+      if (res.data?.body) {
+        setComposeData((p) => ({ ...p, body: res.data.body }));
+        toast.success('AI draft generated');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'AI generation failed');
+    } finally { setGenerating(false); }
+  };
+
   const handleSend = async (e) => {
     e.preventDefault();
     if (!composeData.to || !composeData.subject) { toast.error('To and subject required'); return; }
@@ -114,16 +137,16 @@ const EmailTab = () => {
     try {
       await API.post('/email/messages/send', {
         to: composeData.to.split(',').map((s) => s.trim()),
-        cc: composeData.cc ? composeData.cc.split(',').map((s) => s.trim()) : [],
-        bcc: composeData.bcc ? composeData.bcc.split(',').map((s) => s.trim()) : [],
+        cc: showCcBcc && composeData.cc ? composeData.cc.split(',').map((s) => s.trim()) : [],
+        bcc: showCcBcc && composeData.bcc ? composeData.bcc.split(',').map((s) => s.trim()) : [],
         subject: composeData.subject,
         bodyHtml: composeData.body,
         bodyText: composeData.body,
         accountId: currentAccount,
       });
-      toast.success('Email sent');
+      toast.success('Email sent successfully');
       setShowCompose(false);
-      setComposeData({ to: '', cc: '', bcc: '', subject: '', body: '' });
+      setComposeData({ to: '', cc: '', bcc: '', subject: '', body: '', tone: 'professional', context: '' });
       fetchMessages();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to send');
@@ -138,9 +161,7 @@ const EmailTab = () => {
       fetchMessages();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Sync failed');
-    } finally {
-      setSyncingAccount(null);
-    }
+    } finally { setSyncingAccount(null); }
   };
 
   const handleAddAccount = async (e) => {
@@ -154,6 +175,20 @@ const EmailTab = () => {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to add account');
     }
+  };
+
+  const openCompose = (replyTo) => {
+    if (replyTo) {
+      setComposeData({
+        to: replyTo.from?.address || '',
+        cc: '', bcc: '', subject: `Re: ${replyTo.subject || ''}`,
+        body: '', tone: 'professional', context: '',
+      });
+    } else {
+      setComposeData({ to: '', cc: '', bcc: '', subject: '', body: '', tone: 'professional', context: '' });
+    }
+    setShowCcBcc(false);
+    setShowCompose(true);
   };
 
   const filteredMessages = currentFolder === 'STARRED'
@@ -227,7 +262,7 @@ const EmailTab = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-0 lg:gap-6 h-[calc(100vh-16rem)]">
       <div className="w-full lg:w-72 flex-shrink-0 mb-4 lg:mb-0">
-        <Button variant="blue" onClick={() => setShowCompose(true)} className="w-full rounded-xl mb-4">
+        <Button variant="blue" onClick={() => openCompose(null)} className="w-full rounded-xl mb-4">
           <Plus size={16} className="mr-1.5" /> Compose
         </Button>
         <div className="space-y-1 mb-4">
@@ -353,7 +388,7 @@ const EmailTab = () => {
                 )}
 
                 <div className="border-t border-gray-100 pt-4">
-                  <Button variant="outline" size="sm" onClick={() => setShowCompose(true)} className="rounded-xl">
+                  <Button variant="outline" size="sm" onClick={() => openCompose(selectedMsg)} className="rounded-xl">
                     <Reply size={14} className="mr-1.5" /> Reply
                   </Button>
                 </div>
@@ -370,26 +405,96 @@ const EmailTab = () => {
         </div>
       </div>
 
+      {/* Compose Modal */}
       {showCompose && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowCompose(false); }}>
-          <Card className="w-full max-w-2xl mx-4 border border-gray-100 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-[5vh] pb-8 bg-black/40 overflow-y-auto"
+          onClick={(e) => { if (e.target === e.currentTarget) setShowCompose(false); }}>
+          <Card className="w-full max-w-2xl mx-4 border border-gray-200 shadow-xl">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-bold text-gray-900">New Message</h2>
                 <Button variant="ghost" size="sm" onClick={() => setShowCompose(false)}><Trash2 size={14} /></Button>
               </div>
               <form onSubmit={handleSend} className="space-y-4">
-                <div className="space-y-1.5"><Label>To</Label><Input value={composeData.to} onChange={(e) => setComposeData((p) => ({ ...p, to: e.target.value }))} placeholder="recipient@email.com" required className="h-10 rounded-xl" /></div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5"><Label>CC</Label><Input value={composeData.cc} onChange={(e) => setComposeData((p) => ({ ...p, cc: e.target.value }))} placeholder="cc@email.com" className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1.5"><Label>BCC</Label><Input value={composeData.bcc} onChange={(e) => setComposeData((p) => ({ ...p, bcc: e.target.value }))} placeholder="bcc@email.com" className="h-10 rounded-xl" /></div>
+                <div className="space-y-1.5">
+                  <Label>To <span className="text-red-500">*</span></Label>
+                  <Input value={composeData.to} onChange={(e) => setComposeData((p) => ({ ...p, to: e.target.value }))}
+                    placeholder="recipient@email.com" required className="h-10 rounded-xl" />
                 </div>
-                <div className="space-y-1.5"><Label>Subject</Label><Input value={composeData.subject} onChange={(e) => setComposeData((p) => ({ ...p, subject: e.target.value }))} required className="h-10 rounded-xl" /></div>
-                <div className="space-y-1.5"><Label>Message</Label><Textarea value={composeData.body} onChange={(e) => setComposeData((p) => ({ ...p, body: e.target.value }))} rows={10} required className="rounded-xl" /></div>
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-400">Emails sent via your connected provider</p>
+
+                {/* CC/BCC toggle */}
+                <div>
+                  <button type="button" onClick={() => setShowCcBcc(!showCcBcc)}
+                    className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 font-medium">
+                    {showCcBcc ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    {showCcBcc ? 'Hide CC/BCC' : 'Add CC/BCC'}
+                  </button>
+                  {showCcBcc && (
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-gray-500">CC</Label>
+                        <Input value={composeData.cc} onChange={(e) => setComposeData((p) => ({ ...p, cc: e.target.value }))}
+                          placeholder="cc@email.com" className="h-10 rounded-xl" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-gray-500">BCC</Label>
+                        <Input value={composeData.bcc} onChange={(e) => setComposeData((p) => ({ ...p, bcc: e.target.value }))}
+                          placeholder="bcc@email.com" className="h-10 rounded-xl" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Subject <span className="text-red-500">*</span></Label>
+                  <Input value={composeData.subject} onChange={(e) => setComposeData((p) => ({ ...p, subject: e.target.value }))}
+                    required className="h-10 rounded-xl" />
+                </div>
+
+                {/* Tone selector for AI */}
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-gray-500">AI Tone</Label>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {TONES.map((t) => (
+                      <button key={t.id} type="button" onClick={() => setComposeData((p) => ({ ...p, tone: t.id }))}
+                        className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
+                          composeData.tone === t.id
+                            ? 'bg-brand-blue text-white'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}>
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Context for AI <span className="text-xs text-gray-400 font-normal">(optional — e.g., purpose, recipient details)</span></Label>
+                  <Input value={composeData.context} onChange={(e) => setComposeData((p) => ({ ...p, context: e.target.value }))}
+                    placeholder="e.g., Following up on the proposal sent last week" className="h-10 rounded-xl" />
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Label>Message <span className="text-red-500">*</span></Label>
+                    <button type="button" onClick={handleGenerate} disabled={generating}
+                      className="inline-flex items-center gap-1 text-xs text-brand-blue hover:text-brand-darkBlue font-medium disabled:opacity-50">
+                      {generating ? (
+                        <><Loader2 size={12} className="animate-spin" /> Generating...</>
+                      ) : (
+                        <><Sparkles size={12} /> Generate with AI</>
+                      )}
+                    </button>
+                  </div>
+                  <Textarea value={composeData.body} onChange={(e) => setComposeData((p) => ({ ...p, body: e.target.value }))}
+                    rows={10} required className="rounded-xl" placeholder="Write your message or click 'Generate with AI'" />
+                </div>
+
+                <div className="flex items-center justify-between pt-2">
+                  <p className="text-xs text-gray-400">Uses branded Vangitech template via Brevo/Resend</p>
                   <Button type="submit" variant="blue" disabled={sending} className="rounded-xl">
-                    {sending ? <><Loader2 size={14} className="mr-1.5 animate-spin" /> Sending...</> : <><Send size={14} className="mr-1.5" /> Send</>}
+                    {sending ? <><Loader2 size={14} className="mr-1.5 animate-spin" /> Sending...</>
+                      : <><Send size={14} className="mr-1.5" /> Send</>}
                   </Button>
                 </div>
               </form>

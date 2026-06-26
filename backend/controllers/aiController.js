@@ -1,4 +1,5 @@
 import { getNextBestActions, generateReply, generateMeetingSummary, getPredictiveInsights } from '../services/aiService.js';
+import { generateEmailBody } from '../services/aiEmailService.js';
 
 export const getSuggestions = async (req, res) => {
   try {
@@ -27,6 +28,18 @@ export const getMeetingSummary = async (req, res) => {
     const { title, attendees, duration, notes } = req.body;
     const summary = await generateMeetingSummary(title, attendees, duration, notes);
     res.json(summary);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const generateEmail = async (req, res) => {
+  try {
+    const { to, subject, tone, context } = req.body;
+    if (!subject) return res.status(400).json({ message: 'Subject is required' });
+
+    const body = await generateEmailBody({ to, subject, tone, context });
+    res.json({ body });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

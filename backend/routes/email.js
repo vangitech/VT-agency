@@ -5,7 +5,13 @@ import * as emailController from '../controllers/emailController.js';
 const router = express.Router();
 
 router.use(protect);
-router.use(adminOnly);
+router.use((req, res, next) => {
+  if (req.user && ['superadmin', 'admin', 'manager', 'editor', 'agent'].includes(req.user.role)) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access denied. Staff only.' });
+  }
+});
 
 router.get('/accounts', emailController.getAccounts);
 router.post('/accounts', emailController.createAccount);
