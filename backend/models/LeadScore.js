@@ -22,6 +22,5 @@ const leadScoreSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 leadScoreSchema.index({ score: -1 });
-leadScoreSchema.index({ contact: 1 });
 
 export default mongoose.model('LeadScore', leadScoreSchema);

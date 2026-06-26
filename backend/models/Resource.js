@@ -22,7 +22,6 @@ const resourceSchema = new mongoose.Schema({
   }],
 }, { timestamps: true });
 
-resourceSchema.index({ user: 1 });
 resourceSchema.index({ status: 1 });
 
 export default mongoose.model('Resource', resourceSchema);

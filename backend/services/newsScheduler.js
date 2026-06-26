@@ -13,6 +13,39 @@ const CATEGORIES = [
 
 const PAGE_SIZE = 12;
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function fetchCategory(cat, apiKey) {
+  const params = new URLSearchParams({ apiKey });
+  if (cat.search) {
+    params.set('q', cat.search);
+  } else {
+    params.set('category', cat.id);
+    params.set('country', 'us');
+  }
+  params.set('pageSize', String(PAGE_SIZE));
+
+  const endpoint = cat.search ? 'everything' : 'top-headlines';
+  const response = await fetch(
+    `https://newsapi.org/v2/${endpoint}?${params.toString()}`
+  );
+
+  if (response.status === 429) {
+    console.log(`[NewsScheduler] Rate limited for ${cat.id}, will retry later`);
+    return [];
+  }
+
+  if (!response.ok) {
+    console.log(`[NewsScheduler] Failed to fetch ${cat.id}: ${response.status}`);
+    return [];
+  }
+
+  const data = await response.json();
+  return data.articles || [];
+}
+
 async function fetchAndImport() {
   const setting = await Setting.findOne({ key: 'newsApiKey' });
   const apiKey = setting?.value;
@@ -23,30 +56,23 @@ async function fetchAndImport() {
 
   let totalImported = 0;
   let totalSkipped = 0;
+  let rateLimited = false;
 
   for (const cat of CATEGORIES) {
+    if (rateLimited) {
+      console.log(`[NewsScheduler] Skipping ${cat.id} due to previous rate limit`);
+      continue;
+    }
+
+    await sleep(1500);
+
     try {
-      const params = new URLSearchParams({ apiKey });
-      if (cat.search) {
-        params.set('q', cat.search);
-      } else {
-        params.set('category', cat.id);
-        params.set('country', 'us');
-      }
-      params.set('pageSize', String(PAGE_SIZE));
+      const articles = await fetchCategory(cat, apiKey);
 
-      const endpoint = cat.search ? 'everything' : 'top-headlines';
-      const response = await fetch(
-        `https://newsapi.org/v2/${endpoint}?${params.toString()}`
-      );
-
-      if (!response.ok) {
-        console.log(`[NewsScheduler] Failed to fetch ${cat.id}: ${response.status}`);
+      if (articles.length === 0) {
+        rateLimited = true;
         continue;
       }
-
-      const data = await response.json();
-      const articles = data.articles || [];
 
       for (const article of articles) {
         if (!article.title) continue;
