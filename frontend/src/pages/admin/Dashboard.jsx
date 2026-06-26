@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import API from '../../api';
 import { useLoading } from '../../context/LoadingContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
+import toast from 'react-hot-toast';
 import {
   Image, Users, Newspaper, Briefcase, FileText, ScrollText,
   ArrowUpRight, Loader2, TrendingUp, DollarSign, Target,
@@ -34,6 +34,7 @@ const Dashboard = () => {
         ]);
 
         if (dash.status === 'fulfilled') setAnalytics(dash.value.data);
+        if (dash.status === 'rejected') toast.error('Failed to load analytics');
 
         setStats({
           heroSlides: heroR.status === 'fulfilled' ? heroR.value.data.length : 0,
@@ -43,7 +44,9 @@ const Dashboard = () => {
           projects: projectsR.status === 'fulfilled' ? projectsR.value.data.length : 0,
           messages: messagesR.status === 'fulfilled' ? messagesR.value.data.length : 0,
         });
-      } catch {} finally {
+      } catch (e) {
+        toast.error('Failed to load dashboard data');
+      } finally {
         setLoading(false);
       }
     };
@@ -58,10 +61,12 @@ const Dashboard = () => {
     );
   }
 
+  const kpis = analytics?.kpis || {};
+
   const kpiCards = [
     {
       title: 'Pipeline Value',
-      value: formatCurrency(analytics?.pipelineValue || analytics?.totalPipelineValue || 0),
+      value: formatCurrency(kpis.pipelineValue),
       icon: TrendingUp,
       color: 'text-blue-600',
       bg: 'bg-blue-50',
@@ -70,7 +75,7 @@ const Dashboard = () => {
     },
     {
       title: 'Active Deals',
-      value: analytics?.activeDeals ?? analytics?.totalDeals ?? 0,
+      value: kpis.activeDeals ?? kpis.totalDeals ?? 0,
       icon: Target,
       color: 'text-emerald-600',
       bg: 'bg-emerald-50',
@@ -79,7 +84,7 @@ const Dashboard = () => {
     },
     {
       title: 'Monthly Revenue',
-      value: formatCurrency(analytics?.mrr ?? analytics?.revenue ?? 0),
+      value: formatCurrency(kpis.mrr),
       icon: DollarSign,
       color: 'text-purple-600',
       bg: 'bg-purple-50',
@@ -88,7 +93,7 @@ const Dashboard = () => {
     },
     {
       title: 'Win Rate',
-      value: analytics?.winRate != null ? `${Math.round(analytics.winRate)}%` : '—',
+      value: kpis.winRate != null ? `${Math.round(kpis.winRate)}%` : '—',
       icon: BarChart3,
       color: 'text-amber-600',
       bg: 'bg-amber-50',
@@ -182,7 +187,7 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent className="p-5 pt-0">
             <div className="space-y-1">
-              {analytics?.recentActivity && analytics.recentActivity.length > 0 ? (
+              {analytics?.recentActivity?.length > 0 ? (
                 analytics.recentActivity.slice(0, 6).map((act, i) => (
                   <div key={i} className="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${

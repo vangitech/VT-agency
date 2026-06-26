@@ -23,18 +23,20 @@ const ReportsTab = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [dash, rev, attr, wl, vel] = await Promise.all([
+        const [dash, rev, attr, wl, vel] = await Promise.allSettled([
           API.get('/analytics/dashboard'),
           API.get('/analytics/revenue'),
           API.get('/analytics/attribution'),
           API.get('/analytics/win-loss'),
           API.get('/analytics/velocity'),
         ]);
-        setDashData(dash.data);
-        setRevenueData(rev.data);
-        setAttributionData(attr.data);
-        setWinLossData(wl.data);
-        setVelocityData(vel.data);
+        if (dash.status === 'fulfilled') setDashData(dash.value.data);
+        if (rev.status === 'fulfilled') setRevenueData(rev.value.data);
+        if (attr.status === 'fulfilled') setAttributionData(attr.value.data);
+        if (wl.status === 'fulfilled') setWinLossData(wl.value.data);
+        if (vel.status === 'fulfilled') setVelocityData(vel.value.data);
+        const rejected = [dash, rev, attr, wl, vel].filter((r) => r.status === 'rejected');
+        if (rejected.length > 0) toast.error(`Failed to load ${rejected.length} analytics report(s)`);
       } catch (e) {
         toast.error('Failed to load analytics');
       } finally {

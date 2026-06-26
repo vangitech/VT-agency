@@ -10,15 +10,15 @@ export const getDashboard = async (req, res) => {
   try {
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const yearStart = new Date(now.getFullYear(), 0, 1);
 
     const [
-      totalDeals, wonDeals, pipelineValue, totalProjects,
+      totalDeals, wonDeals, lostDeals, pipelineValue, totalProjects,
       activeProjects, totalHours, totalExpenses, totalContacts,
-      newContactsThisMonth, messagesUnread,
+      newContactsThisMonth, messagesUnread, mrrResult, recentInteractions,
     ] = await Promise.all([
       Deal.countDocuments(),
       Deal.countDocuments({ stage: { $in: ['Closed Won', 'closed_won'] } }),
+      Deal.countDocuments({ stage: { $in: ['Closed Lost', 'closed_lost'] } }),
       Deal.aggregate([
         { $match: { stage: { $nin: ['Closed Lost', 'closed_lost', 'Closed Won', 'closed_won'] } } },
         { $group: { _id: null, total: { $sum: { $multiply: ['$value', { $divide: ['$probability', 100] }] } } } },
@@ -36,19 +36,38 @@ export const getDashboard = async (req, res) => {
       Contact.countDocuments(),
       Contact.countDocuments({ createdAt: { $gte: monthStart } }),
       ContactMessage.countDocuments({ read: false }),
+      Deal.aggregate([
+        { $match: { stage: { $in: ['Closed Won', 'closed_won'] }, closedAt: { $gte: monthStart } } },
+        { $group: { _id: null, total: { $sum: '$value' } } },
+      ]),
+      Interaction.find().sort({ createdAt: -1 }).limit(10).lean(),
     ]);
+
+    const activeDeals = totalDeals - wonDeals - lostDeals;
+    const mrr = Math.round(mrrResult[0]?.total || 0);
+    const totalDecided = wonDeals + lostDeals;
+    const winRate = totalDecided > 0 ? Math.round((wonDeals / totalDecided) * 100) : 0;
+
+    const recentActivity = (recentInteractions || []).map((i) => ({
+      type: i.type === 'email' ? 'deal' : i.type === 'note' ? 'project' : 'contact',
+      description: i.subject || i.description || 'Interaction',
+      date: i.createdAt,
+    }));
 
     res.json({
       kpis: {
-        totalDeals, wonDeals,
+        totalDeals, wonDeals, activeDeals, lostDeals,
         pipelineValue: Math.round(pipelineValue[0]?.total || 0),
         totalProjects, activeProjects,
         hoursThisMonth: Math.round(totalHours[0]?.total || 0),
         expensesThisMonth: Math.round(totalExpenses[0]?.total || 0),
         totalContacts, newContactsThisMonth, messagesUnread,
+        mrr, winRate,
       },
+      recentActivity,
     });
   } catch (error) {
+    console.error('getDashboard error:', error);
     res.status(500).json({ message: error.message });
   }
 };
