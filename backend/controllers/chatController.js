@@ -2,6 +2,7 @@ import ChatSession from '../models/ChatSession.js';
 import ChatMessage from '../models/ChatMessage.js';
 import Contact from '../models/Contact.js';
 import Interaction from '../models/Interaction.js';
+import { getIO } from '../services/events.js';
 
 export const getSessions = async (req, res) => {
   try {
@@ -67,6 +68,17 @@ export const sendMessage = async (req, res) => {
     });
 
     await ChatSession.findByIdAndUpdate(req.params.id, { status: 'active' });
+
+    const io = getIO();
+    if (io) {
+      io.to(`session:${req.params.id}`).emit('chat:message', message.toObject());
+      const updatedSession = await ChatSession.findById(req.params.id)
+        .populate('assignedTo', 'name email')
+        .populate('contact', 'name email');
+      io.to(`session:${req.params.id}`).emit('session:updated', updatedSession);
+      io.emit('chat:stats:update');
+    }
+
     res.status(201).json(message);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -98,6 +110,16 @@ export const endSession = async (req, res) => {
         metadata: { sessionId: session._id, duration: session.updatedAt - session.createdAt },
       });
     }
+
+    const io = getIO();
+    if (io) {
+      const updated = await ChatSession.findById(session._id)
+        .populate('assignedTo', 'name email')
+        .populate('contact', 'name email');
+      io.to(`session:${req.params.id}`).emit('session:updated', updated);
+      io.emit('chat:stats:update');
+    }
+
     res.json(session);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -112,6 +134,16 @@ export const assignSession = async (req, res) => {
       { returnDocument: 'after' }
     );
     if (!session) return res.status(404).json({ message: 'Session not found' });
+
+    const io = getIO();
+    if (io) {
+      const updated = await ChatSession.findById(session._id)
+        .populate('assignedTo', 'name email')
+        .populate('contact', 'name email');
+      io.to(`session:${req.params.id}`).emit('session:updated', updated);
+      io.emit('chat:stats:update');
+    }
+
     res.json(session);
   } catch (error) {
     res.status(500).json({ message: error.message });

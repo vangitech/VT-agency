@@ -21,4 +21,7 @@ router.put('/messages/:id/move', emailController.moveToFolder);
 router.get('/messages/:id/thread', emailController.getThread);
 router.post('/messages/:id/sync-contact', emailController.syncContact);
 
+router.post('/sync/:id', emailController.syncEmails);
+router.post('/sync-all', emailController.syncAllEmails);
+
 export default router;

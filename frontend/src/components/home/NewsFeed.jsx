@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight } from 'lucide-react';
-import { imageUrl } from '../../api';
+import { imageUrl, proxyImageUrl } from '../../api';
+
+const needsProxy = (url) => {
+  if (!url) return false;
+  return url.startsWith('http') && !url.includes(window.location.hostname);
+};
 
 const fallbackNews = [
   {
@@ -62,9 +67,10 @@ const NewsFeed = ({ news }) => {
               {item.image && (
                 <div className="h-48 overflow-hidden">
                   <img
-                    src={imageUrl(item.image)}
+                    src={proxyImageUrl(item.image)}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => { e.target.src = imageUrl(item.image); }}
                   />
                 </div>
               )}

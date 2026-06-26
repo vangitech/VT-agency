@@ -16,6 +16,12 @@ services:
         value: 30d
       - key: CORS_ORIGIN
         value: https://vt-agency.vercel.app
+      - key: RESEND_API_KEY
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SMTP_USER
+        sync: false
 
   - type: web
     name: vangitech-frontend

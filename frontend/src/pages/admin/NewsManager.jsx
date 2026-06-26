@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import API, { imageUrl } from '../../api';
+import API, { imageUrl, proxyImageUrl } from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
@@ -343,9 +343,9 @@ const NewsManager = () => {
                 <Card key={item._id} className="border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                   <CardContent className="p-5">
                     <div className="flex flex-col sm:flex-row gap-4">
-                      {item.image && (
+                        {item.image && (
                         <div className="w-full sm:w-28 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
-                          <img src={imageUrl(item.image)} alt={item.title} className="w-full h-full object-cover" />
+                          <img src={proxyImageUrl(item.image)} alt={item.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = imageUrl(item.image); }} />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -501,7 +501,7 @@ const NewsManager = () => {
                       <div className="h-40 bg-gray-100 overflow-hidden relative">
                         {article.urlToImage ? (
                           <img
-                            src={imageUrl(article.urlToImage)}
+                            src={proxyImageUrl(article.urlToImage)}
                             alt={article.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onError={(e) => { e.target.style.display = 'none'; }}

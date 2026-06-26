@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import { io } from 'socket.io-client';
+import { useAuth } from '../../../context/AuthContext';
 import API from '../../../api';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  MessageSquare, Send, User, Loader2, Phone,
-  Mail, CheckCircle, XCircle, Clock, ArrowLeft,
+  MessageSquare, Send, User, Loader2,
+  Mail, CheckCircle, XCircle, Clock,
   Plus, Users,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -15,7 +17,11 @@ const formatTime = (date) => {
   return new Date(date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 };
 
+const API_BASE = import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD ? 'https://vt-agency.onrender.com' : '');
+
 const ChatTab = () => {
+  const { user } = useAuth();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -24,7 +30,57 @@ const ChatTab = () => {
   const [sending, setSending] = useState(false);
   const [stats, setStats] = useState(null);
   const [filter, setFilter] = useState('active');
+  const [connected, setConnected] = useState(false);
   const messagesEndRef = useRef(null);
+  const socketRef = useRef(null);
+
+  const getToken = () => localStorage.getItem('token');
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) return;
+
+    const socketUrl = API_BASE || window.location.origin;
+    const socket = io(socketUrl, {
+      auth: { token },
+      transports: ['websocket', 'polling'],
+    });
+
+    socket.on('connect', () => setConnected(true));
+    socket.on('disconnect', () => setConnected(false));
+    socket.on('connect_error', (err) => console.error('[WS] Connection error:', err.message));
+
+    socket.on('chat:message', (message) => {
+      if (selected && message.session === selected._id) {
+        setMessages((prev) => {
+          if (prev.some((m) => m._id === message._id)) return prev;
+          return [...prev, message];
+        });
+      }
+    });
+
+    socket.on('session:updated', (updatedSession) => {
+      setSessions((prev) => prev.map((s) => s._id === updatedSession._id ? updatedSession : s));
+      if (selected && selected._id === updatedSession._id) {
+        setSelected(updatedSession);
+      }
+    });
+
+    socket.on('chat:stats:update', () => { fetchStats(); });
+
+    socketRef.current = socket;
+
+    return () => { socket.disconnect(); };
+  }, []);
+
+  useEffect(() => {
+    if (selected && socketRef.current?.connected) {
+      socketRef.current.emit('join:session', selected._id);
+      return () => {
+        socketRef.current?.emit('leave:session', selected._id);
+      };
+    }
+  }, [selected?._id]);
 
   const fetchSessions = () => {
     API.get('/chat/sessions', { params: { status: filter } }).then((r) => {
@@ -50,35 +106,53 @@ const ChatTab = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !selected) return;
-    setSending(true);
-    try {
-      const res = await API.post(`/chat/sessions/${selected._id}/messages`, { content: newMessage });
-      setMessages((prev) => [...prev, res.data]);
+
+    if (socketRef.current?.connected) {
+      socketRef.current.emit('chat:send', {
+        sessionId: selected._id,
+        content: newMessage,
+      });
       setNewMessage('');
-      fetchSessions();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send');
-    } finally { setSending(false); }
+    } else {
+      setSending(true);
+      try {
+        const res = await API.post(`/chat/sessions/${selected._id}/messages`, { content: newMessage });
+        setMessages((prev) => [...prev, res.data]);
+        setNewMessage('');
+        fetchSessions();
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Failed to send');
+      } finally { setSending(false); }
+    }
   };
 
   const handleEnd = async () => {
     if (!selected || !window.confirm('End this chat session?')) return;
-    try {
-      await API.put(`/chat/sessions/${selected._id}/end`);
-      toast.success('Session ended');
+    if (socketRef.current?.connected) {
+      socketRef.current.emit('session:end', selected._id);
       setSelected(null);
-      fetchSessions();
-      fetchStats();
-    } catch { toast.error('Failed to end session'); }
+    } else {
+      try {
+        await API.put(`/chat/sessions/${selected._id}/end`);
+        toast.success('Session ended');
+        setSelected(null);
+        fetchSessions();
+        fetchStats();
+      } catch { toast.error('Failed to end session'); }
+    }
   };
 
   const handleAssign = async () => {
     if (!selected) return;
-    try {
-      await API.put(`/chat/sessions/${selected._id}/assign`);
-      toast.success('Session assigned to you');
-      fetchSessions();
-    } catch { toast.error('Failed to assign'); }
+    if (socketRef.current?.connected) {
+      socketRef.current.emit('session:assign', selected._id);
+    } else {
+      try {
+        await API.put(`/chat/sessions/${selected._id}/assign`);
+        toast.success('Session assigned to you');
+        fetchSessions();
+      } catch { toast.error('Failed to assign'); }
+    }
   };
 
   const handleSync = async () => {
@@ -98,6 +172,12 @@ const ChatTab = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-16rem)]">
       <div className="w-full lg:w-80 flex-shrink-0">
+        {connected !== undefined && (
+          <div className={`text-[10px] flex items-center gap-1 mb-2 px-1 ${connected ? 'text-green-600' : 'text-amber-600'}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${connected ? 'bg-green-500' : 'bg-amber-500'}`} />
+            {connected ? 'Live' : 'Offline'}
+          </div>
+        )}
         {stats && (
           <div className="grid grid-cols-3 gap-2 mb-4">
             <Card className="border border-gray-100 shadow-sm"><CardContent className="p-3 text-center"><p className="text-lg font-bold text-gray-900">{stats.active}</p><p className="text-[10px] text-gray-500">Active</p></CardContent></Card>

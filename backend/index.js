@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import jwt from 'jsonwebtoken';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
@@ -20,11 +23,15 @@ import expenseRoutes from './routes/expenses.js';
 import resourceRoutes from './routes/resources.js';
 import analyticsRoutes from './routes/analytics.js';
 import workflowRoutes from './routes/workflows.js';
+import aiRoutes from './routes/ai.js';
+import customObjectRoutes from './routes/customObjects.js';
+import securityRoutes from './routes/security.js';
 import rateLimit from 'express-rate-limit';
 import PageContent from './models/PageContent.js';
 import User from './models/User.js';
 import Setting from './models/Setting.js';
 import { startNewsScheduler } from './services/newsScheduler.js';
+import { setIO } from './services/events.js';
 
 dotenv.config();
 
@@ -32,6 +39,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+const server = createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Rate limiting
@@ -51,6 +59,117 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Socket.IO for real-time chat
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: true,
+  },
+});
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token || socket.handshake.query?.token;
+  if (!token) return next(new Error('Authentication required'));
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    socket.user = decoded;
+    next();
+  } catch {
+    next(new Error('Invalid token'));
+  }
+});
+
+setIO(io);
+
+io.on('connection', (socket) => {
+  console.log(`[WS] Agent connected: ${socket.user?.id || socket.user?._id}`);
+
+  socket.on('join:session', (sessionId) => {
+    socket.join(`session:${sessionId}`);
+    console.log(`[WS] Joined session room: ${sessionId}`);
+  });
+
+  socket.on('leave:session', (sessionId) => {
+    socket.leave(`session:${sessionId}`);
+  });
+
+  socket.on('chat:send', async (data) => {
+    try {
+      const { sessionId, content, contentType } = data;
+      if (!sessionId || !content) return;
+
+      const { default: ChatMessage } = await import('./models/ChatMessage.js');
+      const { default: ChatSession } = await import('./models/ChatSession.js');
+
+      const message = await ChatMessage.create({
+        session: sessionId,
+        sender: 'agent',
+        senderId: socket.user.id || socket.user._id,
+        senderName: socket.user.name || 'Agent',
+        content,
+        contentType: contentType || 'text',
+      });
+
+      await ChatSession.findByIdAndUpdate(sessionId, { status: 'active' });
+
+      io.to(`session:${sessionId}`).emit('chat:message', message.toObject());
+
+      const updatedSession = await ChatSession.findById(sessionId)
+        .populate('assignedTo', 'name email')
+        .populate('contact', 'name email');
+      io.to(`session:${sessionId}`).emit('session:updated', updatedSession);
+      io.emit('chat:stats:update');
+    } catch (err) {
+      console.error('[WS] chat:send error:', err.message);
+    }
+  });
+
+  socket.on('session:end', async (sessionId) => {
+    try {
+      const { default: ChatSession } = await import('./models/ChatSession.js');
+      const { default: ChatMessage } = await import('./models/ChatMessage.js');
+
+      await ChatSession.findByIdAndUpdate(sessionId, {
+        status: 'ended', endedAt: new Date(), endedBy: 'agent',
+      });
+      await ChatMessage.create({
+        session: sessionId,
+        sender: 'system',
+        content: 'Chat ended by agent',
+        contentType: 'system',
+      });
+
+      const updatedSession = await ChatSession.findById(sessionId)
+        .populate('assignedTo', 'name email')
+        .populate('contact', 'name email');
+      io.to(`session:${sessionId}`).emit('session:updated', updatedSession);
+      io.emit('chat:stats:update');
+    } catch (err) {
+      console.error('[WS] session:end error:', err.message);
+    }
+  });
+
+  socket.on('session:assign', async (sessionId) => {
+    try {
+      const { default: ChatSession } = await import('./models/ChatSession.js');
+      await ChatSession.findByIdAndUpdate(sessionId, {
+        assignedTo: socket.user.id || socket.user._id,
+      });
+      const updatedSession = await ChatSession.findById(sessionId)
+        .populate('assignedTo', 'name email')
+        .populate('contact', 'name email');
+      io.to(`session:${sessionId}`).emit('session:updated', updatedSession);
+      io.emit('chat:stats:update');
+    } catch (err) {
+      console.error('[WS] session:assign error:', err.message);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`[WS] Agent disconnected: ${socket.user?.id || socket.user?._id}`);
+  });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
@@ -67,16 +186,36 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/workflows', workflowRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/custom-objects', customObjectRoutes);
+app.use('/api/security', securityRoutes);
 app.use('/api/public', publicRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Vangitech API is running' });
 });
 
+// Proxy external images (fix ERR_BLOCKED_BY_ORB)
+app.get('/api/proxy-image', async (req, res) => {
+  const { url } = req.query;
+  if (!url) return res.status(400).json({ message: 'URL parameter required' });
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return res.status(response.status).json({ message: 'Failed to fetch image' });
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    const buffer = Buffer.from(await response.arrayBuffer());
+    res.send(buffer);
+  } catch (error) {
+    res.status(500).json({ message: 'Image proxy error' });
+  }
+});
+
 // Serve frontend in production
 const frontendDist = path.join(__dirname, '../frontend/dist');
 app.use(express.static(frontendDist));
-app.use((req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
@@ -276,7 +415,7 @@ const start = async () => {
   }
   console.log('Settings seeded');
 
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     startNewsScheduler();
   });

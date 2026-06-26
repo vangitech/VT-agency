@@ -29,10 +29,10 @@ export const protect = async (req, res, next) => {
 };
 
 export const adminOnly = (req, res, next) => {
-  if (req.user && (req.user.role === 'admin' || req.user.role === 'superadmin')) {
+  if (req.user && ['superadmin', 'admin', 'manager'].includes(req.user.role)) {
     next();
   } else {
-    res.status(403).json({ message: 'Access denied. Admin only.' });
+    res.status(403).json({ message: 'Access denied. Admin/Manager only.' });
   }
 };
 
@@ -42,4 +42,17 @@ export const superadminOnly = (req, res, next) => {
   } else {
     res.status(403).json({ message: 'Access denied. Superadmin only.' });
   }
+};
+
+export const requirePermission = (resource) => (req, res, next) => {
+  if (!req.user) return res.status(401).json({ message: 'Not authorized' });
+  if (req.user.role === 'superadmin') return next();
+
+  const perm = req.user.permissions?.[resource];
+  if (perm === true || perm === 'all') return next();
+  if (perm === 'own') {
+    req.query.owner = req.user._id;
+    return next();
+  }
+  return res.status(403).json({ message: `Access denied. No ${resource} permission.` });
 };

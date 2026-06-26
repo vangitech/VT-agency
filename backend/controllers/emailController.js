@@ -2,6 +2,7 @@ import EmailAccount from '../models/EmailAccount.js';
 import EmailMessage from '../models/EmailMessage.js';
 import Contact from '../models/Contact.js';
 import { sendEmail } from '../services/mailer.js';
+import { syncAccount, syncAllAccounts } from '../services/imapSync.js';
 
 export const getAccounts = async (req, res) => {
   try {
@@ -180,6 +181,28 @@ export const getThread = async (req, res) => {
       $or: [{ threadId }, { messageId: threadId }, { inReplyTo: threadId }],
     }).sort({ receivedAt: 1 });
     res.json(thread);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const syncEmails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const account = await EmailAccount.findById(id);
+    if (!account) return res.status(404).json({ message: 'Account not found' });
+
+    const result = await syncAccount(id);
+    res.json({ message: `Synced ${result.synced} new emails`, synced: result.synced });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const syncAllEmails = async (req, res) => {
+  try {
+    const results = await syncAllAccounts();
+    res.json({ message: 'Sync complete', results });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

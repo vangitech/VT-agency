@@ -9,7 +9,7 @@ import {
   Mail, Inbox, Send, Trash2, Star, Search,
   Loader2, Plus, Reply, Forward, ArrowLeft,
   Paperclip, Clock, User, CheckCircle, RefreshCw,
-  FileText,
+  FileText, Download,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -42,6 +42,7 @@ const EmailTab = () => {
   const [search, setSearch] = useState('');
   const [composeData, setComposeData] = useState({ to: '', cc: '', bcc: '', subject: '', body: '' });
   const [sending, setSending] = useState(false);
+  const [syncingAccount, setSyncingAccount] = useState(null);
   const [showAccountSetup, setShowAccountSetup] = useState(false);
   const [accountForm, setAccountForm] = useState({
     name: '', email: '', provider: 'imap',
@@ -127,6 +128,19 @@ const EmailTab = () => {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to send');
     } finally { setSending(false); }
+  };
+
+  const handleSync = async (accountId) => {
+    setSyncingAccount(accountId);
+    try {
+      const res = await API.post(`/email/sync/${accountId}`);
+      toast.success(res.data.message || 'Sync complete');
+      fetchMessages();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Sync failed');
+    } finally {
+      setSyncingAccount(null);
+    }
   };
 
   const handleAddAccount = async (e) => {
@@ -230,9 +244,19 @@ const EmailTab = () => {
             );
           })}
         </div>
-        {accounts.length > 1 && (
+        {accounts.length > 0 && (
           <div className="space-y-1">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-1">Accounts</p>
+            <div className="flex items-center justify-between px-4 mb-1">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Accounts</p>
+              <button onClick={() => handleSync(currentAccount)} disabled={syncingAccount === currentAccount}
+                className="text-xs text-brand-blue hover:text-brand-darkBlue font-medium disabled:opacity-50">
+                {syncingAccount === currentAccount ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <RefreshCw size={12} />
+                )}
+              </button>
+            </div>
             {accounts.map((acc) => (
               <button key={acc._id} onClick={() => setCurrentAccount(acc._id)}
                 className={`w-full flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${currentAccount === acc._id ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:bg-gray-50'}`}>

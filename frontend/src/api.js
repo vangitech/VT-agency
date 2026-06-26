@@ -29,4 +29,10 @@ export const imageUrl = (path) => {
   return `${base}${path}`;
 };
 
+export const proxyImageUrl = (url) => {
+  if (!url) return '';
+  const base = API.defaults.baseURL || '/api';
+  return `${base}/proxy-image?url=${encodeURIComponent(url)}`;
+};
+
 export default API;
