@@ -1,7 +1,7 @@
 import EmailAccount from '../models/EmailAccount.js';
 import EmailMessage from '../models/EmailMessage.js';
 import Contact from '../models/Contact.js';
-import { sendEmailOcto } from '../services/mailer.js';
+import { sendEmail } from '../services/mailer.js';
 
 export const getAccounts = async (req, res) => {
   try {
@@ -116,10 +116,11 @@ export const sendMessage = async (req, res) => {
     const results = [];
     for (const recipient of recipientEmails) {
       try {
-        await sendEmailOcto({
+        await sendEmail({
           to: recipient,
+          name: recipient,
           subject,
-          html: bodyHtml || bodyText,
+          messageBody: bodyHtml || bodyText,
         });
         results.push({ email: recipient, status: 'sent' });
       } catch (err) {
