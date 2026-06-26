@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import API from '../../api';
 import { useAuth } from '../../context/AuthContext';
+import { useSearchParams } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
@@ -13,7 +14,8 @@ import {
   AtSign, Tags, Plus, Search, Merge, AlertTriangle,
   FileText, Calendar, MessageCircle, Smartphone,
   LayoutDashboard, FolderKanban, BarChart3, Zap,
-  DollarSign,
+  DollarSign, TrendingUp, Target, PieChart, Activity,
+  SeparatorHorizontal,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import EmailTab from './crm/EmailTab';
@@ -36,22 +38,47 @@ const formatDate = (date) => {
   });
 };
 
-const TABS = [
-  { id: 'messages', label: 'Messages', icon: Inbox },
-  { id: 'contacts', label: 'Contacts', icon: Users },
-  { id: 'dedup', label: 'Dedup', icon: Merge },
-  { id: 'deals', label: 'Deals', icon: LayoutDashboard },
-  { id: 'projects', label: 'Projects', icon: FolderKanban },
-  { id: 'timesheets', label: 'Timesheets', icon: Clock },
-  { id: 'expenses', label: 'Expenses', icon: DollarSign },
-  { id: 'resources', label: 'Resources', icon: Users },
-  { id: 'reports', label: 'Reports', icon: BarChart3 },
-  { id: 'workflows', label: 'Workflows', icon: Zap },
-  { id: 'email', label: 'Email', icon: Mail },
-  { id: 'calendar', label: 'Calendar', icon: Calendar },
-  { id: 'calls', label: 'Calls', icon: Phone },
-  { id: 'chat', label: 'Chat', icon: MessageCircle },
-  { id: 'sms', label: 'SMS', icon: Smartphone },
+const TAB_GROUPS = [
+  {
+    label: 'Analytics',
+    tabs: [
+      { id: 'reports', label: 'Reports & Analytics', icon: BarChart3 },
+    ],
+  },
+  {
+    label: 'Sales',
+    tabs: [
+      { id: 'deals', label: 'Deals', icon: LayoutDashboard },
+      { id: 'projects', label: 'Projects', icon: FolderKanban },
+      { id: 'timesheets', label: 'Timesheets', icon: Clock },
+      { id: 'expenses', label: 'Expenses', icon: DollarSign },
+    ],
+  },
+  {
+    label: 'Communications',
+    tabs: [
+      { id: 'messages', label: 'Messages', icon: Inbox },
+      { id: 'email', label: 'Email', icon: Mail },
+      { id: 'calendar', label: 'Calendar', icon: Calendar },
+      { id: 'calls', label: 'Calls', icon: Phone },
+      { id: 'chat', label: 'Chat', icon: MessageCircle },
+      { id: 'sms', label: 'SMS', icon: Smartphone },
+    ],
+  },
+  {
+    label: 'Operations',
+    tabs: [
+      { id: 'contacts', label: 'Contacts', icon: Users },
+      { id: 'resources', label: 'Resources', icon: User },
+      { id: 'workflows', label: 'Workflows', icon: Zap },
+    ],
+  },
+  {
+    label: 'Data',
+    tabs: [
+      { id: 'dedup', label: 'Dedup', icon: Merge },
+    ],
+  },
 ];
 
 // ── Messages Tab ──
@@ -132,7 +159,7 @@ const MessagesTab = ({ user }) => {
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       <div className="w-full lg:w-96 flex-shrink-0">
-        <Card className="border border-gray-100 shadow-sm overflow-hidden">
+        <Card className="border border-gray-200 shadow-sm overflow-hidden">
           <div className="max-h-[60vh] lg:max-h-[70vh] overflow-y-auto">
             {!Array.isArray(messages) || messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
@@ -166,7 +193,7 @@ const MessagesTab = ({ user }) => {
 
       <div className="flex-1">
         {selected ? (
-          <Card className="border border-gray-100 shadow-sm">
+          <Card className="border border-gray-200 shadow-sm">
             <div className="max-h-[70vh] overflow-y-auto p-6 lg:p-8">
               <div className="flex items-start justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
@@ -179,7 +206,7 @@ const MessagesTab = ({ user }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleSync(selected._id)} title="Create/update contact profile">
+                  <Button variant="outline" size="sm" onClick={() => handleSync(selected._id)}>
                     <User size={12} className="mr-1" /> Sync
                   </Button>
                   <Button variant="destructive" size="sm" onClick={() => handleDelete(selected._id)}>
@@ -190,7 +217,7 @@ const MessagesTab = ({ user }) => {
 
               <div className="flex flex-wrap items-center gap-3 mb-6 text-sm">
                 <span className="font-semibold text-gray-900">{selected.subject}</span>
-                <span className="text-gray-400">•</span>
+                <span className="text-gray-300">|</span>
                 <span className="text-gray-500 flex items-center gap-1.5"><Clock size={14} />{formatDate(selected.createdAt)}</span>
                 {selected.replied && (
                   <span className="inline-flex items-center gap-1 text-green-600 bg-green-50 px-2 py-0.5 rounded-full text-xs font-medium">
@@ -199,18 +226,18 @@ const MessagesTab = ({ user }) => {
                 )}
               </div>
 
-              <div className="bg-gray-50 rounded-2xl p-5 mb-8">
+              <div className="bg-gray-50 rounded-xl p-5 mb-8">
                 <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">{selected.message}</p>
               </div>
 
               {Array.isArray(selected.replies) && selected.replies.length > 0 && (
                 <div className="mb-8">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                     <Reply size={14} /> Replies ({selected.replies.length})
-                  </h3>
+                  </h4>
                   <div className="space-y-3">
                     {selected.replies.map((reply, idx) => (
-                      <div key={idx} className="bg-brand-blue/5 rounded-2xl p-4 border border-brand-blue/10">
+                      <div key={idx} className="bg-brand-blue/5 rounded-xl p-4 border border-brand-blue/10">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-xs font-medium text-brand-blue">{reply.adminName}</span>
                           <span className="text-[10px] text-gray-400">{formatDate(reply.sentAt)}</span>
@@ -224,21 +251,21 @@ const MessagesTab = ({ user }) => {
               )}
 
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"><Send size={14} /> Send Reply</h3>
+                <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"><Send size={14} /> Send Reply</h4>
                 <form onSubmit={handleReply} className="space-y-4">
                   <div className="space-y-1.5">
                     <Label className="text-xs font-medium text-gray-500">To</Label>
-                    <Input value={selected.email} disabled className="h-10 rounded-xl bg-gray-50 border-gray-200 text-sm" />
+                    <Input value={selected.email} disabled className="h-10 rounded-lg bg-gray-50 border-gray-200 text-sm" />
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs font-medium text-gray-500">Subject</Label>
-                    <Input value={`Re: ${selected.subject}`} disabled className="h-10 rounded-xl bg-gray-50 border-gray-200 text-sm" />
+                    <Input value={`Re: ${selected.subject}`} disabled className="h-10 rounded-lg bg-gray-50 border-gray-200 text-sm" />
                   </div>
                   <div>
                     <Textarea value={replyBody} onChange={(e) => setReplyBody(e.target.value)} rows={5}
-                      placeholder="Write your reply..." required className="rounded-xl border-gray-200" />
+                      placeholder="Write your reply..." required className="rounded-lg border-gray-200" />
                   </div>
-                  <Button type="submit" variant="blue" disabled={sending || !replyBody.trim()} className="rounded-xl">
+                  <Button type="submit" variant="blue" disabled={sending || !replyBody.trim()}>
                     {sending ? <><Loader2 size={14} className="mr-1.5 animate-spin" /> Sending...</>
                       : <><Send size={14} className="mr-1.5" /> Send Reply</>}
                   </Button>
@@ -247,10 +274,10 @@ const MessagesTab = ({ user }) => {
             </div>
           </Card>
         ) : (
-          <div className="flex items-center justify-center h-64">
+          <div className="flex items-center justify-center h-full min-h-[40vh]">
             <div className="text-center">
               <MessageSquare size={28} className="text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">Select a message</p>
+              <p className="text-gray-500 text-sm">Select a message to read</p>
             </div>
           </div>
         )}
@@ -360,26 +387,26 @@ const ContactsTab = () => {
           <ArrowLeft size={16} /> Back to contacts
         </button>
 
-        <Card className="border border-gray-100 shadow-sm">
+        <Card className="border border-gray-200 shadow-sm">
           <div className="max-h-[70vh] overflow-y-auto p-6 lg:p-8">
             {editMode ? (
               <div className="space-y-4 max-w-2xl">
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Edit Contact</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1"><Label className="text-xs font-medium">Name</Label><Input value={editData.name} onChange={(e) => setEditData((p) => ({ ...p, name: e.target.value }))} className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-medium">Email</Label><Input value={editData.email} onChange={(e) => setEditData((p) => ({ ...p, email: e.target.value }))} className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-medium">Phone</Label><Input value={editData.phone} onChange={(e) => setEditData((p) => ({ ...p, phone: e.target.value }))} className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-medium">Title</Label><Input value={editData.title} onChange={(e) => setEditData((p) => ({ ...p, title: e.target.value }))} className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-medium">Company</Label><Input value={editData.company} onChange={(e) => setEditData((p) => ({ ...p, company: e.target.value }))} className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-medium">Industry</Label><Input value={editData.industry} onChange={(e) => setEditData((p) => ({ ...p, industry: e.target.value }))} className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-medium">Company Size</Label><Input value={editData.companySize} onChange={(e) => setEditData((p) => ({ ...p, companySize: e.target.value }))} className="h-10 rounded-xl" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-medium">Website</Label><Input value={editData.website} onChange={(e) => setEditData((p) => ({ ...p, website: e.target.value }))} className="h-10 rounded-xl" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Name</Label><Input value={editData.name} onChange={(e) => setEditData((p) => ({ ...p, name: e.target.value }))} className="h-10 rounded-lg" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Email</Label><Input value={editData.email} onChange={(e) => setEditData((p) => ({ ...p, email: e.target.value }))} className="h-10 rounded-lg" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Phone</Label><Input value={editData.phone} onChange={(e) => setEditData((p) => ({ ...p, phone: e.target.value }))} className="h-10 rounded-lg" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Title</Label><Input value={editData.title} onChange={(e) => setEditData((p) => ({ ...p, title: e.target.value }))} className="h-10 rounded-lg" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Company</Label><Input value={editData.company} onChange={(e) => setEditData((p) => ({ ...p, company: e.target.value }))} className="h-10 rounded-lg" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Industry</Label><Input value={editData.industry} onChange={(e) => setEditData((p) => ({ ...p, industry: e.target.value }))} className="h-10 rounded-lg" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Company Size</Label><Input value={editData.companySize} onChange={(e) => setEditData((p) => ({ ...p, companySize: e.target.value }))} className="h-10 rounded-lg" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-medium">Website</Label><Input value={editData.website} onChange={(e) => setEditData((p) => ({ ...p, website: e.target.value }))} className="h-10 rounded-lg" /></div>
                 </div>
-                <div className="space-y-1"><Label className="text-xs font-medium">Location</Label><Input value={editData.location} onChange={(e) => setEditData((p) => ({ ...p, location: e.target.value }))} className="h-10 rounded-xl" /></div>
-                <div className="space-y-1"><Label className="text-xs font-medium">Tags (comma separated)</Label><Input value={editData.tags} onChange={(e) => setEditData((p) => ({ ...p, tags: e.target.value }))} className="h-10 rounded-xl" /></div>
-                <div className="space-y-1"><Label className="text-xs font-medium">LinkedIn</Label><Input value={editData.socialLinks?.linkedin || ''} onChange={(e) => setEditData((p) => ({ ...p, socialLinks: { ...p.socialLinks, linkedin: e.target.value } }))} className="h-10 rounded-xl" /></div>
-                <div className="space-y-1"><Label className="text-xs font-medium">Twitter</Label><Input value={editData.socialLinks?.twitter || ''} onChange={(e) => setEditData((p) => ({ ...p, socialLinks: { ...p.socialLinks, twitter: e.target.value } }))} className="h-10 rounded-xl" /></div>
-                <div className="space-y-1"><Label className="text-xs font-medium">Notes</Label><Textarea value={editData.notes} onChange={(e) => setEditData((p) => ({ ...p, notes: e.target.value }))} rows={3} className="rounded-xl" /></div>
+                <div className="space-y-1"><Label className="text-xs font-medium">Location</Label><Input value={editData.location} onChange={(e) => setEditData((p) => ({ ...p, location: e.target.value }))} className="h-10 rounded-lg" /></div>
+                <div className="space-y-1"><Label className="text-xs font-medium">Tags (comma separated)</Label><Input value={editData.tags} onChange={(e) => setEditData((p) => ({ ...p, tags: e.target.value }))} className="h-10 rounded-lg" /></div>
+                <div className="space-y-1"><Label className="text-xs font-medium">LinkedIn</Label><Input value={editData.socialLinks?.linkedin || ''} onChange={(e) => setEditData((p) => ({ ...p, socialLinks: { ...p.socialLinks, linkedin: e.target.value } }))} className="h-10 rounded-lg" /></div>
+                <div className="space-y-1"><Label className="text-xs font-medium">Twitter</Label><Input value={editData.socialLinks?.twitter || ''} onChange={(e) => setEditData((p) => ({ ...p, socialLinks: { ...p.socialLinks, twitter: e.target.value } }))} className="h-10 rounded-lg" /></div>
+                <div className="space-y-1"><Label className="text-xs font-medium">Notes</Label><Textarea value={editData.notes} onChange={(e) => setEditData((p) => ({ ...p, notes: e.target.value }))} rows={3} className="rounded-lg" /></div>
                 <div className="flex gap-3 pt-2">
                   <Button variant="blue" onClick={handleSave}>Save</Button>
                   <Button variant="outline" onClick={() => setEditMode(false)}>Cancel</Button>
@@ -404,49 +431,49 @@ const ContactsTab = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                   {contact.email && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <Mail size={14} className="text-brand-blue flex-shrink-0" />
                       <a href={`mailto:${contact.email}`} className="truncate hover:text-brand-blue">{contact.email}</a>
                     </div>
                   )}
                   {contact.phone && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <Phone size={14} className="text-brand-blue flex-shrink-0" />
                       <a href={`tel:${contact.phone}`} className="truncate hover:text-brand-blue">{contact.phone}</a>
                     </div>
                   )}
                   {contact.company && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <Building2 size={14} className="text-brand-blue flex-shrink-0" />
                       <span className="truncate">{contact.company}{contact.industry ? ` (${contact.industry})` : ''}</span>
                     </div>
                   )}
                   {contact.website && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <Globe size={14} className="text-brand-blue flex-shrink-0" />
                       <a href={contact.website} target="_blank" rel="noopener noreferrer" className="truncate hover:text-brand-blue">{contact.website}</a>
                     </div>
                   )}
                   {contact.location && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <MapPin size={14} className="text-brand-blue flex-shrink-0" />
                       <span className="truncate">{contact.location}</span>
                     </div>
                   )}
                   {contact.companySize && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <Users size={14} className="text-brand-blue flex-shrink-0" />
                       <span>{contact.companySize} employees</span>
                     </div>
                   )}
                   {contact.socialLinks?.linkedin && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <Link2 size={14} className="text-brand-blue flex-shrink-0" />
                       <a href={contact.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="truncate hover:text-brand-blue">LinkedIn</a>
                     </div>
                   )}
                   {contact.socialLinks?.twitter && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-4 py-3">
                       <AtSign size={14} className="text-brand-blue flex-shrink-0" />
                       <a href={contact.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="truncate hover:text-brand-blue">Twitter</a>
                     </div>
@@ -463,7 +490,7 @@ const ContactsTab = () => {
                 )}
 
                 {contact.notes && (
-                  <div className="bg-gray-50 rounded-2xl p-4 mb-8">
+                  <div className="bg-gray-50 rounded-xl p-4 mb-8">
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Notes</p>
                     <p className="text-sm text-gray-700 whitespace-pre-wrap">{contact.notes}</p>
                   </div>
@@ -529,7 +556,7 @@ const ContactsTab = () => {
                   <div className="flex gap-2">
                     <Input value={newInteraction} onChange={(e) => setNewInteraction(e.target.value)}
                       placeholder="Add a note, call summary, meeting notes..."
-                      className="h-10 rounded-xl flex-1" />
+                      className="h-10 rounded-lg flex-1" />
                     <Button variant="blue" size="sm" onClick={handleAddInteraction} disabled={!newInteraction.trim()}>
                       Add
                     </Button>
@@ -568,9 +595,9 @@ const ContactsTab = () => {
       <div className="w-full lg:w-96 flex-shrink-0">
         <div className="relative mb-4">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search contacts..." className="h-10 rounded-xl pl-9 border-gray-200" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search contacts..." className="h-10 rounded-lg pl-9 border-gray-200" />
         </div>
-        <Card className="border border-gray-100 shadow-sm overflow-hidden">
+        <Card className="border border-gray-200 shadow-sm overflow-hidden">
           <div className="max-h-[55vh] lg:max-h-[65vh] overflow-y-auto">
             {!Array.isArray(contacts) || contacts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
@@ -650,13 +677,13 @@ const DedupTab = () => {
           <h2 className="text-lg font-bold text-gray-900">Duplicate Detection</h2>
           <p className="text-sm text-gray-500 mt-1">Find and merge duplicate contacts by email</p>
         </div>
-        <Button variant="outline" size="sm" onClick={findDuplicates} className="rounded-xl">
+        <Button variant="outline" size="sm" onClick={findDuplicates} className="rounded-lg">
           <Search size={14} className="mr-1.5" /> Scan Again
         </Button>
       </div>
 
       {!Array.isArray(duplicates) || duplicates.length === 0 ? (
-        <Card className="border border-gray-100 shadow-sm">
+        <Card className="border border-gray-200 shadow-sm">
           <CardContent className="p-12 text-center">
             <CheckCircle size={48} className="text-green-400 mx-auto mb-4" />
             <p className="text-gray-700 font-semibold text-sm">No duplicates found</p>
@@ -666,7 +693,7 @@ const DedupTab = () => {
       ) : (
         <div className="space-y-4">
           {duplicates.map((dup, idx) => (
-            <Card key={idx} className="border border-gray-100 shadow-sm">
+            <Card key={idx} className="border border-gray-200 shadow-sm">
               <CardContent className="p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <AlertTriangle size={16} className="text-amber-500" />
@@ -674,7 +701,7 @@ const DedupTab = () => {
                 </div>
 
                 {dup.ids.map((id, i) => (
-                  <div key={id} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl mb-2">
+                  <div key={id} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg mb-2">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center text-white text-xs font-bold">
                         {(dup.names[i] || '?').charAt(0).toUpperCase()}
@@ -703,48 +730,98 @@ const DedupTab = () => {
 
 const CRMManager = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('messages');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabParam || 'reports');
+
+  useEffect(() => {
+    if (tabParam && tabParam !== activeTab) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (id) => {
+    setActiveTab(id);
+    setSearchParams({ tab: id });
+  };
+
+  const allTabs = TAB_GROUPS.flatMap((g) => g.tabs);
 
   return (
     <div className="p-6 lg:p-8">
       <div className="flex items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">CRM</h1>
-          <p className="text-gray-500 mt-1">Unified contact management &amp; messaging</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight">CRM</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {activeTab === 'reports' ? 'Analytics & performance metrics' :
+             activeTab === 'deals' ? 'Sales pipeline & deal management' :
+             activeTab === 'projects' ? 'Project management & tracking' :
+             activeTab === 'timesheets' ? 'Time & billable hours tracking' :
+             activeTab === 'expenses' ? 'Expense management' :
+             activeTab === 'messages' ? 'Contact form submissions' :
+             activeTab === 'email' ? 'Email accounts & messaging' :
+             activeTab === 'calendar' ? 'Events & scheduling' :
+             activeTab === 'calls' ? 'Call logging & tracking' :
+             activeTab === 'chat' ? 'Live chat sessions' :
+             activeTab === 'sms' ? 'SMS messaging' :
+             activeTab === 'contacts' ? 'Contact profiles & 360° view' :
+             activeTab === 'resources' ? 'Team capacity & allocation' :
+             activeTab === 'workflows' ? 'Automation & sequences' :
+             activeTab === 'dedup' ? 'Duplicate contact detection' :
+             'Unified customer relationship management'}
+          </p>
         </div>
       </div>
 
-      <div className="flex gap-2 mb-6">
-        {TABS.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                activeTab === tab.id
-                  ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/25'
-                  : 'bg-white text-gray-600 border border-gray-200 hover:border-brand-blue hover:text-brand-blue'
-              }`}>
-              <Icon size={16} /> {tab.label}
-            </button>
-          );
-        })}
+      {/* Tab navigation */}
+      <div className="mb-6 overflow-x-auto">
+        <div className="flex gap-2 min-w-max pb-1">
+          {TAB_GROUPS.map((group, gi) => (
+            <div key={group.label} className="flex items-center gap-2">
+              {gi > 0 && (
+                <div className="w-px h-8 bg-gray-200 mx-1 flex-shrink-0" />
+              )}
+              {group.tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabChange(tab.id)}
+                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                      isActive
+                        ? 'bg-brand-blue text-white shadow-sm shadow-brand-blue/20'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border border-transparent'
+                    }`}
+                  >
+                    <Icon size={16} />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {activeTab === 'messages' && <MessagesTab user={user} />}
-      {activeTab === 'contacts' && <ContactsTab />}
-      {activeTab === 'dedup' && <DedupTab />}
-      {activeTab === 'deals' && <DealsTab />}
-      {activeTab === 'projects' && <ProjectsTab />}
-      {activeTab === 'timesheets' && <TimesheetTab />}
-      {activeTab === 'expenses' && <ExpensesTab />}
-      {activeTab === 'resources' && <ResourcesTab />}
-      {activeTab === 'reports' && <ReportsTab />}
-      {activeTab === 'workflows' && <WorkflowsTab />}
-      {activeTab === 'email' && <EmailTab />}
-      {activeTab === 'calendar' && <CalendarTab />}
-      {activeTab === 'calls' && <CallsTab />}
-      {activeTab === 'chat' && <ChatTab />}
-      {activeTab === 'sms' && <SMSTab />}
+      {/* Tab content */}
+      <div>
+        {activeTab === 'reports' && <ReportsTab />}
+        {activeTab === 'deals' && <DealsTab />}
+        {activeTab === 'projects' && <ProjectsTab />}
+        {activeTab === 'timesheets' && <TimesheetTab />}
+        {activeTab === 'expenses' && <ExpensesTab />}
+        {activeTab === 'messages' && <MessagesTab user={user} />}
+        {activeTab === 'email' && <EmailTab />}
+        {activeTab === 'calendar' && <CalendarTab />}
+        {activeTab === 'calls' && <CallsTab />}
+        {activeTab === 'chat' && <ChatTab />}
+        {activeTab === 'sms' && <SMSTab />}
+        {activeTab === 'contacts' && <ContactsTab />}
+        {activeTab === 'resources' && <ResourcesTab />}
+        {activeTab === 'workflows' && <WorkflowsTab />}
+        {activeTab === 'dedup' && <DedupTab />}
+      </div>
     </div>
   );
 };
