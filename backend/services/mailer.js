@@ -194,7 +194,7 @@ Here's what you can expect next:
   <li style="margin-bottom:8px;">We'll provide a tailored solution based on your needs</li>
 </ul>
 
-In the meantime, feel free to explore our services at <a href="https://vangitech.com/services" style="color:#1a56db;text-decoration:underline;">vangitech.com/services</a> to learn more about how we can help you.
+In the meantime, feel free to explore our services at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/services</a> to learn more about how we can help you.
 
 If you have any urgent questions, please don't hesitate to contact us at support@vangitech.com.
 
@@ -220,7 +220,7 @@ export async function sendFollowUpEmail({ to, name }) {
     messageBody: `
 I hope this message finds you well. It's been a few days since you reached out to us, and I wanted to follow up personally.
 
-Have you had a chance to review our <a href="https://vangitech.com/services" style="color:#1a56db;text-decoration:underline;">service list</a>? We offer a wide range of technology solutions including:
+Have you had a chance to review our <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">service list</a>? We offer a wide range of technology solutions including:
 
 <ul style="margin:12px 0;padding-left:20px;">
   <li style="margin-bottom:6px;"><strong>Software Development</strong> — Custom web, mobile, and enterprise applications</li>
