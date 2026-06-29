@@ -44,15 +44,27 @@ const server = createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Rate limiting
-const limiter = rateLimit({
+const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests from this IP, please try again later.',
+  max: 20,
+  message: 'Too many login attempts. Please try again later.',
 });
-app.use('/api', limiter);
+app.use('/api/auth/login', authLimiter);
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  message: 'Too many requests from this IP, please try again later.',
+  skip: (req) => req.path === '/api/auth/login',
+});
+app.use('/api', apiLimiter);
+
+const corsOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
+  : ['https://vt-agency.onrender.com', 'http://localhost:5173', 'http://localhost:5001'];
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: corsOrigins,
   credentials: true,
 }));
 app.use(express.json());
@@ -63,7 +75,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Socket.IO for real-time chat
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: corsOrigins,
     credentials: true,
   },
 });

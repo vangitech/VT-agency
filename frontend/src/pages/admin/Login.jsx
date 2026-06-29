@@ -27,7 +27,14 @@ const Login = () => {
       toast.success('Welcome back!');
       navigate('/admin/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Invalid credentials');
+      const msg = error.response?.data?.message;
+      if (msg) {
+        toast.error(msg);
+      } else if (error.code === 'ERR_NETWORK') {
+        toast.error('Cannot reach server. Check your connection or try again later.');
+      } else {
+        toast.error('An unexpected error occurred. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
