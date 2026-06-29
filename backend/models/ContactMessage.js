@@ -8,6 +8,7 @@ const contactMessageSchema = new mongoose.Schema(
     message: { type: String, required: true },
     read: { type: Boolean, default: false },
     replied: { type: Boolean, default: false },
+    followUpSent: { type: Boolean, default: false },
     replies: [{
       body: { type: String, required: true },
       adminName: { type: String, required: true },

@@ -9,6 +9,7 @@ import Setting from '../models/Setting.js';
 import ContactMessage from '../models/ContactMessage.js';
 import Contact from '../models/Contact.js';
 import Interaction from '../models/Interaction.js';
+import { sendSupportNotification, sendWelcomeEmail } from '../services/mailer.js';
 
 const router = express.Router();
 
@@ -116,6 +117,24 @@ router.post('/contact', async (req, res) => {
       subject,
       description: message,
       linkedMessage: contactMessage._id,
+    });
+
+    // Send notification to support team
+    await sendSupportNotification({ name, email, subject, message }).catch((err) => {
+      console.error('[Contact] Failed to send support notification:', err.message);
+    });
+
+    // Send welcome email to the visitor
+    await sendWelcomeEmail({ to: email, name }).catch((err) => {
+      console.error('[Contact] Failed to send welcome email:', err.message);
+    });
+
+    // Log welcome email as an interaction
+    await Interaction.create({
+      contact: contact._id,
+      type: 'email',
+      subject: 'Welcome to Vangitech — We\'ve Received Your Message',
+      description: 'Welcome email sent automatically after contact form submission.',
     });
 
     res.status(201).json({ message: 'Message sent successfully', id: contactMessage._id });

@@ -150,6 +150,104 @@ function buildReplyTemplate({ originalSubject, originalMessage, replyBody, admin
 </html>`;
 }
 
+export async function sendSupportNotification({ name, email, subject, message }) {
+  const html = buildTemplate({
+    name: 'Support Team',
+    recipientEmail: FROM_EMAIL,
+    subject: `New Contact Form Submission: ${subject}`,
+    messageBody: `
+You have received a new message from the contact form on vangitech.com.
+
+<strong>From:</strong> ${name}<br>
+<strong>Email:</strong> ${email}<br>
+<strong>Subject:</strong> ${subject}<br>
+<strong>Message:</strong><br>
+${message}
+
+Please log into the CRM to view and respond to this message.
+    `.trim(),
+  });
+
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: ['support@vangitech.com'],
+    subject: `New Contact Form Submission: ${subject}`,
+    html,
+    replyTo: email,
+  });
+
+  return { provider: result.provider, id: result.id };
+}
+
+export async function sendWelcomeEmail({ to, name }) {
+  const html = buildTemplate({
+    name,
+    recipientEmail: to,
+    subject: 'Welcome to Vangitech — We\'ve Received Your Message',
+    messageBody: `
+Thank you for reaching out to us! We have received your message and our team is reviewing it.
+
+Here's what you can expect next:
+<ul style="margin:12px 0;padding-left:20px;">
+  <li style="margin-bottom:8px;">Our team will review your request within 24-48 hours</li>
+  <li style="margin-bottom:8px;">A dedicated representative will reach out to you</li>
+  <li style="margin-bottom:8px;">We'll provide a tailored solution based on your needs</li>
+</ul>
+
+In the meantime, feel free to explore our services at <a href="https://vangitech.com/services" style="color:#1a56db;text-decoration:underline;">vangitech.com/services</a> to learn more about how we can help you.
+
+If you have any urgent questions, please don't hesitate to contact us at support@vangitech.com.
+
+We look forward to speaking with you!
+    `.trim(),
+  });
+
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [to],
+    subject: 'Welcome to Vangitech — We\'ve Received Your Message',
+    html,
+  });
+
+  return { provider: result.provider, id: result.id };
+}
+
+export async function sendFollowUpEmail({ to, name }) {
+  const html = buildTemplate({
+    name,
+    recipientEmail: to,
+    subject: 'Just Checking In — How Can We Help You?',
+    messageBody: `
+I hope this message finds you well. It's been a few days since you reached out to us, and I wanted to follow up personally.
+
+Have you had a chance to review our <a href="https://vangitech.com/services" style="color:#1a56db;text-decoration:underline;">service list</a>? We offer a wide range of technology solutions including:
+
+<ul style="margin:12px 0;padding-left:20px;">
+  <li style="margin-bottom:6px;"><strong>Software Development</strong> — Custom web, mobile, and enterprise applications</li>
+  <li style="margin-bottom:6px;"><strong>Cybersecurity</strong> — Security audits, penetration testing, and compliance</li>
+  <li style="margin-bottom:6px;"><strong>IT Consulting</strong> — Technology strategy and digital transformation</li>
+  <li style="margin-bottom:6px;"><strong>Cloud Solutions</strong> — Migration, architecture, and managed services</li>
+</ul>
+
+Could you let us know what specific service you're looking for? Our team is ready to provide a tailored solution for your needs.
+
+Just reply to this email and we'll take it from there.
+
+Best regards,
+Vangitech Team
+    `.trim(),
+  });
+
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [to],
+    subject: 'Just Checking In — How Can We Help You?',
+    html,
+  });
+
+  return { provider: result.provider, id: result.id };
+}
+
 export async function sendEmail({ to, name, subject, messageBody, replyTo }) {
   const html = buildTemplate({ name, recipientEmail: to, subject, messageBody });
 
