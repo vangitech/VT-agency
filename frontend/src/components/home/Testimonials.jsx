@@ -83,11 +83,11 @@ const Testimonials = ({ testimonials }) => {
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-brand-green bg-brand-green/5 px-4 py-1.5 rounded-full mb-4">
             Testimonials
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
             <span className="text-brand-blue">What Our</span>{' '}
             <span className="text-brand-green">Clients Say</span>
           </h2>
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed">
             Real feedback from real clients who have trusted us with their technology needs.
           </p>
         </div>

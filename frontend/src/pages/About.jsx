@@ -78,10 +78,10 @@ const About = () => {
           <span className="inline-block text-xs font-semibold tracking-widest uppercase bg-white/10 px-4 py-1.5 rounded-full mb-4">
             Who We Are
           </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4">
             About Vangitech
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto text-white/80">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto text-white/80">
             Empowering businesses with innovative technology solutions.
           </p>
         </div>
@@ -122,11 +122,11 @@ const About = () => {
             <span className="inline-block text-xs font-semibold tracking-widest uppercase text-brand-blue bg-brand-blue/5 px-4 py-1.5 rounded-full mb-4">
               Our Principles
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
               <span className="text-brand-blue">Core</span>{' '}
               <span className="text-brand-green">Values</span>
             </h2>
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
               The principles that guide everything we do.
             </p>
           </div>
@@ -154,11 +154,11 @@ const About = () => {
             <span className="inline-block text-xs font-semibold tracking-widest uppercase text-brand-green bg-brand-green/5 px-4 py-1.5 rounded-full mb-4">
               Our Expertise
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
               <span className="text-brand-blue">What</span>{' '}
               <span className="text-brand-green">We Do</span>
             </h2>
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
               Comprehensive technology services designed to meet your business needs.
             </p>
           </div>

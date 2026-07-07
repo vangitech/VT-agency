@@ -37,13 +37,13 @@ const HeroCarousel = ({ slides }) => {
 
   if (!Array.isArray(slides) || slides.length === 0) {
     return (
-      <div className="min-h-[70vh] bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
+      <div className="min-h-[80vh] md:min-h-[85vh] bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
         <div className="text-center text-white px-4">
           <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/20">
             <span className="text-white font-bold text-2xl tracking-tight">VT</span>
           </div>
           <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4">Vangitech</h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-brand-lightGreen">Innovating the Future</p>
+          <p className="text-base sm:text-xl md:text-2xl text-brand-lightGreen">Innovating the Future</p>
         </div>
       </div>
     );
@@ -54,7 +54,7 @@ const HeroCarousel = ({ slides }) => {
   const gradientIndex = currentIndex % FALLBACK_GRADIENTS.length;
 
   return (
-    <div className="relative w-full h-[70vh] min-h-[500px] overflow-hidden">
+    <div className="relative w-full h-[80vh] md:h-[85vh] min-h-[500px] lg:min-h-[600px] overflow-hidden">
       {imageFailed ? (
         <div className={`absolute inset-0 bg-gradient-to-br ${FALLBACK_GRADIENTS[gradientIndex]}`} />
       ) : (
@@ -76,13 +76,13 @@ const HeroCarousel = ({ slides }) => {
 
       <div className="relative h-full flex items-center justify-center">
         <div className="text-center text-white px-4 max-w-4xl">
-          <div className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in leading-tight">
+          <div className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 animate-fade-in leading-tight">
             {slide.title}
           </div>
-          <div className="text-base sm:text-xl md:text-2xl text-brand-lightGreen mb-3 font-semibold">
+          <div className="text-base sm:text-xl md:text-2xl lg:text-3xl text-brand-lightGreen mb-3 font-semibold">
             {slide.subtitle}
           </div>
-          <div className="text-sm sm:text-base md:text-lg text-gray-200 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed">
+          <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed">
             {slide.description}
           </div>
           {slide.ctaText && (

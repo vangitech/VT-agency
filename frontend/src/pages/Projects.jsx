@@ -172,10 +172,10 @@ const Projects = () => {
           <span className="inline-block text-xs font-semibold tracking-widest uppercase bg-white/10 px-4 py-1.5 rounded-full mb-4">
             Our Portfolio
           </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4">
             Our Projects
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto text-white/80">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto text-white/80">
             Explore some of the innovative solutions we've delivered for our clients.
           </p>
         </div>
