@@ -1,3 +1,4 @@
+import SEO from '../components/SEO';
 import {
   Shield, Code, Database, Lock, Users,
   Award, Globe, Heart,
@@ -66,6 +67,11 @@ const About = () => {
 
   return (
     <div className="pt-16 -mt-20 md:pt-20">
+      <SEO
+        title="About"
+        description="Learn about Vangitech — a technology company delivering software development, cybersecurity, compliance audits, and IT consulting. Mission-driven, client-centric."
+        url="https://vangitech.com/about"
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green py-20 lg:py-28">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">

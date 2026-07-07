@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SEO from '../components/SEO';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 import API from '../api';
@@ -65,6 +66,11 @@ const Contact = () => {
 
   return (
     <div className="pt-16 -mt-20 md:pt-20">
+      <SEO
+        title="Contact"
+        description="Get in touch with Vangitech. Contact us for software development, cybersecurity, IT consulting, or any technology project. Based in Abuja, Nigeria."
+        url="https://vangitech.com/contact"
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green py-20 lg:py-28">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">

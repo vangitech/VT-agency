@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import API from '../api';
+import SEO from '../components/SEO';
 import HeroCarousel from '../components/home/HeroCarousel';
 import ProjectsSection from '../components/home/ProjectsSection';
 import PageContentSection from '../components/home/PageContentSection';
@@ -50,6 +51,11 @@ const Home = () => {
 
   return (
     <>
+      <SEO
+        title="Home"
+        description="Vangitech delivers custom software development, cybersecurity, compliance audits, and IT consulting. Empowering businesses with innovative technology solutions."
+        url="https://vangitech.com/"
+      />
       <HeroCarousel slides={heroSlides} />
       <ProjectsSection projects={projects} />
       <Clients clients={clients} />

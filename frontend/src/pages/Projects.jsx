@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import API, { imageUrl } from '../api';
+import SEO from '../components/SEO';
 import { Search, Code, FolderOpen } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
@@ -160,6 +161,11 @@ const Projects = () => {
 
   return (
     <div className="pt-16 -mt-20 md:pt-20">
+      <SEO
+        title="Projects"
+        description="Explore Vangitech's portfolio of software development, cybersecurity, fintech, edutech, and consulting projects delivered for clients across industries."
+        url="https://vangitech.com/projects"
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green py-20 lg:py-28">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import { ArrowLeft, Calendar, Newspaper, Loader2, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import API, { imageUrl, proxyImageUrl } from '../api';
@@ -69,6 +70,13 @@ const NewsDetail = () => {
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen bg-gray-50">
+      <SEO
+        title={article.title}
+        description={article.summary || article.title}
+        image={article.image ? `https://vt-agency.onrender.com${article.image}` : undefined}
+        url={`https://vangitech.com/news/${article._id}`}
+        type="article"
+      />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Link to="/">
           <Button variant="outline" size="sm">

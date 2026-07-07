@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import SEO from '../components/SEO';
 import API from '../api';
 import { Loader2 } from 'lucide-react';
 
@@ -87,6 +88,11 @@ const StaticPage = ({ slug }) => {
 
   return (
     <div className="pt-16 md:pt-20">
+      <SEO
+        title={title}
+        description={`${title} — Learn about how Vangitech handles your data, terms of service, and policies.`}
+        url={`https://vangitech.com/${pageKey}`}
+      />
       <section className="bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green py-20 lg:py-28">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase bg-white/10 px-4 py-1.5 rounded-full mb-4">
