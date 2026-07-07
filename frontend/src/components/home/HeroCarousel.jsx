@@ -37,7 +37,7 @@ const HeroCarousel = ({ slides }) => {
 
   if (!Array.isArray(slides) || slides.length === 0) {
     return (
-      <div className="min-h-[80vh] md:min-h-[85vh] bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
+      <div className="min-h-[90vh] md:min-h-[95vh] bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
         <div className="text-center text-white px-4">
           <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/20">
             <span className="text-white font-bold text-2xl tracking-tight">VT</span>
@@ -54,12 +54,12 @@ const HeroCarousel = ({ slides }) => {
   const gradientIndex = currentIndex % FALLBACK_GRADIENTS.length;
 
   return (
-    <div className="relative w-full h-[80vh] md:h-[85vh] min-h-[500px] lg:min-h-[600px] overflow-hidden">
+    <div className="relative w-full h-[90vh] md:h-[95vh] min-h-[600px] lg:min-h-[700px] overflow-hidden">
       {imageFailed ? (
         <div className={`absolute inset-0 bg-gradient-to-br ${FALLBACK_GRADIENTS[gradientIndex]}`} />
       ) : (
         <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out hero-slide-enter"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[12000ms] ease-out scale-105 hover:scale-100"
           style={{ backgroundImage: `url(${imageUrl(slide.image)})` }}
         />
       )}
@@ -72,24 +72,24 @@ const HeroCarousel = ({ slides }) => {
           onError={() => setFailedImages((prev) => new Set(prev).add(currentIndex))}
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/40" />
 
-      <div className="relative h-full flex items-center justify-center">
-        <div className="text-center text-white px-4 max-w-4xl">
-          <div className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 animate-fade-in leading-tight">
+      <div className="relative h-full flex items-center justify-center px-4">
+        <div className="text-center text-white max-w-4xl mx-auto">
+          <div className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-5 animate-fade-in leading-tight">
             {slide.title}
           </div>
-          <div className="text-base sm:text-xl md:text-2xl lg:text-3xl text-brand-lightGreen mb-3 font-semibold">
+          <div className="text-base sm:text-xl md:text-2xl lg:text-3xl text-brand-lightGreen mb-3 sm:mb-4 font-semibold">
             {slide.subtitle}
           </div>
-          <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed">
+          <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 mb-6 sm:mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed px-2">
             {slide.description}
           </div>
           {slide.ctaText && (
             <Button
               variant="green"
               size="lg"
-              className="text-white bg-brand-green hover:bg-brand-darkGreen shadow-lg shadow-brand-green/25"
+              className="text-white bg-brand-green hover:bg-brand-darkGreen shadow-lg shadow-brand-green/25 px-8 py-3 sm:px-10 sm:py-4 text-sm sm:text-base"
               onClick={() => window.location.href = slide.ctaLink || '#'}
             >
               {slide.ctaText}
