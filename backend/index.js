@@ -43,6 +43,8 @@ const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT || 5000;
 
+app.set('trust proxy', 1);
+
 // Rate limiting
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -61,7 +63,7 @@ app.use('/api', apiLimiter);
 
 const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
-  : ['https://vt-agency.onrender.com', 'http://localhost:5173', 'http://localhost:5001'];
+  : ['https://vt-agency.onrender.com', 'https://vangitech.com', 'https://www.vangitech.com', 'http://localhost:5173', 'http://localhost:5001'];
 
 app.use(cors({
   origin: corsOrigins,

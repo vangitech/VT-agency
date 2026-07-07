@@ -3,9 +3,16 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { imageUrl } from '../../api';
 
+const FALLBACK_GRADIENTS = [
+  'from-brand-darkBlue via-brand-blue to-brand-green',
+  'from-brand-darkBlue via-brand-green to-brand-blue',
+  'from-brand-blue via-brand-darkBlue to-brand-green',
+];
+
 const HeroCarousel = ({ slides }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [failedImages, setFailedImages] = useState(new Set());
 
   const goToSlide = useCallback((index) => {
     if (isTransitioning) return;
@@ -43,13 +50,28 @@ const HeroCarousel = ({ slides }) => {
   }
 
   const slide = slides[currentIndex];
+  const imageFailed = failedImages.has(currentIndex);
+  const gradientIndex = currentIndex % FALLBACK_GRADIENTS.length;
 
   return (
     <div className="relative w-full h-[70vh] min-h-[500px] overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out hero-slide-enter"
-        style={{ backgroundImage: `url(${imageUrl(slide.image)})` }}
-      />
+      {imageFailed ? (
+        <div className={`absolute inset-0 bg-gradient-to-br ${FALLBACK_GRADIENTS[gradientIndex]}`} />
+      ) : (
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out hero-slide-enter"
+          style={{ backgroundImage: `url(${imageUrl(slide.image)})` }}
+        />
+      )}
+      {/* Preload image to detect failure */}
+      {slide.image && !imageFailed && (
+        <img
+          src={imageUrl(slide.image)}
+          alt=""
+          className="hidden"
+          onError={() => setFailedImages((prev) => new Set(prev).add(currentIndex))}
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
 
       <div className="relative h-full flex items-center justify-center">
