@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { imageUrl } from '../../api';
 
@@ -37,7 +36,7 @@ const HeroCarousel = ({ slides }) => {
 
   if (!Array.isArray(slides) || slides.length === 0) {
     return (
-      <div className="min-h-[90vh] md:min-h-[95vh] bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
         <div className="text-center text-white px-4">
           <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/20">
             <span className="text-white font-bold text-2xl tracking-tight">VT</span>
@@ -54,7 +53,7 @@ const HeroCarousel = ({ slides }) => {
   const gradientIndex = currentIndex % FALLBACK_GRADIENTS.length;
 
   return (
-    <div className="relative w-full h-[90vh] md:h-[95vh] min-h-[600px] lg:min-h-[700px] overflow-hidden">
+    <div className="relative w-full h-screen overflow-hidden">
       {imageFailed ? (
         <div className={`absolute inset-0 bg-gradient-to-br ${FALLBACK_GRADIENTS[gradientIndex]}`} />
       ) : (
@@ -102,17 +101,21 @@ const HeroCarousel = ({ slides }) => {
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center text-white transition-all active:scale-95"
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/70 hover:text-white transition-all active:scale-90"
             aria-label="Previous slide"
           >
-            <ChevronLeft size={20} />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center text-white transition-all active:scale-95"
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/70 hover:text-white transition-all active:scale-90"
             aria-label="Next slide"
           >
-            <ChevronRight size={20} />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
           </button>
         </>
       )}
