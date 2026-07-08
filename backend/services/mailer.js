@@ -14,8 +14,20 @@ const mailer = new Octomailer([
   new BrevoProvider(BREVO_API_KEY, 1),
 ]);
 
-function buildTemplate({ name, recipientEmail, subject, messageBody }) {
+function buildTemplate({ name, recipientEmail, subject, messageBody, senderName, senderEmail }) {
   const year = new Date().getFullYear();
+  const fromBlock = senderName ? `
+              <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f9fafb;border-radius:12px;padding:24px;margin:0 0 32px;width:100%;">
+                <tr>
+                  <td style="font-size:13px;color:#6b7280;padding-bottom:8px;">Message from:</td>
+                </tr>
+                <tr>
+                  <td style="font-size:14px;color:#111827;font-weight:600;">${senderName}</td>
+                </tr>
+                <tr>
+                  <td style="font-size:13px;color:#6b7280;">${senderEmail}</td>
+                </tr>
+              </table>` : '';
   return `
 <!DOCTYPE html>
 <html>
@@ -47,17 +59,7 @@ function buildTemplate({ name, recipientEmail, subject, messageBody }) {
               <div style="color:#374151;font-size:15px;line-height:1.8;margin:0 0 32px;">
                 ${messageBody.replace(/\n/g, '<br>')}
               </div>
-              <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f9fafb;border-radius:12px;padding:24px;margin:0 0 32px;width:100%;">
-                <tr>
-                  <td style="font-size:13px;color:#6b7280;padding-bottom:8px;">Message from:</td>
-                </tr>
-                <tr>
-                  <td style="font-size:14px;color:#111827;font-weight:600;">${name}</td>
-                </tr>
-                <tr>
-                  <td style="font-size:13px;color:#6b7280;">${recipientEmail}</td>
-                </tr>
-              </table>
+              ${fromBlock}
               <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 8px;">Best regards,</p>
               <p style="color:#111827;font-size:15px;font-weight:700;margin:0 0 4px;">Vangitech Team</p>
               <p style="color:#059669;font-size:13px;margin:0;">
@@ -154,12 +156,12 @@ export async function sendSupportNotification({ name, email, subject, message })
   const html = buildTemplate({
     name: 'Support Team',
     recipientEmail: FROM_EMAIL,
+    senderName: name,
+    senderEmail: email,
     subject: `New Contact Form Submission: ${subject}`,
     messageBody: `
 You have received a new message from the contact form on vangitech.com.
 
-<strong>From:</strong> ${name}<br>
-<strong>Email:</strong> ${email}<br>
 <strong>Subject:</strong> ${subject}<br>
 <strong>Message:</strong><br>
 ${message}
@@ -301,17 +303,17 @@ export async function sendQuoteNotification(data) {
   const html = buildTemplate({
     name: 'Sales Team',
     recipientEmail: FROM_EMAIL,
+    senderName: name,
+    senderEmail: email,
     subject: `New Quote Request: ${category}`,
     messageBody: `
 You have received a new quote request from <strong>${name}</strong> via vangitech.com.
 
 <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin:16px 0;">
   <tr><td colspan="2" style="padding:10px 16px;background:#f9fafb;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e5e7eb;">Contact Information</td></tr>
-  ${buildFieldRow('Name', name)}
   ${buildFieldRow('Role', role)}
   ${buildFieldRow('Company', company)}
   ${buildFieldRow('Website', website)}
-  ${buildFieldRow('Email', email)}
   ${buildFieldRow('Phone', phone)}
   ${buildFieldRow('Industry', industry)}
   ${buildFieldRow('Company Size', companySize)}
