@@ -11,6 +11,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import QuoteRequest from './pages/QuoteRequest';
 import Projects from './pages/Projects';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -78,6 +79,7 @@ const AppRoutes = () => {
         <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
         <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
         <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+        <Route path="/quote" element={<PublicLayout><QuoteRequest /></PublicLayout>} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         
         <Route path="/admin/login" element={<Login />} />

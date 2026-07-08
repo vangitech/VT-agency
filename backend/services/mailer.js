@@ -262,6 +262,72 @@ export async function sendEmail({ to, name, subject, messageBody, replyTo }) {
   return { provider: result.provider, id: result.id };
 }
 
+export async function sendQuoteNotification({ name, email, phone, company, projectType, budget, timeline, description }) {
+  const html = buildTemplate({
+    name: 'Support Team',
+    recipientEmail: FROM_EMAIL,
+    subject: `New Quote Request: ${projectType}`,
+    messageBody: `
+You have received a new quote request from vangitech.com.
+
+<strong>From:</strong> ${name}<br>
+<strong>Email:</strong> ${email}<br>
+<strong>Phone:</strong> ${phone || 'Not provided'}<br>
+<strong>Company:</strong> ${company || 'Not provided'}<br>
+<strong>Project Type:</strong> ${projectType}<br>
+<strong>Budget:</strong> ${budget || 'Not specified'}<br>
+<strong>Timeline:</strong> ${timeline || 'Not specified'}<br>
+<strong>Description:</strong><br>
+${description}
+
+Please log into the CRM to view and respond to this request.
+    `.trim(),
+  });
+
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: ['support@vangitech.com'],
+    subject: `New Quote Request: ${projectType}`,
+    html,
+    replyTo: email,
+  });
+
+  return { provider: result.provider, id: result.id };
+}
+
+export async function sendQuoteConfirmation({ to, name }) {
+  const html = buildTemplate({
+    name,
+    recipientEmail: to,
+    subject: "We've Received Your Quote Request",
+    messageBody: `
+Thank you for reaching out to us! We have received your quote request and our team is reviewing it.
+
+Here's what you can expect next:
+<ul style="margin:12px 0;padding-left:20px;">
+  <li style="margin-bottom:8px;">Our team will review your project requirements within 24-48 hours</li>
+  <li style="margin-bottom:8px;">A dedicated representative will reach out to discuss your needs</li>
+  <li style="margin-bottom:8px;">We'll provide a tailored quote based on your specifications</li>
+</ul>
+
+In the meantime, feel free to explore our services at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/services</a> to learn more about how we can help you.
+
+If you have any urgent questions, please don't hesitate to contact us at support@vangitech.com.
+
+We look forward to working with you!
+    `.trim(),
+  });
+
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [to],
+    subject: "We've Received Your Quote Request",
+    html,
+  });
+
+  return { provider: result.provider, id: result.id };
+}
+
 export async function sendReply({ to, name, originalSubject, originalMessage, replyBody, adminName }) {
   const subject = `Re: ${originalSubject}`;
   const html = buildReplyTemplate({ originalSubject, originalMessage, replyBody, adminName });

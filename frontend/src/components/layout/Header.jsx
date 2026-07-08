@@ -110,11 +110,11 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              <a href="mailto:info@vangitech.com?subject=Let's%20Work%20Together">
+              <button onClick={() => navigateWithLoader('/quote')}>
                 <Button variant="blue" size="sm" className="shadow-sm">
-                  <Mail size={16} className="mr-2" /> Get in Touch
+                  <Mail size={16} className="mr-2" /> Request a Quote
                 </Button>
-              </a>
+              </button>
             )}
           </nav>
 
@@ -175,13 +175,12 @@ const Header = () => {
                   </button>
                 </>
               ) : (
-                <a
-                  href="mailto:info@vangitech.com?subject=Let's%20Work%20Together"
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-brand-blue hover:bg-brand-blue/5 transition-colors"
-                  onClick={() => setIsOpen(false)}
+                <button
+                  onClick={() => { setIsOpen(false); navigateWithLoader('/quote'); }}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-brand-blue hover:bg-brand-blue/5 transition-colors"
                 >
-                  <Mail size={18} /> Get in Touch
-                </a>
+                  <Mail size={18} /> Request a Quote
+                </button>
               )}
             </div>
           </div>

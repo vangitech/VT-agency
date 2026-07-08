@@ -9,7 +9,8 @@ import Setting from '../models/Setting.js';
 import ContactMessage from '../models/ContactMessage.js';
 import Contact from '../models/Contact.js';
 import Interaction from '../models/Interaction.js';
-import { sendSupportNotification, sendWelcomeEmail } from '../services/mailer.js';
+import QuoteRequest from '../models/QuoteRequest.js';
+import { sendSupportNotification, sendWelcomeEmail, sendQuoteNotification, sendQuoteConfirmation } from '../services/mailer.js';
 
 const router = express.Router();
 
@@ -138,6 +139,51 @@ router.post('/contact', async (req, res) => {
     });
 
     res.status(201).json({ message: 'Message sent successfully', id: contactMessage._id });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.post('/quote-request', async (req, res) => {
+  try {
+    const { name, email, phone, company, projectType, budget, timeline, description } = req.body;
+    if (!name || !email || !projectType || !description) {
+      return res.status(400).json({ message: 'Name, email, project type, and description are required' });
+    }
+    const quoteRequest = await QuoteRequest.create({ name, email, phone, company, projectType, budget, timeline, description });
+
+    // Auto-create/update unified contact profile
+    let contact = await Contact.findOne({ email: email.toLowerCase() });
+    if (!contact) {
+      contact = await Contact.create({ name, email: email.toLowerCase(), source: 'quote_form' });
+    }
+    await Interaction.create({
+      contact: contact._id,
+      type: 'form_submission',
+      subject: `Quote Request: ${projectType}`,
+      description,
+      linkedMessage: quoteRequest._id,
+    });
+
+    // Send notification to support team
+    await sendQuoteNotification({ name, email, phone, company, projectType, budget, timeline, description }).catch((err) => {
+      console.error('[Quote] Failed to send support notification:', err.message);
+    });
+
+    // Send confirmation to the requester
+    await sendQuoteConfirmation({ to: email, name }).catch((err) => {
+      console.error('[Quote] Failed to send confirmation email:', err.message);
+    });
+
+    // Log confirmation email as an interaction
+    await Interaction.create({
+      contact: contact._id,
+      type: 'email',
+      subject: "We've Received Your Quote Request",
+      description: 'Quote confirmation email sent automatically after form submission.',
+    });
+
+    res.status(201).json({ message: 'Quote request submitted successfully', id: quoteRequest._id });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
