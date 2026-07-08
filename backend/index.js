@@ -32,6 +32,7 @@ import User from './models/User.js';
 import Setting from './models/Setting.js';
 import { startNewsScheduler } from './services/newsScheduler.js';
 import { startContactFollowUpScheduler } from './services/contactFollowUpScheduler.js';
+import { startKeepAlive } from './services/keepAlive.js';
 import { setIO } from './services/events.js';
 
 dotenv.config();
@@ -434,6 +435,7 @@ const start = async () => {
     console.log(`Server running on port ${PORT}`);
     startNewsScheduler();
     startContactFollowUpScheduler();
+    startKeepAlive();
   });
 };
 

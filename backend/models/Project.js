@@ -30,5 +30,6 @@ const projectSchema = new mongoose.Schema({
 
 projectSchema.index({ status: 1 });
 projectSchema.index({ deal: 1 });
+projectSchema.index({ isActive: 1, createdAt: -1 });
 
 export default mongoose.model('Project', projectSchema);

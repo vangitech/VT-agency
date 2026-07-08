@@ -42,5 +42,7 @@ const newsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+newsSchema.index({ isActive: 1, publishedAt: -1 });
+
 const News = mongoose.model('News', newsSchema);
 export default News;

@@ -27,5 +27,7 @@ const clientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+clientSchema.index({ isActive: 1, name: 1 });
+
 const Client = mongoose.model('Client', clientSchema);
 export default Client;

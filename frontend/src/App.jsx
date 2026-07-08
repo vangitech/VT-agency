@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -8,33 +8,36 @@ import Footer from './components/layout/Footer';
 import AdminSidebar from './components/layout/AdminSidebar';
 import CookieConsent from './components/CookieConsent';
 import ErrorBoundary from './components/ErrorBoundary';
-import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import QuoteRequest from './pages/QuoteRequest';
-import Projects from './pages/Projects';
-import Login from './pages/admin/Login';
-import Dashboard from './pages/admin/Dashboard';
-import NewsDetail from './pages/NewsDetail';
-import StaticPage from './pages/StaticPage';
-import HeroManager from './pages/admin/HeroManager';
-import TestimonialManager from './pages/admin/TestimonialManager';
-import NewsManager from './pages/admin/NewsManager';
-import ClientManager from './pages/admin/ClientManager';
-import ProjectManager from './pages/admin/ProjectManager';
-import SettingsManager from './pages/admin/SettingsManager';
-import LegalPagesManager from './pages/admin/LegalPagesManager';
-import UserManager from './pages/admin/UserManager';
-import CRMManager from './pages/admin/CRMManager';
+
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const QuoteRequest = lazy(() => import('./pages/QuoteRequest'));
+const Projects = lazy(() => import('./pages/Projects'));
+const NewsDetail = lazy(() => import('./pages/NewsDetail'));
+const StaticPage = lazy(() => import('./pages/StaticPage'));
+const Login = lazy(() => import('./pages/admin/Login'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const HeroManager = lazy(() => import('./pages/admin/HeroManager'));
+const TestimonialManager = lazy(() => import('./pages/admin/TestimonialManager'));
+const NewsManager = lazy(() => import('./pages/admin/NewsManager'));
+const ClientManager = lazy(() => import('./pages/admin/ClientManager'));
+const ProjectManager = lazy(() => import('./pages/admin/ProjectManager'));
+const SettingsManager = lazy(() => import('./pages/admin/SettingsManager'));
+const LegalPagesManager = lazy(() => import('./pages/admin/LegalPagesManager'));
+const UserManager = lazy(() => import('./pages/admin/UserManager'));
+const CRMManager = lazy(() => import('./pages/admin/CRMManager'));
+
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <PageLoader />;
   }
   if (!user) {
     return <Navigate to="/admin/login" replace />;
@@ -74,7 +77,7 @@ const AppRoutes = () => {
   const isAdmin = location.pathname.startsWith('/admin');
 
   return (
-    <>
+    <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
         <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
@@ -143,7 +146,7 @@ const AppRoutes = () => {
         } />
       </Routes>
       {!isAdmin && <CookieConsent />}
-    </>
+    </Suspense>
   );
 };
 

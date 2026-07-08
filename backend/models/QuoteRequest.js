@@ -77,5 +77,7 @@ const quoteRequestSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+quoteRequestSchema.index({ email: 1, createdAt: -1 });
+
 const QuoteRequest = mongoose.model('QuoteRequest', quoteRequestSchema);
 export default QuoteRequest;
