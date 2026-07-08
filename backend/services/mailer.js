@@ -262,32 +262,79 @@ export async function sendEmail({ to, name, subject, messageBody, replyTo }) {
   return { provider: result.provider, id: result.id };
 }
 
-export async function sendQuoteNotification({ name, email, phone, company, projectType, budget, timeline, description }) {
+function buildFieldRow(label, value) {
+  if (!value) return '';
+  return `<tr><td style="padding:8px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#6b7280;font-weight:600;white-space:nowrap;vertical-align:top;">${label}</td><td style="padding:8px 16px;border-bottom:1px solid #e5e7eb;font-size:14px;color:#111827;">${value}</td></tr>`;
+}
+
+function buildArrayField(label, values) {
+  if (!values || values.length === 0) return '';
+  return buildFieldRow(label, values.join(', '));
+}
+
+export async function sendQuoteNotification(data) {
+  const { name, role, company, website, email, phone, industry, companySize, budget, timeline, category } = data;
+
+  let categoryRows = '';
+  if (category === 'Software Development') {
+    categoryRows += buildArrayField('Project Scope', data.softwareScope);
+    categoryRows += buildArrayField('Target Platforms', data.targetPlatforms);
+    categoryRows += buildArrayField('Core Features', data.coreFeatures);
+    categoryRows += buildFieldRow('Preferred Tech Stack', data.preferredTechStack);
+  } else if (category === 'Cyber-Security') {
+    categoryRows += buildFieldRow('Primary Security Need', data.securityNeed);
+    categoryRows += buildArrayField('Infrastructure Type', data.infrastructureType);
+    categoryRows += buildArrayField('Compliance Framework', data.complianceFramework);
+    categoryRows += buildFieldRow('Recent Attack', data.recentAttack);
+  } else if (category === 'ISO Implementation') {
+    categoryRows += buildArrayField('Target Certification', data.targetCertification);
+    categoryRows += buildFieldRow('Current Status', data.currentStatus);
+    categoryRows += buildFieldRow('Locations in Scope', data.locationsInScope ? String(data.locationsInScope) : '');
+  } else if (category === 'Fintech Solutions') {
+    categoryRows += buildArrayField('Solution Category', data.solutionCategory);
+    categoryRows += buildFieldRow('Regulatory License Status', data.regulatoryLicenseStatus);
+    categoryRows += buildFieldRow('Expected Transaction Volume', data.expectedTransactionVolume);
+  }
+
+  const hasAttachment = data.documentOriginalName ? `<tr><td style="padding:8px 16px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#6b7280;font-weight:600;white-space:nowrap;vertical-align:top;">Attached Document</td><td style="padding:8px 16px;border-bottom:1px solid #e5e7eb;font-size:14px;color:#111827;">${data.documentOriginalName}</td></tr>` : '';
+
   const html = buildTemplate({
-    name: 'Support Team',
+    name: 'Sales Team',
     recipientEmail: FROM_EMAIL,
-    subject: `New Quote Request: ${projectType}`,
+    subject: `New Quote Request: ${category}`,
     messageBody: `
-You have received a new quote request from vangitech.com.
+You have received a new quote request from <strong>${name}</strong> via vangitech.com.
 
-<strong>From:</strong> ${name}<br>
-<strong>Email:</strong> ${email}<br>
-<strong>Phone:</strong> ${phone || 'Not provided'}<br>
-<strong>Company:</strong> ${company || 'Not provided'}<br>
-<strong>Project Type:</strong> ${projectType}<br>
-<strong>Budget:</strong> ${budget || 'Not specified'}<br>
-<strong>Timeline:</strong> ${timeline || 'Not specified'}<br>
-<strong>Description:</strong><br>
-${description}
+<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin:16px 0;">
+  <tr><td colspan="2" style="padding:10px 16px;background:#f9fafb;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e5e7eb;">Contact Information</td></tr>
+  ${buildFieldRow('Name', name)}
+  ${buildFieldRow('Role', role)}
+  ${buildFieldRow('Company', company)}
+  ${buildFieldRow('Website', website)}
+  ${buildFieldRow('Email', email)}
+  ${buildFieldRow('Phone', phone)}
+  ${buildFieldRow('Industry', industry)}
+  ${buildFieldRow('Company Size', companySize)}
 
-Please log into the CRM to view and respond to this request.
+  <tr><td colspan="2" style="padding:10px 16px;background:#f9fafb;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e5e7eb;">Project Overview</td></tr>
+  ${buildFieldRow('Category', category)}
+  ${buildFieldRow('Budget', budget)}
+  ${buildFieldRow('Timeline', timeline)}
+  ${categoryRows}
+
+  ${hasAttachment ? `<tr><td colspan="2" style="padding:10px 16px;background:#f9fafb;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e5e7eb;">Attachments</td></tr>${hasAttachment}` : ''}
+</table>
+
+${data.additionalSpecs ? `<div style="margin:16px 0;padding:16px;background:#f9fafb;border-radius:8px;border-left:3px solid #1a56db;"><p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Additional Specifications</p><p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">${data.additionalSpecs.replace(/\n/g, '<br>')}</p></div>` : ''}
+
+<p style="margin:16px 0 0;color:#6b7280;font-size:13px;">Please log into the <a href="https://vangitech.com/admin/crm" style="color:#1a56db;text-decoration:underline;">CRM dashboard</a> to view, respond, and manage this lead.</p>
     `.trim(),
   });
 
   const result = await mailer.send({
     from: `${FROM_NAME} <${FROM_EMAIL}>`,
-    to: ['support@vangitech.com'],
-    subject: `New Quote Request: ${projectType}`,
+    to: ['sales@vangitech.com'],
+    subject: `New Quote Request: ${category} — ${name}, ${company || email}`,
     html,
     replyTo: email,
   });
@@ -295,26 +342,30 @@ Please log into the CRM to view and respond to this request.
   return { provider: result.provider, id: result.id };
 }
 
-export async function sendQuoteConfirmation({ to, name }) {
+export async function sendQuoteConfirmation({ to, name, category }) {
   const html = buildTemplate({
     name,
     recipientEmail: to,
     subject: "We've Received Your Quote Request",
     messageBody: `
-Thank you for reaching out to us! We have received your quote request and our team is reviewing it.
+Thank you for reaching out to Vangitech! We have received your request for a <strong>${category}</strong> quote.
+
+A dedicated solutions architect is now reviewing your specifications and will reach out within <strong>24–48 hours</strong> with a tailored proposal.
 
 Here's what you can expect next:
 <ul style="margin:12px 0;padding-left:20px;">
-  <li style="margin-bottom:8px;">Our team will review your project requirements within 24-48 hours</li>
-  <li style="margin-bottom:8px;">A dedicated representative will reach out to discuss your needs</li>
-  <li style="margin-bottom:8px;">We'll provide a tailored quote based on your specifications</li>
+  <li style="margin-bottom:8px;"><strong>Review</strong> — Our team carefully analyzes your project requirements</li>
+  <li style="margin-bottom:8px;"><strong>Consultation</strong> — A solutions architect contacts you to clarify details and discuss approach</li>
+  <li style="margin-bottom:8px;"><strong>Proposal</strong> — You receive a comprehensive, tailored quote and project roadmap</li>
 </ul>
 
-In the meantime, feel free to explore our services at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/services</a> to learn more about how we can help you.
+In the meantime, feel free to explore our portfolio at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/projects</a> to see how we've helped businesses like yours.
 
-If you have any urgent questions, please don't hesitate to contact us at support@vangitech.com.
+If you have any urgent questions, reply directly to this email or contact us at support@vangitech.com.
 
-We look forward to working with you!
+We look forward to building something great together!
+
+<p style="margin:16px 0 0;font-size:13px;color:#6b7280;">— The Vangitech Team</p>
     `.trim(),
   });
 

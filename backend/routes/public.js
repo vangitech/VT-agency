@@ -10,6 +10,7 @@ import ContactMessage from '../models/ContactMessage.js';
 import Contact from '../models/Contact.js';
 import Interaction from '../models/Interaction.js';
 import QuoteRequest from '../models/QuoteRequest.js';
+import { quoteUpload } from '../middleware/upload.js';
 import { sendSupportNotification, sendWelcomeEmail, sendQuoteNotification, sendQuoteConfirmation } from '../services/mailer.js';
 
 const router = express.Router();
@@ -144,34 +145,91 @@ router.post('/contact', async (req, res) => {
   }
 });
 
-router.post('/quote-request', async (req, res) => {
+router.post('/quote-request', quoteUpload.single('document'), async (req, res) => {
   try {
-    const { name, email, phone, company, projectType, budget, timeline, description } = req.body;
-    if (!name || !email || !projectType || !description) {
-      return res.status(400).json({ message: 'Name, email, project type, and description are required' });
+    const body = req.body;
+
+    // Parse array fields sent as JSON strings from multipart form
+    const parseArray = (val) => {
+      if (!val) return [];
+      if (Array.isArray(val)) return val;
+      try { return JSON.parse(val); } catch { return [val]; }
+    };
+
+    const payload = {
+      name: body.name,
+      role: body.role || '',
+      company: body.company || '',
+      website: body.website || '',
+      email: body.email,
+      phone: body.phone || '',
+      industry: body.industry || '',
+      companySize: body.companySize || '',
+      budget: body.budget || '',
+      timeline: body.timeline || '',
+      category: body.category,
+
+      // Software Development
+      softwareScope: parseArray(body.softwareScope),
+      targetPlatforms: parseArray(body.targetPlatforms),
+      coreFeatures: parseArray(body.coreFeatures),
+      preferredTechStack: body.preferredTechStack || '',
+
+      // Cyber Security
+      securityNeed: body.securityNeed || '',
+      infrastructureType: parseArray(body.infrastructureType),
+      complianceFramework: parseArray(body.complianceFramework),
+      recentAttack: body.recentAttack || '',
+
+      // ISO Implementation
+      targetCertification: parseArray(body.targetCertification),
+      currentStatus: body.currentStatus || '',
+      locationsInScope: body.locationsInScope ? Number(body.locationsInScope) : 0,
+
+      // Fintech Solutions
+      solutionCategory: parseArray(body.solutionCategory),
+      regulatoryLicenseStatus: body.regulatoryLicenseStatus || '',
+      expectedTransactionVolume: body.expectedTransactionVolume || '',
+
+      // Closeout
+      documentPath: req.file ? `/uploads/${req.file.filename}` : '',
+      documentOriginalName: req.file ? req.file.originalname : '',
+      additionalSpecs: body.additionalSpecs || '',
+    };
+
+    if (!payload.name || !payload.email || !payload.category) {
+      return res.status(400).json({ message: 'Name, email, and category are required' });
     }
-    const quoteRequest = await QuoteRequest.create({ name, email, phone, company, projectType, budget, timeline, description });
+
+    if (!payload.softwareScope && !payload.securityNeed && !payload.targetCertification && !payload.solutionCategory) {
+      if (payload.category === 'Software Development') payload.softwareScope = [];
+      else if (payload.category === 'Cyber-Security') payload.securityNeed = '';
+      else if (payload.category === 'ISO Implementation') payload.targetCertification = [];
+      else if (payload.category === 'Fintech Solutions') payload.solutionCategory = [];
+    }
+
+    const quoteRequest = await QuoteRequest.create(payload);
 
     // Auto-create/update unified contact profile
-    let contact = await Contact.findOne({ email: email.toLowerCase() });
+    let contact = await Contact.findOne({ email: payload.email.toLowerCase() });
     if (!contact) {
-      contact = await Contact.create({ name, email: email.toLowerCase(), source: 'quote_form' });
+      contact = await Contact.create({ name: payload.name, email: payload.email.toLowerCase(), source: 'quote_form' });
     }
     await Interaction.create({
       contact: contact._id,
       type: 'form_submission',
-      subject: `Quote Request: ${projectType}`,
-      description,
+      subject: `Quote Request: ${payload.category}`,
+      description: payload.additionalSpecs || `${payload.category} quote requested`,
       linkedMessage: quoteRequest._id,
     });
 
-    // Send notification to support team
-    await sendQuoteNotification({ name, email, phone, company, projectType, budget, timeline, description }).catch((err) => {
-      console.error('[Quote] Failed to send support notification:', err.message);
+    // Send notification to sales team
+    await sendQuoteNotification({ ...payload, documentOriginalName: payload.documentOriginalName }).catch((err) => {
+      console.error('[Quote] Failed to send sales notification:', err.message);
     });
 
     // Send confirmation to the requester
-    await sendQuoteConfirmation({ to: email, name }).catch((err) => {
+    await sendQuoteConfirmation({ to: payload.email, name: payload.name, category: payload.category }).catch((err) => {
       console.error('[Quote] Failed to send confirmation email:', err.message);
     });
 
