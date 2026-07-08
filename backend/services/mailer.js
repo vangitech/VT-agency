@@ -57,7 +57,7 @@ function buildTemplate({ name, recipientEmail, subject, messageBody, senderName,
             <td style="background:#ffffff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb;">
               <p style="color:#374151;font-size:16px;line-height:1.7;margin:0 0 24px;">Dear <strong style="color:#111827;">${name}</strong>,</p>
               <div style="color:#374151;font-size:15px;line-height:1.8;margin:0 0 32px;">
-                ${messageBody.replace(/\n/g, '<br>')}
+                ${messageBody}
               </div>
               ${fromBlock}
               <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 8px;">Best regards,</p>
@@ -120,7 +120,7 @@ function buildReplyTemplate({ originalSubject, originalMessage, replyBody, admin
           <tr>
             <td style="background:#ffffff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb;">
               <div style="color:#374151;font-size:15px;line-height:1.8;margin:0 0 32px;">
-                ${replyBody.replace(/\n/g, '<br>')}
+                ${replyBody}
               </div>
               <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 8px;">Best regards,</p>
               <p style="color:#111827;font-size:15px;font-weight:700;margin:0 0 4px;">${adminName}</p>
@@ -159,15 +159,11 @@ export async function sendSupportNotification({ name, email, subject, message })
     senderName: name,
     senderEmail: email,
     subject: `New Contact Form Submission: ${subject}`,
-    messageBody: `
-You have received a new message from the contact form on vangitech.com.
-
-<strong>Subject:</strong> ${subject}<br>
+    messageBody: `<p>You have received a new message from the contact form on vangitech.com.</p>
+<p><strong>Subject:</strong> ${subject}<br>
 <strong>Message:</strong><br>
-${message}
-
-Please log into the CRM to view and respond to this message.
-    `.trim(),
+${message}</p>
+<p>Please log into the CRM to view and respond to this message.</p>`,
   });
 
   const result = await mailer.send({
@@ -186,22 +182,16 @@ export async function sendWelcomeEmail({ to, name }) {
     name,
     recipientEmail: to,
     subject: 'Welcome to Vangitech — We\'ve Received Your Message',
-    messageBody: `
-Thank you for reaching out to us! We have received your message and our team is reviewing it.
-
-Here's what you can expect next:
+    messageBody: `<p>Thank you for reaching out to us! We have received your message and our team is reviewing it.</p>
+<p>Here's what you can expect next:</p>
 <ul style="margin:12px 0;padding-left:20px;">
   <li style="margin-bottom:8px;">Our team will review your request within 24-48 hours</li>
   <li style="margin-bottom:8px;">A dedicated representative will reach out to you</li>
   <li style="margin-bottom:8px;">We'll provide a tailored solution based on your needs</li>
 </ul>
-
-In the meantime, feel free to explore our services at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/services</a> to learn more about how we can help you.
-
-If you have any urgent questions, please don't hesitate to contact us at support@vangitech.com.
-
-We look forward to speaking with you!
-    `.trim(),
+<p>In the meantime, feel free to explore our services at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/services</a> to learn more about how we can help you.</p>
+<p>If you have any urgent questions, please don't hesitate to contact us at support@vangitech.com.</p>
+<p>We look forward to speaking with you!</p>`,
   });
 
   const result = await mailer.send({
@@ -219,25 +209,17 @@ export async function sendFollowUpEmail({ to, name }) {
     name,
     recipientEmail: to,
     subject: 'Just Checking In — How Can We Help You?',
-    messageBody: `
-I hope this message finds you well. It's been a few days since you reached out to us, and I wanted to follow up personally.
-
-Have you had a chance to review our <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">service list</a>? We offer a wide range of technology solutions including:
-
+    messageBody: `<p>I hope this message finds you well. It's been a few days since you reached out to us, and I wanted to follow up personally.</p>
+<p>Have you had a chance to review our <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">service list</a>? We offer a wide range of technology solutions including:</p>
 <ul style="margin:12px 0;padding-left:20px;">
   <li style="margin-bottom:6px;"><strong>Software Development</strong> — Custom web, mobile, and enterprise applications</li>
   <li style="margin-bottom:6px;"><strong>Cybersecurity</strong> — Security audits, penetration testing, and compliance</li>
   <li style="margin-bottom:6px;"><strong>IT Consulting</strong> — Technology strategy and digital transformation</li>
   <li style="margin-bottom:6px;"><strong>Cloud Solutions</strong> — Migration, architecture, and managed services</li>
 </ul>
-
-Could you let us know what specific service you're looking for? Our team is ready to provide a tailored solution for your needs.
-
-Just reply to this email and we'll take it from there.
-
-Best regards,
-Vangitech Team
-    `.trim(),
+<p>Could you let us know what specific service you're looking for? Our team is ready to provide a tailored solution for your needs.</p>
+<p>Just reply to this email and we'll take it from there.</p>
+<p>Best regards,<br>Vangitech Team</p>`,
   });
 
   const result = await mailer.send({
@@ -306,9 +288,7 @@ export async function sendQuoteNotification(data) {
     senderName: name,
     senderEmail: email,
     subject: `New Quote Request: ${category}`,
-    messageBody: `
-You have received a new quote request from <strong>${name}</strong> via vangitech.com.
-
+    messageBody: `<p>You have received a new quote request from <strong>${name}</strong> via vangitech.com.</p>
 <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin:16px 0;">
   <tr><td colspan="2" style="padding:10px 16px;background:#f9fafb;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e5e7eb;">Contact Information</td></tr>
   ${buildFieldRow('Role', role)}
@@ -317,20 +297,15 @@ You have received a new quote request from <strong>${name}</strong> via vangitec
   ${buildFieldRow('Phone', phone)}
   ${buildFieldRow('Industry', industry)}
   ${buildFieldRow('Company Size', companySize)}
-
   <tr><td colspan="2" style="padding:10px 16px;background:#f9fafb;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e5e7eb;">Project Overview</td></tr>
   ${buildFieldRow('Category', category)}
   ${buildFieldRow('Budget', budget)}
   ${buildFieldRow('Timeline', timeline)}
   ${categoryRows}
-
   ${hasAttachment ? `<tr><td colspan="2" style="padding:10px 16px;background:#f9fafb;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e5e7eb;">Attachments</td></tr>${hasAttachment}` : ''}
 </table>
-
-${data.additionalSpecs ? `<div style="margin:16px 0;padding:16px;background:#f9fafb;border-radius:8px;border-left:3px solid #1a56db;"><p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Additional Specifications</p><p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">${data.additionalSpecs.replace(/\n/g, '<br>')}</p></div>` : ''}
-
-<p style="margin:16px 0 0;color:#6b7280;font-size:13px;">Please log into the <a href="https://vangitech.com/admin/crm" style="color:#1a56db;text-decoration:underline;">CRM dashboard</a> to view, respond, and manage this lead.</p>
-    `.trim(),
+${data.additionalSpecs ? `<div style="margin:16px 0;padding:16px;background:#f9fafb;border-radius:8px;border-left:3px solid #1a56db;"><p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Additional Specifications</p><p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">${data.additionalSpecs}</p></div>` : ''}
+<p style="margin:16px 0 0;color:#6b7280;font-size:13px;">Please log into the <a href="https://vangitech.com/admin/crm" style="color:#1a56db;text-decoration:underline;">CRM dashboard</a> to view, respond, and manage this lead.</p>`,
   });
 
   const result = await mailer.send({
@@ -349,26 +324,17 @@ export async function sendQuoteConfirmation({ to, name, category }) {
     name,
     recipientEmail: to,
     subject: "We've Received Your Quote Request",
-    messageBody: `
-Thank you for reaching out to Vangitech! We have received your request for a <strong>${category}</strong> quote.
-
-A dedicated solutions architect is now reviewing your specifications and will reach out within <strong>24–48 hours</strong> with a tailored proposal.
-
-Here's what you can expect next:
+    messageBody: `<p>Thank you for reaching out to Vangitech! We have received your request for a <strong>${category}</strong> quote.</p>
+<p>A dedicated solutions architect is now reviewing your specifications and will reach out within <strong>24–48 hours</strong> with a tailored proposal.</p>
+<p>Here's what you can expect next:</p>
 <ul style="margin:12px 0;padding-left:20px;">
   <li style="margin-bottom:8px;"><strong>Review</strong> — Our team carefully analyzes your project requirements</li>
   <li style="margin-bottom:8px;"><strong>Consultation</strong> — A solutions architect contacts you to clarify details and discuss approach</li>
   <li style="margin-bottom:8px;"><strong>Proposal</strong> — You receive a comprehensive, tailored quote and project roadmap</li>
 </ul>
-
-In the meantime, feel free to explore our portfolio at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/projects</a> to see how we've helped businesses like yours.
-
-If you have any urgent questions, reply directly to this email or contact us at support@vangitech.com.
-
-We look forward to building something great together!
-
-<p style="margin:16px 0 0;font-size:13px;color:#6b7280;">— The Vangitech Team</p>
-    `.trim(),
+<p>In the meantime, feel free to explore our portfolio at <a href="https://vangitech.com/projects" style="color:#1a56db;text-decoration:underline;">vangitech.com/projects</a> to see how we've helped businesses like yours.</p>
+<p>If you have any urgent questions, reply directly to this email or contact us at support@vangitech.com.</p>
+<p style="margin:16px 0 0;font-size:13px;color:#6b7280;">We look forward to building something great together!<br>— The Vangitech Team</p>`,
   });
 
   const result = await mailer.send({
