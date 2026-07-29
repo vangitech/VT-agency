@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import { register, login, getMe, updateProfile, changePassword, getUsers, createUser, updateUserRole, deleteUser, forgotPassword, resetPassword, setupSuperAdmin, resetUserPassword } from '../controllers/authController.js';
+import { register, login, getMe, updateProfile, changePassword, getUsers, createUser, updateUserRole, deleteUser, forgotPassword, resetPassword, setupSuperAdmin, resetUserPassword, resendSetup } from '../controllers/authController.js';
 import { protect, superadminOnly } from '../middleware/auth.js';
 import { loginRules, forgotPasswordRules, resetPasswordRules, changePasswordRules } from '../middleware/validate.js';
 import User from '../models/User.js';
@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/register', protect, superadminOnly, register);
 router.post('/login', loginRules, login);
 router.post('/setup-superadmin', setupSuperAdmin);
+router.post('/resend-setup', resendSetup);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateProfile);
 router.put('/change-password', protect, changePasswordRules, changePassword);

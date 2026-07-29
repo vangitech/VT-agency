@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, RefreshCw } from 'lucide-react';
+import API from '../../api';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -12,8 +13,21 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const handleResendSetup = async () => {
+    setResending(true);
+    try {
+      const res = await API.post('/auth/resend-setup');
+      toast.success(res.data.message);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to resend setup email');
+    } finally {
+      setResending(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -134,6 +148,16 @@ const Login = () => {
             </Button>
           </form>
 
+          <div className="mt-6 pt-4 border-t border-gray-100 text-center">
+            <button
+              onClick={handleResendSetup}
+              disabled={resending}
+              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-brand-blue font-medium transition-colors"
+            >
+              <RefreshCw size={12} className={resending ? 'animate-spin' : ''} />
+              {resending ? 'Sending...' : "Didn't receive setup email? Resend"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

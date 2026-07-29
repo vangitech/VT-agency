@@ -77,6 +77,36 @@ export const setupSuperAdmin = async (req, res) => {
   }
 };
 
+export const resendSetup = async (req, res) => {
+  try {
+    const email = process.env.BOOTSTRAP_EMAIL || 'evangel@vangitech.com';
+    const existingUser = await User.findOne({ role: 'superadmin' });
+
+    const existingToken = await SetupToken.findOne({ email, used: false, expiresAt: { $gt: new Date() } });
+    if (existingToken) {
+      return res.json({ message: 'A setup email was already sent. Check your inbox (including spam).' });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    await SetupToken.create({ token, email, expiresAt: new Date(Date.now() + 86400000) });
+    const setupLink = `${process.env.CLIENT_URL || 'http://localhost:5173'}/vaccess/setup?token=${token}`;
+
+    if (existingUser) {
+      await sendPasswordResetEmail({ to: email, name: existingUser.name, resetLink: setupLink }).catch((err) => {
+        console.error('[ResendSetup] Failed to send email:', err.message);
+      });
+    } else {
+      await sendSuperAdminSetupEmail({ to: email, name: 'Super Admin', setupLink }).catch((err) => {
+        console.error('[ResendSetup] Failed to send email:', err.message);
+      });
+    }
+
+    res.json({ message: `Setup email sent to ${email}. Check your inbox.` });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
