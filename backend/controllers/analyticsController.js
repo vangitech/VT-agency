@@ -114,6 +114,7 @@ export const getRevenueReport = async (req, res) => {
       dealCount: wonDeals.length,
     });
   } catch (error) {
+    console.error('[getRevenueReport]', error.message);
     res.status(500).json({ message: error.message });
   }
 };
@@ -149,6 +150,7 @@ export const getActivityReport = async (req, res) => {
       total: interactions.reduce((s, i) => s + i.count, 0),
     });
   } catch (error) {
+    console.error('[getActivityReport]', error.message);
     res.status(500).json({ message: error.message });
   }
 };
@@ -177,6 +179,7 @@ export const getAttributionReport = async (req, res) => {
       totalWon,
     });
   } catch (error) {
+    console.error('[getAttributionReport]', error.message);
     res.status(500).json({ message: error.message });
   }
 };
@@ -201,6 +204,7 @@ export const getWinLossReport = async (req, res) => {
       byLostReason: byReason || [],
     });
   } catch (error) {
+    console.error('[getWinLossReport]', error.message);
     res.status(500).json({ message: error.message });
   }
 };
@@ -242,6 +246,7 @@ export const getSalesVelocity = async (req, res) => {
       monthlyHistory: monthlyDeals || [],
     });
   } catch (error) {
+    console.error('[getSalesVelocity]', error.message);
     res.status(500).json({ message: error.message });
   }
 };
