@@ -29,7 +29,9 @@ import securityRoutes from './routes/security.js';
 import rateLimit from 'express-rate-limit';
 import PageContent from './models/PageContent.js';
 import User from './models/User.js';
+import SetupToken from './models/SetupToken.js';
 import Setting from './models/Setting.js';
+import { sendSuperAdminSetupEmail } from './services/mailer.js';
 import { startNewsScheduler } from './services/newsScheduler.js';
 import { startContactFollowUpScheduler } from './services/contactFollowUpScheduler.js';
 import { startKeepAlive } from './services/keepAlive.js';
@@ -403,21 +405,23 @@ const start = async () => {
   await seedLegalPages();
 
   if (process.env.FIRST_RUN === 'true') {
-    const saPassword = process.env.SUPERADMIN_PASSWORD;
-    if (!saPassword) {
-      console.log('FIRST_RUN=true but SUPERADMIN_PASSWORD not set — skipping bootstrap');
+    const existing = await User.findOne({ role: 'superadmin' });
+    if (existing) {
+      console.log(`Superadmin already exists (${existing.email})`);
     } else {
-      const existing = await User.findOne({ role: 'superadmin' });
-      if (existing) {
-        console.log(`Superadmin already exists (${existing.email}) — skipping bootstrap`);
+      const email = process.env.BOOTSTRAP_EMAIL || 'evangel@vangitech.com';
+      const existingToken = await SetupToken.findOne({ email, used: false, expiresAt: { $gt: new Date() } });
+      if (existingToken) {
+        console.log(`Setup token already sent to ${email} — check inbox`);
       } else {
-        await User.create({
-          name: 'Evangel',
-          email: process.env.BOOTSTRAP_EMAIL || 'evangel@vangitech.com',
-          password: saPassword,
-          role: 'superadmin',
+        const crypto = await import('crypto');
+        const token = crypto.randomBytes(32).toString('hex');
+        await SetupToken.create({ token, email, expiresAt: new Date(Date.now() + 86400000) });
+        const setupLink = `${process.env.CLIENT_URL || 'http://localhost:5173'}/vaccess/setup?token=${token}`;
+        await sendSuperAdminSetupEmail({ to: email, name: 'Super Admin', setupLink }).catch((err) => {
+          console.error('[FirstRun] Failed to send setup email:', err.message);
         });
-        console.log('Superadmin created via FIRST_RUN');
+        console.log(`Superadmin setup email sent to ${email}`);
       }
     }
   }

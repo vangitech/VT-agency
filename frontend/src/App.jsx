@@ -20,6 +20,7 @@ const StaticPage = lazy(() => import('./pages/StaticPage'));
 const Login = lazy(() => import('./pages/admin/Login'));
 const ForgotPassword = lazy(() => import('./pages/admin/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/admin/ResetPassword'));
+const SuperAdminSetup = lazy(() => import('./pages/admin/SuperAdminSetup'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const HeroManager = lazy(() => import('./pages/admin/HeroManager'));
 const TestimonialManager = lazy(() => import('./pages/admin/TestimonialManager'));
@@ -92,6 +93,7 @@ const AppRoutes = () => {
         <Route path="/vaccess/login" element={<Login />} />
         <Route path="/vaccess/forgot-password" element={<ForgotPassword />} />
         <Route path="/vaccess/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/vaccess/setup" element={<SuperAdminSetup />} />
         
         <Route path="/news/:id" element={<PublicLayout><NewsDetail /></PublicLayout>} />
         

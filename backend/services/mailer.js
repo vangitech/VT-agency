@@ -347,6 +347,35 @@ export async function sendQuoteConfirmation({ to, name, category }) {
   return { provider: result.provider, id: result.id };
 }
 
+export async function sendSuperAdminSetupEmail({ to, name, setupLink }) {
+  const html = buildTemplate({
+    name,
+    recipientEmail: to,
+    subject: 'Set Up Your Super Admin Account — Vangitech',
+    messageBody: `<p>Your super admin account has been created for <strong>Vangitech</strong>.</p>
+<p>Click the button below to set your password and activate your account. This link is valid for <strong>24 hours</strong>.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:32px 0;">
+  <tr>
+    <td align="center">
+      <a href="${setupLink}" style="background:linear-gradient(135deg,#1a56db,#059669);color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:inline-block;">Set Up Account</a>
+    </td>
+  </tr>
+</table>
+<p>Or copy this link into your browser:</p>
+<p style="font-size:13px;color:#6b7280;word-break:break-all;">${setupLink}</p>
+<p style="margin-top:24px;font-size:13px;color:#6b7280;">If you didn't expect this email, you can safely ignore it.</p>`,
+  });
+
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [to],
+    subject: 'Set Up Your Super Admin Account — Vangitech',
+    html,
+  });
+
+  return { provider: result.provider, id: result.id };
+}
+
 export async function sendPasswordResetEmail({ to, name, resetLink }) {
   const html = buildTemplate({
     name,

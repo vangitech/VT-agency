@@ -1,7 +1,8 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import { sendPasswordResetEmail } from '../services/mailer.js';
+import SetupToken from '../models/SetupToken.js';
+import { sendPasswordResetEmail, sendSuperAdminSetupEmail } from '../services/mailer.js';
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -27,6 +28,49 @@ export const register = async (req, res) => {
       avatar: user.avatar,
       role: user.role,
       token: generateToken(user._id),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const setupSuperAdmin = async (req, res) => {
+  try {
+    const { token, password, name } = req.body;
+    if (!token || !password) {
+      return res.status(400).json({ message: 'Token and password are required' });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters' });
+    }
+
+    const setupToken = await SetupToken.findOne({ token, used: false, expiresAt: { $gt: new Date() } });
+    if (!setupToken) {
+      return res.status(400).json({ message: 'Invalid or expired setup token' });
+    }
+
+    const existing = await User.findOne({ role: 'superadmin' });
+    if (existing) {
+      return res.status(400).json({ message: 'Super admin already exists' });
+    }
+
+    const user = await User.create({
+      name: name || 'Super Admin',
+      email: setupToken.email,
+      password,
+      role: 'superadmin',
+    });
+
+    setupToken.used = true;
+    await setupToken.save();
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user._id),
+      message: 'Super admin account created. You can now log in.',
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -216,12 +260,16 @@ export const forgotPassword = async (req, res) => {
       return res.json({ message: 'If that email exists, a reset link has been sent.' });
     }
 
+    if (user.role !== 'superadmin') {
+      return res.json({ message: 'Regular admins cannot reset passwords via email. Contact your super admin to reset your password.' });
+    }
+
     const resetToken = crypto.randomBytes(32).toString('hex');
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpire = Date.now() + 3600000;
     await user.save();
 
-    const resetLink = `${process.env.CLIENT_URL || 'http://localhost:5173'}/admin/reset-password/${resetToken}`;
+    const resetLink = `${process.env.CLIENT_URL || 'http://localhost:5173'}/vaccess/reset-password/${resetToken}`;
     await sendPasswordResetEmail({ to: user.email, name: user.name, resetLink }).catch((err) => {
       console.error('[ForgotPassword] Failed to send email:', err.message);
     });
@@ -278,6 +326,31 @@ export const deleteUser = async (req, res) => {
 
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: 'User deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const resetUserPassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters' });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.role === 'superadmin') {
+      return res.status(403).json({ message: 'Cannot reset a superadmin password here' });
+    }
+
+    user.password = password;
+    await user.save();
+
+    res.json({ message: `Password reset for ${user.name}. Share the new password securely.` });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

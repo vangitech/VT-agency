@@ -4,13 +4,14 @@ import API from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Mail, ArrowLeft, CheckCircle, ShieldAlert } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [contactSuperAdmin, setContactSuperAdmin] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,8 +21,12 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      await API.post('/auth/forgot-password', { email });
-      setSent(true);
+      const res = await API.post('/auth/forgot-password', { email });
+      if (res.data.message?.includes('Contact your super admin')) {
+        setContactSuperAdmin(true);
+      } else {
+        setSent(true);
+      }
     } catch (error) {
       const msg = error.response?.data?.message;
       toast.error(msg || 'Failed to send reset email');
@@ -61,7 +66,24 @@ const ForgotPassword = () => {
             <p className="text-gray-500 text-sm mt-1">Enter your email to receive a reset link</p>
           </div>
 
-          {sent ? (
+          {contactSuperAdmin ? (
+            <div className="text-center py-8 space-y-4">
+              <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto">
+                <ShieldAlert size={32} className="text-amber-500" />
+              </div>
+              <h2 className="text-lg font-semibold text-gray-900">Contact Your Super Admin</h2>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Regular admins cannot reset their password via email. Please contact your
+                super admin to have your password reset.
+              </p>
+              <Link
+                to="/vaccess/login"
+                className="inline-flex items-center gap-1.5 text-sm text-brand-blue font-medium hover:text-brand-blue/80 mt-4"
+              >
+                <ArrowLeft size={14} /> Back to login
+              </Link>
+            </div>
+          ) : sent ? (
             <div className="text-center py-8 space-y-4">
               <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle size={32} className="text-emerald-500" />

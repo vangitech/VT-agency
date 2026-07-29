@@ -7,7 +7,7 @@ import { Card, CardContent } from '../../components/ui/card';
 import { useAuth } from '../../context/AuthContext';
 import {
   Shield, ShieldCheck, ShieldAlert,
-  Trash2, Plus, X, Loader2,
+  Trash2, Plus, X, Loader2, KeyRound,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -23,6 +23,8 @@ const UserManager = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'editor' });
+  const [resetTarget, setResetTarget] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
 
   const fetchUsers = async () => {
     try {
@@ -75,6 +77,21 @@ const UserManager = () => {
       fetchUsers();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to delete user');
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!newPassword || newPassword.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+    try {
+      await API.put(`/auth/users/${resetTarget._id}/reset-password`, { password: newPassword });
+      toast.success(`Password reset for ${resetTarget.name}`);
+      setResetTarget(null);
+      setNewPassword('');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to reset password');
     }
   };
 
@@ -175,6 +192,11 @@ const UserManager = () => {
                         <option value="superadmin">Super Admin</option>
                       </select>
                     )}
+                    {!isSelf && u.role !== 'superadmin' && (
+                      <Button variant="outline" size="sm" onClick={() => { setResetTarget(u); setNewPassword(''); }}>
+                        <KeyRound size={12} />
+                      </Button>
+                    )}
                     {!isSelf && (
                       <Button variant="destructive" size="sm" onClick={() => handleDelete(u._id)}>
                         <Trash2 size={12} />
@@ -187,6 +209,32 @@ const UserManager = () => {
           );
         })}
       </div>
+
+      {resetTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setResetTarget(null)}>
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-gray-900">Reset Password</h3>
+              <button onClick={() => setResetTarget(null)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+            </div>
+            <p className="text-sm text-gray-500 mb-4">
+              Set a new password for <strong>{resetTarget.name}</strong> ({resetTarget.email}).
+              Share the new password securely with the user.
+            </p>
+            <Input
+              type="password"
+              placeholder="New password (min 8 chars)"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="h-11 rounded-xl border-gray-200 mb-4"
+            />
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1" onClick={() => setResetTarget(null)}>Cancel</Button>
+              <Button variant="blue" className="flex-1" onClick={handleResetPassword}>Reset Password</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

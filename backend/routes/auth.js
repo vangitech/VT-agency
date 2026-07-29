@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import { register, login, getMe, updateProfile, changePassword, getUsers, createUser, updateUserRole, deleteUser, forgotPassword, resetPassword } from '../controllers/authController.js';
+import { register, login, getMe, updateProfile, changePassword, getUsers, createUser, updateUserRole, deleteUser, forgotPassword, resetPassword, setupSuperAdmin, resetUserPassword } from '../controllers/authController.js';
 import { protect, superadminOnly } from '../middleware/auth.js';
 import { loginRules, forgotPasswordRules, resetPasswordRules, changePasswordRules } from '../middleware/validate.js';
 import User from '../models/User.js';
@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post('/register', protect, superadminOnly, register);
 router.post('/login', loginRules, login);
+router.post('/setup-superadmin', setupSuperAdmin);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateProfile);
 router.put('/change-password', protect, changePasswordRules, changePassword);
@@ -20,6 +21,7 @@ router.get('/users', protect, superadminOnly, getUsers);
 router.post('/users', protect, superadminOnly, createUser);
 router.put('/users/:id/role', protect, superadminOnly, updateUserRole);
 router.delete('/users/:id', protect, superadminOnly, deleteUser);
+router.put('/users/:id/reset-password', protect, superadminOnly, resetUserPassword);
 
 // Emergency superadmin reset — requires superadmin session
 router.get('/reset-superadmin', protect, superadminOnly, async (req, res) => {
