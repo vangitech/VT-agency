@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
-import connectDB from './config/db.js';
+import connectDB, { setShuttingDown } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import publicRoutes from './routes/public.js';
@@ -465,6 +465,7 @@ function shutdown(signal, err, exitCode = 1) {
   } else {
     console.log(`[${signal}] Graceful shutdown initiated`);
   }
+  setShuttingDown();
   server.close(() => {
     mongoose.connection.close(false).then(() => {
       process.exit(exitCode);
