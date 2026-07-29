@@ -31,8 +31,9 @@ const HeroManager = () => {
     try {
       const res = await API.get('/admin/hero');
       setSlides(res.data);
-    } catch {
-      toast.error('Failed to fetch slides');
+    } catch (err) {
+      const status = err?.response?.status || err?.code || 'error';
+      toast.error(`Failed to fetch slides (${status})`);
     } finally {
       setLoading(false);
     }

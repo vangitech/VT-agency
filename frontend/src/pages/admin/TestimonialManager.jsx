@@ -27,8 +27,9 @@ const TestimonialManager = () => {
     try {
       const res = await API.get('/admin/testimonials');
       setTestimonials(res.data);
-    } catch {
-      toast.error('Failed to fetch testimonials');
+    } catch (err) {
+      const status = err?.response?.status || err?.code || 'error';
+      toast.error(`Failed to fetch testimonials (${status})`);
     } finally {
       setLoading(false);
     }

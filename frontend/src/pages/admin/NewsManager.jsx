@@ -86,8 +86,9 @@ const NewsManager = () => {
     try {
       const res = await API.get('/admin/news');
       setNews(res.data);
-    } catch {
-      toast.error('Failed to fetch news');
+    } catch (err) {
+      const status = err?.response?.status || err?.code || 'error';
+      toast.error(`Failed to fetch news (${status})`);
     } finally {
       setLoading(false);
     }

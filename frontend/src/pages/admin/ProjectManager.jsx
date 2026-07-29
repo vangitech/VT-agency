@@ -29,8 +29,9 @@ const ProjectManager = () => {
     try {
       const res = await API.get('/admin/projects');
       setProjects(res.data);
-    } catch {
-      toast.error('Failed to fetch projects');
+    } catch (err) {
+      const status = err?.response?.status || err?.code || 'error';
+      toast.error(`Failed to fetch projects (${status})`);
     } finally {
       setLoading(false);
     }

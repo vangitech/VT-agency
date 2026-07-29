@@ -34,7 +34,10 @@ const Dashboard = () => {
         ]);
 
         if (dash.status === 'fulfilled') setAnalytics(dash.value.data);
-        if (dash.status === 'rejected') toast.error('Failed to load analytics');
+        if (dash.status === 'rejected') {
+          const status = dash.reason?.response?.status || dash.reason?.code || 'error';
+          toast.error(`Failed to load analytics (${status})`);
+        }
 
         setStats({
           heroSlides: heroR.status === 'fulfilled' ? heroR.value.data.length : 0,

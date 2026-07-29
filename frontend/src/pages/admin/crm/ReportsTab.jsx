@@ -39,11 +39,13 @@ const ReportsTab = () => {
         const rejected = results.filter((r) => r.status === 'rejected');
         rejected.forEach((r) => {
           const idx = results.indexOf(r);
-          console.error(`[ReportsTab] ${labels[idx]} failed:`, r.reason?.response?.data || r.reason);
+          const status = r.reason?.response?.status || r.reason?.code || 'error';
+          console.error(`[ReportsTab] ${labels[idx]} failed (${status}):`, r.reason?.response?.data || r.reason);
         });
         if (rejected.length > 0) {
           const failedNames = results.map((r, i) => r.status === 'rejected' ? labels[i] : null).filter(Boolean);
-          toast.error(`Failed to load: ${failedNames.join(', ')}. Check console for details.`);
+          const statuses = rejected.map((r) => r.reason?.response?.status || r.reason?.code).filter(Boolean);
+          toast.error(`Failed to load: ${failedNames.join(', ')} (${statuses.join(', ')})`);
         }
       } catch (err) {
         console.error('[ReportsTab] Unexpected error:', err);

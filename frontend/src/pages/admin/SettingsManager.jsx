@@ -32,8 +32,9 @@ const SettingsManager = () => {
       if (res.data) {
         setSettings((prev) => ({ ...prev, ...res.data }));
       }
-    } catch {
-      toast.error('Failed to fetch settings');
+    } catch (err) {
+      const status = err?.response?.status || err?.code || 'error';
+      toast.error(`Failed to fetch settings (${status})`);
     } finally {
       setLoading(false);
     }
