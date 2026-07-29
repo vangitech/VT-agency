@@ -1,31 +1,9 @@
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const uploadDir = path.join(__dirname, '..', 'uploads');
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const name = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    cb(null, name);
-  },
-});
+import { imageStorage, documentStorage } from '../config/cloudinary.js';
 
 const fileFilter = (req, file, cb) => {
   const allowed = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
-  if (allowed.test(path.extname(file.originalname))) {
+  if (allowed.test(file.originalname)) {
     cb(null, true);
   } else {
     cb(new Error('Only image files (jpg, jpeg, png, gif, webp, svg) are allowed'), false);
@@ -33,14 +11,14 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage,
+  storage: imageStorage,
   fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 const quoteFileFilter = (req, file, cb) => {
   const allowed = /\.(pdf|docx|zip|jpg|jpeg|png|gif|webp|svg)$/i;
-  if (allowed.test(path.extname(file.originalname))) {
+  if (allowed.test(file.originalname)) {
     cb(null, true);
   } else {
     cb(new Error('Only PDF, Docx, ZIP, and image files are allowed'), false);
@@ -48,7 +26,7 @@ const quoteFileFilter = (req, file, cb) => {
 };
 
 export const quoteUpload = multer({
-  storage,
+  storage: documentStorage,
   fileFilter: quoteFileFilter,
   limits: { fileSize: 25 * 1024 * 1024 },
 });
