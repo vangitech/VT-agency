@@ -32,7 +32,10 @@ const CookieConsent = () => {
   const [leaving, setLeaving] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [prefs, setPrefs] = useState({ analytics: true, preferences: false });
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(() => {
+    const stored = localStorage.getItem(COOKIE_KEY);
+    return stored === 'accepted';
+  });
 
   useEffect(() => {
     const stored = localStorage.getItem(COOKIE_KEY);
@@ -40,7 +43,6 @@ const CookieConsent = () => {
       const timer = setTimeout(() => setVisible(true), 800);
       return () => clearTimeout(timer);
     }
-    if (stored === 'accepted') setAccepted(true);
   }, []);
 
   const close = () => {
