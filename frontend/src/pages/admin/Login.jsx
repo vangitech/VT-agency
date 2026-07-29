@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -25,7 +25,7 @@ const Login = () => {
     try {
       await login(email, password);
       toast.success('Welcome back!');
-      navigate('/admin/dashboard');
+      navigate('/vaccess/dashboard');
     } catch (error) {
       const msg = error.response?.data?.message;
       if (msg) {
@@ -98,9 +98,9 @@ const Login = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="text-sm font-medium text-gray-700">Password</Label>
-                <button type="button" className="text-xs text-brand-blue hover:text-brand-blue/80 font-medium">
+                <Link to="/vaccess/forgot-password" className="text-xs text-brand-blue hover:text-brand-blue/80 font-medium">
                   Forgot password?
-                </button>
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />

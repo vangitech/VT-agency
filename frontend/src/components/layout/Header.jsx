@@ -95,7 +95,7 @@ const Header = () => {
                       <p className="text-xs text-gray-500 truncate">{user.email}</p>
                     </div>
                     <button
-                      onClick={() => { navigate('/admin/dashboard'); setDropdownOpen(false); }}
+                      onClick={() => { navigate('/vaccess/dashboard'); setDropdownOpen(false); }}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <LayoutDashboard size={16} /> Dashboard
@@ -161,7 +161,7 @@ const Header = () => {
                     </div>
                   </div>
                   <Link
-                    to="/admin/dashboard"
+                    to="/vaccess/dashboard"
                     className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-brand-blue hover:bg-brand-blue/5 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >

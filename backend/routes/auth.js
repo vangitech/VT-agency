@@ -1,16 +1,19 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import { register, login, getMe, updateProfile, changePassword, getUsers, createUser, updateUserRole, deleteUser } from '../controllers/authController.js';
+import { register, login, getMe, updateProfile, changePassword, getUsers, createUser, updateUserRole, deleteUser, forgotPassword, resetPassword } from '../controllers/authController.js';
 import { protect, superadminOnly } from '../middleware/auth.js';
+import { loginRules, forgotPasswordRules, resetPasswordRules, changePasswordRules } from '../middleware/validate.js';
 import User from '../models/User.js';
 
 const router = express.Router();
 
 router.post('/register', protect, superadminOnly, register);
-router.post('/login', login);
+router.post('/login', loginRules, login);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateProfile);
-router.put('/change-password', protect, changePassword);
+router.put('/change-password', protect, changePasswordRules, changePassword);
+router.post('/forgot-password', forgotPasswordRules, forgotPassword);
+router.post('/reset-password/:token', resetPasswordRules, resetPassword);
 
 // Superadmin user management
 router.get('/users', protect, superadminOnly, getUsers);
@@ -18,16 +21,17 @@ router.post('/users', protect, superadminOnly, createUser);
 router.put('/users/:id/role', protect, superadminOnly, updateUserRole);
 router.delete('/users/:id', protect, superadminOnly, deleteUser);
 
-// Emergency superadmin reset — visit in browser to reset password
-router.get('/reset-superadmin', async (req, res) => {
+// Emergency superadmin reset — requires superadmin session
+router.get('/reset-superadmin', protect, superadminOnly, async (req, res) => {
   try {
-    const hashed = await bcrypt.hash('admin123', 10);
+    const password = process.env.SUPERADMIN_PASSWORD || 'admin123';
+    const hashed = await bcrypt.hash(password, 10);
     await User.findOneAndUpdate(
       { email: { $regex: /^evangel@vangitech\.com$/i } },
       { $set: { password: hashed, role: 'superadmin', name: 'Evangel' } },
       { upsert: true }
     );
-    res.json({ success: true, message: 'Superadmin reset to evangel@vangitech.com / admin123' });
+    res.json({ success: true, message: `Superadmin reset to evangel@vangitech.com` });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

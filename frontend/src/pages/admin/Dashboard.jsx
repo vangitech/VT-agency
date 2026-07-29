@@ -70,7 +70,7 @@ const Dashboard = () => {
       icon: TrendingUp,
       color: 'text-blue-600',
       bg: 'bg-blue-50',
-      link: '/admin/crm',
+      link: '/vaccess/crm',
       tab: 'deals',
     },
     {
@@ -79,7 +79,7 @@ const Dashboard = () => {
       icon: Target,
       color: 'text-emerald-600',
       bg: 'bg-emerald-50',
-      link: '/admin/crm',
+      link: '/vaccess/crm',
       tab: 'deals',
     },
     {
@@ -88,7 +88,7 @@ const Dashboard = () => {
       icon: DollarSign,
       color: 'text-purple-600',
       bg: 'bg-purple-50',
-      link: '/admin/crm',
+      link: '/vaccess/crm',
       tab: 'reports',
     },
     {
@@ -97,18 +97,18 @@ const Dashboard = () => {
       icon: BarChart3,
       color: 'text-amber-600',
       bg: 'bg-amber-50',
-      link: '/admin/crm',
+      link: '/vaccess/crm',
       tab: 'reports',
     },
   ];
 
   const contentCards = [
-    { title: 'Hero Slides', count: stats.heroSlides, icon: Image, color: 'from-blue-500 to-blue-600', link: '/admin/hero' },
-    { title: 'Testimonials', count: stats.testimonials, icon: Users, color: 'from-emerald-500 to-emerald-600', link: '/admin/testimonials' },
-    { title: 'News', count: stats.news, icon: Newspaper, color: 'from-purple-500 to-purple-600', link: '/admin/news' },
-    { title: 'Clients', count: stats.clients, icon: Briefcase, color: 'from-orange-500 to-orange-600', link: '/admin/clients' },
-    { title: 'Projects', count: stats.projects, icon: FileText, color: 'from-pink-500 to-pink-600', link: '/admin/projects' },
-    { title: 'Messages', count: stats.messages, icon: Mail, color: 'from-teal-500 to-teal-600', link: '/admin/settings' },
+    { title: 'Hero Slides', count: stats.heroSlides, icon: Image, color: 'from-blue-500 to-blue-600', link: '/vaccess/hero' },
+    { title: 'Testimonials', count: stats.testimonials, icon: Users, color: 'from-emerald-500 to-emerald-600', link: '/vaccess/testimonials' },
+    { title: 'News', count: stats.news, icon: Newspaper, color: 'from-purple-500 to-purple-600', link: '/vaccess/news' },
+    { title: 'Clients', count: stats.clients, icon: Briefcase, color: 'from-orange-500 to-orange-600', link: '/vaccess/clients' },
+    { title: 'Projects', count: stats.projects, icon: FileText, color: 'from-pink-500 to-pink-600', link: '/vaccess/projects' },
+    { title: 'Messages', count: stats.messages, icon: Mail, color: 'from-teal-500 to-teal-600', link: '/vaccess/settings' },
   ];
 
   return (
@@ -182,7 +182,7 @@ const Dashboard = () => {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold text-gray-900">Recent Activity</CardTitle>
-              <Link to="/admin/crm" className="text-xs text-brand-blue font-medium hover:underline">View all</Link>
+              <Link to="/vaccess/crm" className="text-xs text-brand-blue font-medium hover:underline">View all</Link>
             </div>
           </CardHeader>
           <CardContent className="p-5 pt-0">
@@ -225,12 +225,12 @@ const Dashboard = () => {
           <CardContent className="p-5 pt-0">
             <div className="space-y-2">
               {[
-                { label: '+ Deal', icon: Target, color: 'bg-blue-50 text-blue-600 hover:bg-blue-100', path: '/admin/crm', tab: 'deals' },
-                { label: '+ Project', icon: FileText, color: 'bg-purple-50 text-purple-600 hover:bg-purple-100', path: '/admin/crm', tab: 'projects' },
-                { label: '+ News', icon: Newspaper, color: 'bg-orange-50 text-orange-600 hover:bg-orange-100', path: '/admin/news' },
-                { label: '+ Client', icon: Briefcase, color: 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100', path: '/admin/clients' },
-                { label: '+ Testimonial', icon: Users, color: 'bg-pink-50 text-pink-600 hover:bg-pink-100', path: '/admin/testimonials' },
-                { label: 'Reports', icon: BarChart3, color: 'bg-amber-50 text-amber-600 hover:bg-amber-100', path: '/admin/crm', tab: 'reports' },
+                { label: '+ Deal', icon: Target, color: 'bg-blue-50 text-blue-600 hover:bg-blue-100', path: '/vaccess/crm', tab: 'deals' },
+                { label: '+ Project', icon: FileText, color: 'bg-purple-50 text-purple-600 hover:bg-purple-100', path: '/vaccess/crm', tab: 'projects' },
+                { label: '+ News', icon: Newspaper, color: 'bg-orange-50 text-orange-600 hover:bg-orange-100', path: '/vaccess/news' },
+                { label: '+ Client', icon: Briefcase, color: 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100', path: '/vaccess/clients' },
+                { label: '+ Testimonial', icon: Users, color: 'bg-pink-50 text-pink-600 hover:bg-pink-100', path: '/vaccess/testimonials' },
+                { label: 'Reports', icon: BarChart3, color: 'bg-amber-50 text-amber-600 hover:bg-amber-100', path: '/vaccess/crm', tab: 'reports' },
               ].map((action) => {
                 const Icon = action.icon;
                 return (

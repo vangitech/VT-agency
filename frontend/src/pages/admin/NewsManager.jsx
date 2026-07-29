@@ -409,7 +409,7 @@ const NewsManager = () => {
                 <p className="font-semibold text-amber-800 text-sm mb-1">NewsAPI Key Required</p>
                 <p className="text-amber-700 text-xs mb-3">
                   Add your NewsAPI key in{' '}
-                  <a href="/admin/settings" className="text-brand-blue font-medium hover:underline">Settings → Integrations</a>
+                    <a href="/vaccess/settings" className="text-brand-blue font-medium hover:underline">Settings → Integrations</a>
                   {' '}to fetch live news articles.
                 </p>
               </div>

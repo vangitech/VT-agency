@@ -1,5 +1,6 @@
 import express from 'express';
 import { protect, adminOnly } from '../middleware/auth.js';
+import { contactRules, contactUpdateRules, crmReplyRules } from '../middleware/validate.js';
 import * as crmController from '../controllers/crmController.js';
 
 const router = express.Router();
@@ -13,7 +14,7 @@ router.get('/messages/stats', crmController.getStats);
 router.get('/messages/:id', crmController.getMessage);
 router.put('/messages/:id/read', crmController.markRead);
 router.delete('/messages/:id', crmController.deleteMessage);
-router.post('/messages/:id/reply', crmController.sendReplyMessage);
+router.post('/messages/:id/reply', crmReplyRules, crmController.sendReplyMessage);
 router.post('/messages/:id/sync-contact', crmController.syncMessageToContact);
 
 // Contacts (unified profiles)
@@ -21,8 +22,8 @@ router.get('/contacts', crmController.getContacts);
 router.get('/contacts/dedup/find', crmController.findDuplicates);
 router.post('/contacts/dedup/merge', crmController.mergeDuplicates);
 router.get('/contacts/:id', crmController.getContact);
-router.post('/contacts', crmController.createContact);
-router.put('/contacts/:id', crmController.updateContact);
+router.post('/contacts', contactRules, crmController.createContact);
+router.put('/contacts/:id', contactUpdateRules, crmController.updateContact);
 router.delete('/contacts/:id', crmController.deleteContact);
 
 // Interactions

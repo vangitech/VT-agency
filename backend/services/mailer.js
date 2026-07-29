@@ -347,6 +347,35 @@ export async function sendQuoteConfirmation({ to, name, category }) {
   return { provider: result.provider, id: result.id };
 }
 
+export async function sendPasswordResetEmail({ to, name, resetLink }) {
+  const html = buildTemplate({
+    name,
+    recipientEmail: to,
+    subject: 'Reset Your Password — Vangitech Admin',
+    messageBody: `<p>We received a request to reset the password for your Vangitech admin account.</p>
+<p>Click the button below to set a new password. This link is valid for <strong>1 hour</strong>.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:32px 0;">
+  <tr>
+    <td align="center">
+      <a href="${resetLink}" style="background:linear-gradient(135deg,#1a56db,#059669);color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:inline-block;">Reset Password</a>
+    </td>
+  </tr>
+</table>
+<p>Or copy this link into your browser:</p>
+<p style="font-size:13px;color:#6b7280;word-break:break-all;">${resetLink}</p>
+<p style="margin-top:24px;font-size:13px;color:#6b7280;">If you didn't request this, you can safely ignore this email. Your password will remain unchanged.</p>`,
+  });
+
+  const result = await mailer.send({
+    from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    to: [to],
+    subject: 'Reset Your Password — Vangitech Admin',
+    html,
+  });
+
+  return { provider: result.provider, id: result.id };
+}
+
 export async function sendReply({ to, name, originalSubject, originalMessage, replyBody, adminName }) {
   const subject = `Re: ${originalSubject}`;
   const html = buildReplyTemplate({ originalSubject, originalMessage, replyBody, adminName });

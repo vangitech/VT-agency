@@ -9,16 +9,16 @@ import { imageUrl } from '../../api';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
-  { name: 'Hero Slides', path: '/admin/hero', icon: Image },
-  { name: 'Testimonials', path: '/admin/testimonials', icon: Users },
-  { name: 'News', path: '/admin/news', icon: Newspaper },
-  { name: 'Clients', path: '/admin/clients', icon: Briefcase },
-  { name: 'Projects', path: '/admin/projects', icon: FileText },
-  { name: 'Legal Pages', path: '/admin/legal', icon: ScrollText },
-  { name: 'CRM', path: '/admin/crm', icon: MessageSquare },
-  { name: 'Users', path: '/admin/users', icon: Shield, superadmin: true },
-  { name: 'Settings', path: '/admin/settings', icon: Settings },
+  { name: 'Dashboard', path: '/vaccess/dashboard', icon: LayoutDashboard },
+  { name: 'Hero Slides', path: '/vaccess/hero', icon: Image },
+  { name: 'Testimonials', path: '/vaccess/testimonials', icon: Users },
+  { name: 'News', path: '/vaccess/news', icon: Newspaper },
+  { name: 'Clients', path: '/vaccess/clients', icon: Briefcase },
+  { name: 'Projects', path: '/vaccess/projects', icon: FileText },
+  { name: 'Legal Pages', path: '/vaccess/legal', icon: ScrollText },
+  { name: 'CRM', path: '/vaccess/crm', icon: MessageSquare },
+  { name: 'Users', path: '/vaccess/users', icon: Shield, superadmin: true },
+  { name: 'Settings', path: '/vaccess/settings', icon: Settings },
 ];
 
 const AdminSidebar = () => {
@@ -40,7 +40,7 @@ const AdminSidebar = () => {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-gray-800/50">
-        <Link to="/admin/dashboard" className="flex flex-col items-center">
+        <Link to="/vaccess/dashboard" className="flex flex-col items-center">
           <span className="text-[8px] text-gray-500 font-medium leading-tight tracking-wider">RC 1803640</span>
           <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-green rounded-lg flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-xs leading-none tracking-tight">VT</span>

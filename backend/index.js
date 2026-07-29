@@ -228,12 +228,7 @@ app.get('/api/proxy-image', async (req, res) => {
   }
 });
 
-// Serve frontend in production
-const frontendDist = path.join(__dirname, '../frontend/dist');
-app.use(express.static(frontendDist));
-app.use((req, res) => {
-  res.sendFile(path.join(frontendDist, 'index.html'));
-});
+
 
 // Seed legal pages
 const seedLegalPages = async () => {
@@ -407,14 +402,25 @@ const start = async () => {
 
   await seedLegalPages();
 
-  await User.deleteOne({ email: 'evangel@vangitech.com' });
-  await User.create({
-    name: 'Evangel',
-    email: 'evangel@vangitech.com',
-    password: 'admin123',
-    role: 'superadmin',
-  });
-  console.log('Superadmin seeded');
+  if (process.env.FIRST_RUN === 'true') {
+    const saPassword = process.env.SUPERADMIN_PASSWORD;
+    if (!saPassword) {
+      console.log('FIRST_RUN=true but SUPERADMIN_PASSWORD not set — skipping bootstrap');
+    } else {
+      const existing = await User.findOne({ role: 'superadmin' });
+      if (existing) {
+        console.log(`Superadmin already exists (${existing.email}) — skipping bootstrap`);
+      } else {
+        await User.create({
+          name: 'Evangel',
+          email: process.env.BOOTSTRAP_EMAIL || 'evangel@vangitech.com',
+          password: saPassword,
+          role: 'superadmin',
+        });
+        console.log('Superadmin created via FIRST_RUN');
+      }
+    }
+  }
 
   const defaults = {
     companyEmail: 'support@vangitech.com',

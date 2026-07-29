@@ -11,6 +11,7 @@ import Contact from '../models/Contact.js';
 import Interaction from '../models/Interaction.js';
 import QuoteRequest from '../models/QuoteRequest.js';
 import { quoteUpload } from '../middleware/upload.js';
+import { contactMessageRules } from '../middleware/validate.js';
 import { sendSupportNotification, sendWelcomeEmail, sendQuoteNotification, sendQuoteConfirmation } from '../services/mailer.js';
 
 const router = express.Router();
@@ -100,7 +101,7 @@ router.get('/settings', async (req, res) => {
   }
 });
 
-router.post('/contact', async (req, res) => {
+router.post('/contact', contactMessageRules, async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
     if (!name || !email || !subject || !message) {

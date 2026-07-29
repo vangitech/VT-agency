@@ -8,6 +8,7 @@ import Footer from './components/layout/Footer';
 import AdminSidebar from './components/layout/AdminSidebar';
 import CookieConsent from './components/CookieConsent';
 import ErrorBoundary from './components/ErrorBoundary';
+import useInactivityTimeout from './hooks/useInactivityTimeout';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -17,6 +18,8 @@ const Projects = lazy(() => import('./pages/Projects'));
 const NewsDetail = lazy(() => import('./pages/NewsDetail'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const Login = lazy(() => import('./pages/admin/Login'));
+const ForgotPassword = lazy(() => import('./pages/admin/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/admin/ResetPassword'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const HeroManager = lazy(() => import('./pages/admin/HeroManager'));
 const TestimonialManager = lazy(() => import('./pages/admin/TestimonialManager'));
@@ -40,12 +43,13 @@ const ProtectedRoute = ({ children }) => {
     return <PageLoader />;
   }
   if (!user) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/vaccess/login" replace />;
   }
   return children;
 };
 
 const AdminLayout = ({ children }) => {
+  useInactivityTimeout();
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
@@ -74,7 +78,7 @@ const LegalRoute = ({ slug }) => (
 
 const AppRoutes = () => {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith('/admin');
+  const isAdmin = location.pathname.startsWith('/vaccess');
 
   return (
     <Suspense fallback={<PageLoader />}>
@@ -85,7 +89,9 @@ const AppRoutes = () => {
         <Route path="/quote" element={<PublicLayout><QuoteRequest /></PublicLayout>} />
         <Route path="/projects" element={<PublicLayout><Projects /></PublicLayout>} />
         
-        <Route path="/admin/login" element={<Login />} />
+        <Route path="/vaccess/login" element={<Login />} />
+        <Route path="/vaccess/forgot-password" element={<ForgotPassword />} />
+        <Route path="/vaccess/reset-password/:token" element={<ResetPassword />} />
         
         <Route path="/news/:id" element={<PublicLayout><NewsDetail /></PublicLayout>} />
         
@@ -94,52 +100,52 @@ const AppRoutes = () => {
         <Route path="/faq" element={<LegalRoute slug="faq" />} />
         <Route path="/policy" element={<LegalRoute slug="policy" />} />
         
-        <Route path="/admin/dashboard" element={
+        <Route path="/vaccess/dashboard" element={
           <ProtectedRoute>
             <AdminLayout><Dashboard /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/hero" element={
+        <Route path="/vaccess/hero" element={
           <ProtectedRoute>
             <AdminLayout><HeroManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/testimonials" element={
+        <Route path="/vaccess/testimonials" element={
           <ProtectedRoute>
             <AdminLayout><TestimonialManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/news" element={
+        <Route path="/vaccess/news" element={
           <ProtectedRoute>
             <AdminLayout><NewsManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/clients" element={
+        <Route path="/vaccess/clients" element={
           <ProtectedRoute>
             <AdminLayout><ClientManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/projects" element={
+        <Route path="/vaccess/projects" element={
           <ProtectedRoute>
             <AdminLayout><ProjectManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/settings" element={
+        <Route path="/vaccess/settings" element={
           <ProtectedRoute>
             <AdminLayout><SettingsManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/legal" element={
+        <Route path="/vaccess/legal" element={
           <ProtectedRoute>
             <AdminLayout><LegalPagesManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/users" element={
+        <Route path="/vaccess/users" element={
           <ProtectedRoute>
             <AdminLayout><UserManager /></AdminLayout>
           </ProtectedRoute>
         } />
-        <Route path="/admin/crm" element={
+        <Route path="/vaccess/crm" element={
           <ProtectedRoute>
             <AdminLayout><CRMManager /></AdminLayout>
           </ProtectedRoute>
