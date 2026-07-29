@@ -97,7 +97,7 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="evangel@vangitech.com"
+                  placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 h-12 rounded-xl border-gray-200 bg-white focus:border-brand-blue focus:ring-brand-blue/20"
@@ -118,7 +118,7 @@ const Login = () => {
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
+                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 h-12 rounded-xl border-gray-200 bg-white focus:border-brand-blue focus:ring-brand-blue/20"
