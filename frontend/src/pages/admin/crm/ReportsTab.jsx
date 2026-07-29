@@ -34,9 +34,19 @@ const ReportsTab = () => {
         if (attr.status === 'fulfilled') setAttributionData(attr.value.data);
         if (wl.status === 'fulfilled') setWinLossData(wl.value.data);
         if (vel.status === 'fulfilled') setVelocityData(vel.value.data);
-        const rejected = [dash, rev, attr, wl, vel].filter((r) => r.status === 'rejected');
-        if (rejected.length > 0) toast.error(`Failed to load ${rejected.length} analytics report(s)`);
-      } catch {
+        const results = [dash, rev, attr, wl, vel];
+        const labels = ['Dashboard', 'Revenue', 'Attribution', 'Win/Loss', 'Velocity'];
+        const rejected = results.filter((r) => r.status === 'rejected');
+        rejected.forEach((r) => {
+          const idx = results.indexOf(r);
+          console.error(`[ReportsTab] ${labels[idx]} failed:`, r.reason?.response?.data || r.reason);
+        });
+        if (rejected.length > 0) {
+          const failedNames = results.map((r, i) => r.status === 'rejected' ? labels[i] : null).filter(Boolean);
+          toast.error(`Failed to load: ${failedNames.join(', ')}. Check console for details.`);
+        }
+      } catch (err) {
+        console.error('[ReportsTab] Unexpected error:', err);
         toast.error('Failed to load analytics');
       } finally {
         setLoading(false);
