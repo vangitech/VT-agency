@@ -64,7 +64,7 @@ app.use('/api', apiLimiter);
 
 const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
-  : ['https://vt-agency.onrender.com', 'https://vangitech.com', 'https://www.vangitech.com', 'http://localhost:5173', 'http://localhost:5001'];
+  : ['https://vangitech.com', 'https://www.vangitech.com', 'http://localhost:5173', 'http://localhost:5001'];
 
 app.use(cors({
   origin: corsOrigins,

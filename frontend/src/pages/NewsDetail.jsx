@@ -73,7 +73,7 @@ const NewsDetail = () => {
       <SEO
         title={article.title}
         description={article.summary || article.title}
-        image={article.image ? `https://vt-agency.onrender.com${article.image}` : undefined}
+        image={article.image ? `https://api.vangitech.com${article.image}` : undefined}
         url={`https://vangitech.com/news/${article._id}`}
         type="article"
       />

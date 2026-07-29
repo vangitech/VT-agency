@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL
-  || (import.meta.env.PROD ? 'https://vt-agency.onrender.com/api' : '/api');
+  || (import.meta.env.PROD ? 'https://api.vangitech.com/api' : '/api');
 
 const API = axios.create({
   baseURL: API_BASE,
@@ -25,7 +25,7 @@ export const imageUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
   const base = import.meta.env.VITE_API_URL
-    || (import.meta.env.PROD ? 'https://vt-agency.onrender.com' : '');
+    || (import.meta.env.PROD ? 'https://api.vangitech.com' : '');
   return `${base}${path}`;
 };
 
