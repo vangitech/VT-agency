@@ -49,22 +49,6 @@ const PORT = process.env.PORT || 5000;
 
 app.set('trust proxy', 1);
 
-// Rate limiting
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: 'Too many login attempts. Please try again later.',
-});
-app.use('/api/auth/login', authLimiter);
-
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 1000,
-  message: 'Too many requests from this IP, please try again later.',
-  skip: (req) => req.path === '/api/auth/login',
-});
-app.use('/api', apiLimiter);
-
 const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
   : ['https://vangitech.com', 'https://www.vangitech.com', 'http://localhost:5173', 'http://localhost:5001'];
@@ -75,6 +59,22 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting (after CORS so 429 responses include CORS headers)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: 'Too many login attempts. Please try again later.',
+});
+app.use('/api/auth/login', authLimiter);
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5000,
+  message: 'Too many requests from this IP, please try again later.',
+  skip: (req) => req.originalUrl === '/api/auth/login' || req.originalUrl === '/api/health',
+});
+app.use('/api', apiLimiter);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
