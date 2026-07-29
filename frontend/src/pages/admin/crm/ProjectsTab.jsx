@@ -6,9 +6,9 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  FolderKanban, Loader2, Plus, Search, Clock,
+  FolderKanban, Loader2, Plus, Clock,
   Users, CheckCircle, Circle, DollarSign, Trash2,
-  Calendar, ChevronRight, AlertCircle, BarChart3,
+  ChevronRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 

@@ -6,9 +6,9 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  Calendar, ChevronLeft, ChevronRight, Plus,
-  Loader2, Clock, MapPin, Users, Trash2,
-  X, CheckCircle, AlertCircle,
+  ChevronLeft, ChevronRight, Plus,
+  Loader2, Trash2,
+  X, CheckCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -42,7 +42,7 @@ const CalendarTab = () => {
     try {
       const res = await API.get('/calendar/events', { params: { start: start.toISOString(), end: end.toISOString() } });
       setEvents(Array.isArray(res.data) ? res.data : []);
-    } catch {} finally { setLoading(false); }
+    } finally { setLoading(false); }
   }, [year, month]);
 
   useEffect(() => { fetchEvents(); }, [fetchEvents]);

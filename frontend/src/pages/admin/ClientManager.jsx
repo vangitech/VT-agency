@@ -23,20 +23,21 @@ const ClientManager = () => {
     isActive: true,
   });
 
-  useEffect(() => {
-    fetchClients();
-  }, []);
-
   const fetchClients = async () => {
     try {
       const res = await API.get('/admin/clients');
       setClients(res.data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch clients');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const t = setTimeout(fetchClients, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -123,7 +124,7 @@ const ClientManager = () => {
       await API.delete(`/admin/clients/${id}`);
       toast.success('Client deleted successfully');
       fetchClients();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete client');
     }
   };

@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { useAuth } from '../../../context/AuthContext';
 import API from '../../../api';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
   MessageSquare, Send, User, Loader2,
-  Mail, CheckCircle, XCircle, Clock,
-  Plus, Users,
+  CheckCircle, XCircle,
+  Users,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -21,7 +20,6 @@ const API_BASE = import.meta.env.VITE_API_URL
   || (import.meta.env.PROD ? 'https://vt-agency.onrender.com' : '');
 
 const ChatTab = () => {
-  const { user } = useAuth();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -35,6 +33,15 @@ const ChatTab = () => {
   const socketRef = useRef(null);
 
   const getToken = () => localStorage.getItem('token');
+
+  const fetchSessions = () => {
+    API.get('/chat/sessions', { params: { status: filter } }).then((r) => {
+      setSessions(Array.isArray(r.data.sessions) ? r.data.sessions : []);
+    }).catch(() => {}).finally(() => setLoading(false));
+  };
+
+  const fetchStats = () =>
+    API.get('/chat/sessions/stats').then((r) => setStats(r.data)).catch(() => {});
 
   useEffect(() => {
     const token = getToken();
@@ -81,15 +88,6 @@ const ChatTab = () => {
       };
     }
   }, [selected?._id]);
-
-  const fetchSessions = () => {
-    API.get('/chat/sessions', { params: { status: filter } }).then((r) => {
-      setSessions(Array.isArray(r.data.sessions) ? r.data.sessions : []);
-    }).catch(() => {}).finally(() => setLoading(false));
-  };
-
-  const fetchStats = () =>
-    API.get('/chat/sessions/stats').then((r) => setStats(r.data)).catch(() => {});
 
   useEffect(() => {
     Promise.all([fetchSessions(), fetchStats()]);

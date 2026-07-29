@@ -6,8 +6,8 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  MessageSquare, Send, Phone, Loader2,
-  User, Clock, CheckCircle, ArrowLeft,
+  MessageSquare, Send, Loader2,
+  Clock, CheckCircle, ArrowLeft,
   Plus, Smartphone,
 } from 'lucide-react';
 import toast from 'react-hot-toast';

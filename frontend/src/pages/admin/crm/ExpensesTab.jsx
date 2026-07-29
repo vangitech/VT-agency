@@ -6,8 +6,8 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  Receipt, Loader2, Plus, Search, Trash2,
-  DollarSign, BarChart3, CheckCircle, Wallet,
+  Receipt, Loader2, Plus, Trash2,
+  CheckCircle, Wallet,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 

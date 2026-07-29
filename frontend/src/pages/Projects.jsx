@@ -156,7 +156,8 @@ const Projects = () => {
           (p.client && p.client.toLowerCase().includes(term))
       );
     }
-    setFilteredProjects(result);
+    const t = setTimeout(() => setFilteredProjects(result), 0);
+    return () => clearTimeout(t);
   }, [searchTerm, activeCategory, projects]);
 
   return (

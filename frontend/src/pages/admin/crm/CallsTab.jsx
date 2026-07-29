@@ -7,8 +7,8 @@ import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
   Phone, PhoneIncoming, PhoneOutgoing, PhoneMissed,
-  Loader2, Clock, User, Search, Plus, Voicemail,
-  Trash2, BarChart3, Mic, MessageSquare,
+  Loader2, Clock, Search, Plus,
+  Trash2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -36,7 +36,7 @@ const CallsTab = () => {
     contact: '', to: '', direction: 'outbound', status: 'completed',
     duration: 0, notes: '', outcome: '',
   });
-  const [contacts, setContacts] = useState([]);
+  const [, setContacts] = useState([]);
   const [initiateNumber, setInitiateNumber] = useState('');
   const [initiating, setInitiating] = useState(null);
 
@@ -62,7 +62,7 @@ const CallsTab = () => {
     if (!phoneNumber?.trim()) return;
     setInitiating(phoneNumber);
     try {
-      const res = await API.post('/calls/initiate', { phoneNumber });
+      await API.post('/calls/initiate', { phoneNumber });
       toast.success(`Call initiated to ${phoneNumber}`);
       setInitiateNumber('');
       fetchLogs();
@@ -94,15 +94,6 @@ const CallsTab = () => {
       fetchLogs();
       fetchStats();
     } catch { toast.error('Failed to delete'); }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'completed': return Phone;
-      case 'missed': return PhoneMissed;
-      case 'voicemail': return Voicemail;
-      default: return Phone;
-    }
   };
 
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-brand-blue animate-spin" /></div>;
@@ -172,7 +163,6 @@ const CallsTab = () => {
               <p className="text-gray-400 text-xs mt-1">Use the call button or log calls manually</p>
             </div>
           ) : logs.map((log) => {
-            const StatusIcon = getStatusIcon(log.status);
             const isInbound = log.direction === 'inbound';
             return (
               <div key={log._id} className="flex items-center gap-4 p-4 border-b border-gray-100 hover:bg-gray-50">

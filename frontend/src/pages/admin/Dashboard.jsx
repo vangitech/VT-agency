@@ -5,9 +5,9 @@ import { useLoading } from '../../context/LoadingContext';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import toast from 'react-hot-toast';
 import {
-  Image, Users, Newspaper, Briefcase, FileText, ScrollText,
+  Image, Users, Newspaper, Briefcase, FileText,
   ArrowUpRight, Loader2, TrendingUp, DollarSign, Target,
-  BarChart3, Activity, Mail, Clock,
+  BarChart3, Activity, Mail,
 } from 'lucide-react';
 
 const formatCurrency = (val) =>
@@ -44,7 +44,7 @@ const Dashboard = () => {
           projects: projectsR.status === 'fulfilled' ? projectsR.value.data.length : 0,
           messages: messagesR.status === 'fulfilled' ? messagesR.value.data.length : 0,
         });
-      } catch (e) {
+      } catch {
         toast.error('Failed to load dashboard data');
       } finally {
         setLoading(false);

@@ -2,11 +2,6 @@ import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { imageUrl, proxyImageUrl } from '../../api';
 
-const needsProxy = (url) => {
-  if (!url) return false;
-  return url.startsWith('http') && !url.includes(window.location.hostname);
-};
-
 const fallbackNews = [
   {
     title: 'AI-Powered Cybersecurity: The Next Frontier in Threat Detection',

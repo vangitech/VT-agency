@@ -5,14 +5,15 @@ const VTLoader = ({ loading, onDone }) => {
 
   useEffect(() => {
     if (!loading) {
-      setFadeOut(true);
-      const timer = setTimeout(() => {
+      const t1 = setTimeout(() => setFadeOut(true), 0);
+      const t2 = setTimeout(() => {
         setFadeOut(false);
         onDone?.();
       }, 400);
-      return () => clearTimeout(timer);
+      return () => { clearTimeout(t1); clearTimeout(t2); };
     }
-    setFadeOut(false);
+    const t = setTimeout(() => setFadeOut(false), 0);
+    return () => clearTimeout(t);
   }, [loading, onDone]);
 
   if (!loading && !fadeOut) return null;

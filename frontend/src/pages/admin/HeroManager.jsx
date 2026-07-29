@@ -27,20 +27,21 @@ const HeroManager = () => {
     isActive: true,
   });
 
-  useEffect(() => {
-    fetchSlides();
-  }, []);
-
   const fetchSlides = async () => {
     try {
       const res = await API.get('/admin/hero');
       setSlides(res.data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch slides');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const t = setTimeout(fetchSlides, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -142,7 +143,7 @@ const HeroManager = () => {
       await API.delete(`/admin/hero/${id}`);
       toast.success('Slide deleted successfully');
       fetchSlides();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete slide');
     }
   };

@@ -1,15 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import API from '../api';
 import { Loader2 } from 'lucide-react';
-
-const pageMap = {
-  privacy: { title: 'Privacy Policy', slug: 'privacy' },
-  terms: { title: 'Terms & Conditions', slug: 'terms' },
-  faq: { title: 'Frequently Asked Questions', slug: 'faq' },
-  policy: { title: 'Cookie Policy', slug: 'policy' },
-};
 
 const pageFallback = {
   privacy: {
@@ -56,7 +48,6 @@ const pageFallback = {
 
 const StaticPage = ({ slug }) => {
   const pageKey = slug || 'privacy';
-  const pageInfo = pageMap[pageKey] || pageMap.privacy;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 

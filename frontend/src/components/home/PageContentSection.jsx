@@ -1,4 +1,3 @@
-import React from 'react';
 import { Shield, Code, TrendingUp, Users, Award, Zap } from 'lucide-react';
 
 const fallbackItems = [

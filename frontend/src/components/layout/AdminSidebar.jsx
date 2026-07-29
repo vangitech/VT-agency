@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Image, Users, Newspaper, Briefcase,
-  Settings, FileText, LogOut, ChevronLeft, Menu, X, ScrollText, Shield, MessageSquare,
+  Settings, FileText, LogOut, ChevronLeft, Menu, ScrollText, Shield, MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { imageUrl } from '../../api';
@@ -25,11 +25,11 @@ const AdminSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   useEffect(() => {
-    setMobileOpen(false);
+    const t = setTimeout(() => setMobileOpen(false), 0);
+    return () => clearTimeout(t);
   }, [location.pathname]);
 
   const initials = user?.name

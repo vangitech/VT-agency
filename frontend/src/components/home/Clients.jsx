@@ -1,4 +1,3 @@
-import React from 'react';
 import { imageUrl } from '../../api';
 
 const fallbackClients = [

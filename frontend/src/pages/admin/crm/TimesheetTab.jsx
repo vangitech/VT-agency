@@ -5,10 +5,7 @@ import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
 import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
-import {
-  Clock, Loader2, Plus, Search, Trash2,
-  DollarSign, BarChart3, CheckCircle,
-} from 'lucide-react';
+import { Clock, Loader2, Plus, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const TimesheetTab = () => {

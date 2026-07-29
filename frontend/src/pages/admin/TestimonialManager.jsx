@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 
 const TestimonialManager = () => {
   const [testimonials, setTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
@@ -23,20 +23,21 @@ const TestimonialManager = () => {
     isActive: true,
   });
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
   const fetchTestimonials = async () => {
     try {
       const res = await API.get('/admin/testimonials');
       setTestimonials(res.data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch testimonials');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const t = setTimeout(fetchTestimonials, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -93,7 +94,7 @@ const TestimonialManager = () => {
       await API.delete(`/admin/testimonials/${id}`);
       toast.success('Testimonial deleted successfully');
       fetchTestimonials();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete testimonial');
     }
   };

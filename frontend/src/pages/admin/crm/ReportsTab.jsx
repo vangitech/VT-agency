@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import API from '../../../api';
 import { Card, CardContent } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
 import {
   BarChart3, TrendingUp, Target, DollarSign,
-  Loader2, Activity, Users, Phone, Mail,
+  Loader2, Activity, Users, Mail,
   PieChart, Award, Zap,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -37,7 +36,7 @@ const ReportsTab = () => {
         if (vel.status === 'fulfilled') setVelocityData(vel.value.data);
         const rejected = [dash, rev, attr, wl, vel].filter((r) => r.status === 'rejected');
         if (rejected.length > 0) toast.error(`Failed to load ${rejected.length} analytics report(s)`);
-      } catch (e) {
+      } catch {
         toast.error('Failed to load analytics');
       } finally {
         setLoading(false);

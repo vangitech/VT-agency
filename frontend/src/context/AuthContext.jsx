@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import API from '../api';
 
 const AuthContext = createContext();
@@ -21,7 +21,8 @@ export const AuthProvider = ({ children }) => {
           setLoading(false);
         });
     } else {
-      setLoading(false);
+      const t = setTimeout(() => setLoading(false), 0);
+      return () => clearTimeout(t);
     }
   }, []);
 
@@ -51,4 +52,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

@@ -7,7 +7,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import {
   Shield, Loader2, Key, FileText, History,
   CheckCircle, XCircle, AlertTriangle, Smartphone,
-  Eye, EyeOff, Copy, RefreshCw,
+  Eye, EyeOff, Copy,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -22,22 +22,23 @@ const SecurityTab = () => {
   const [showSecret, setShowSecret] = useState(false);
 
   const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setTwoFactorEnabled(payload.twoFactorEnabled || false);
-    } catch {}
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    setTwoFactorEnabled(payload.twoFactorEnabled || false);
   };
 
   const fetchAuditLogs = async () => {
     try {
       const res = await API.get('/security/audit-logs', { params: { limit: 50 } });
       setAuditLogs(Array.isArray(res.data.logs) ? res.data.logs : []);
-    } catch {} finally { setLoadingAudit(false); }
+    } finally { setLoadingAudit(false); }
   };
 
-  useEffect(() => { fetchUser(); fetchAuditLogs(); }, []);
+  useEffect(() => {
+    const t = setTimeout(() => { fetchUser(); fetchAuditLogs(); }, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleGenerate2FA = async () => {
     setLoading2FA(true);

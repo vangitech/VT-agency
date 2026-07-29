@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import API from '../../../api';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
@@ -6,10 +6,10 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  Plus, Loader2, DollarSign, Calendar, User,
-  Phone, Mail, Building2, Trash2, GripVertical,
-  Target, Clock, TrendingUp, X, ChevronRight,
-  BarChart3, AlertCircle, CheckCircle,
+  Plus, Loader2, DollarSign, Calendar,
+  Building2, Trash2,
+  Target, TrendingUp, X,
+  BarChart3, CheckCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -34,7 +34,7 @@ const formatDate = (d) => {
 const DealsTab = () => {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState(null);
+  const [, setStats] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editDeal, setEditDeal] = useState(null);
   const [formData, setFormData] = useState({ title: '', value: '', probability: '', stage: 'Prospecting', company: '', email: '', phone: '', source: '', notes: '', expectedCloseDate: '' });
@@ -42,7 +42,7 @@ const DealsTab = () => {
   const [activities, setActivities] = useState([]);
   const [showActivityForm, setShowActivityForm] = useState(false);
   const [activityForm, setActivityForm] = useState({ deal: '', type: 'task', subject: '', description: '', dueDate: '', priority: 'medium' });
-  const [users, setUsers] = useState([]);
+  const [, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [draggedDeal, setDraggedDeal] = useState(null);
 
@@ -80,7 +80,7 @@ const DealsTab = () => {
   const handleDrop = async (stageId) => {
     if (!draggedDeal || draggedDeal.stage === stageId) return;
     try {
-      const updated = await API.put(`/deals/${draggedDeal._id}`, { stage: stageId });
+      await API.put(`/deals/${draggedDeal._id}`, { stage: stageId });
       if (stageId === 'Closed Won') {
         toast.success('Deal won! Project auto-created.');
       }
@@ -136,11 +136,9 @@ const DealsTab = () => {
   };
 
   const openActivities = async (deal) => {
-    try {
-      const res = await API.get(`/deals/${deal._id}`);
-      setActivities(Array.isArray(res.data.activities) ? res.data.activities : []);
-      setEditDeal(deal);
-    } catch {}
+    const res = await API.get(`/deals/${deal._id}`);
+    setActivities(Array.isArray(res.data.activities) ? res.data.activities : []);
+    setEditDeal(deal);
   };
 
   const handleAddActivity = async (e) => {
@@ -165,10 +163,7 @@ const DealsTab = () => {
 
   const getStageDeals = (stageId) => deals.filter((d) => d.stage === stageId);
 
-  const totalWeighted = deals.reduce((s, d) => {
-    if (d.stage === 'Closed Lost' || d.stage === 'Closed Won') return s;
-    return s + (d.value * d.probability / 100);
-  }, 0);
+
 
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-brand-blue animate-spin" /></div>;
 

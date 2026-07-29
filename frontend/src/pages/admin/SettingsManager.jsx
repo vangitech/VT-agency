@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import API from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent } from '../../components/ui/card';
 import toast from 'react-hot-toast';
-import { Mail, Trash2, CheckCircle, ExternalLink } from 'lucide-react';
+import { Mail, Trash2, CheckCircle } from 'lucide-react';
 
 const SettingsManager = () => {
   const [settings, setSettings] = useState({
@@ -25,11 +25,6 @@ const SettingsManager = () => {
   const [messages, setMessages] = useState([]);
   const [messagesLoading, setMessagesLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('settings');
-
-  useEffect(() => {
-    fetchSettings();
-    fetchMessages();
-  }, []);
 
   const fetchSettings = async () => {
     try {
@@ -54,6 +49,14 @@ const SettingsManager = () => {
       setMessagesLoading(false);
     }
   };
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      fetchSettings();
+      fetchMessages();
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

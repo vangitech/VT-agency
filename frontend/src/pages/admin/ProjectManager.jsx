@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import API, { imageUrl } from '../../api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 
 const ProjectManager = () => {
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
@@ -25,20 +25,21 @@ const ProjectManager = () => {
   });
   const [techInput, setTechInput] = useState('');
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
   const fetchProjects = async () => {
     try {
       const res = await API.get('/admin/projects');
       setProjects(res.data);
-    } catch (error) {
+    } catch {
       toast.error('Failed to fetch projects');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const t = setTimeout(fetchProjects, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -86,8 +87,8 @@ const ProjectManager = () => {
       });
       setTechInput('');
       fetchProjects();
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Something went wrong');
+    } catch {
+      toast.error('Something went wrong');
     }
   };
 
@@ -112,7 +113,7 @@ const ProjectManager = () => {
       await API.delete(`/admin/projects/${id}`);
       toast.success('Project deleted successfully');
       fetchProjects();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete project');
     }
   };

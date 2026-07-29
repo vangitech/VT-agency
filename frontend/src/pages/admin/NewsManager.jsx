@@ -42,7 +42,7 @@ const NewsManager = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [formOpen, setFormOpen] = useState(false);
+  const [, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(formDefaults);
 
@@ -58,11 +58,6 @@ const NewsManager = () => {
   const [apiTotal, setApiTotal] = useState(0);
   const [apiImporting, setApiImporting] = useState(new Set());
   const [needsApiKey, setNeedsApiKey] = useState(false);
-
-  useEffect(() => {
-    fetchNews();
-    fetchAutoFetchInfo();
-  }, []);
 
   const fetchAutoFetchInfo = async () => {
     try {
@@ -97,6 +92,14 @@ const NewsManager = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      fetchNews();
+      fetchAutoFetchInfo();
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

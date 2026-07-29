@@ -7,8 +7,8 @@ import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
   Database, Plus, Loader2, Trash2, ChevronRight,
-  GripVertical, FileText, Settings, List,
-  PlusCircle, X, Save,
+  FileText, Settings,
+  X, Save,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -64,12 +64,6 @@ const CustomObjectsTab = () => {
       setBuilderForm({ name: '', description: '', icon: 'FileText', color: '#6366f1', fields: [{ name: 'title', label: 'Title', type: 'text', required: true, showInList: true, order: 0 }] });
       fetchTypes();
     } catch (err) { toast.error(err.response?.data?.message || 'Failed to save'); }
-  };
-
-  const handleDeleteType = async (id) => {
-    if (!window.confirm('Delete this object type and all its records?')) return;
-    try { await API.delete(`/custom-objects/object-types/${id}`); toast.success('Deleted'); if (selectedType?._id === id) { setSelectedType(null); setRecords([]); } fetchTypes(); }
-    catch { toast.error('Failed to delete'); }
   };
 
   const handleSaveRecord = async (e) => {

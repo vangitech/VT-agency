@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import API from '../../../api';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
@@ -8,7 +8,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import {
   Mail, Inbox, Send, Trash2, Star, Search,
   Loader2, Plus, Reply, Paperclip, Clock,
-  FileText, Download, RefreshCw, Sparkles,
+  FileText, RefreshCw, Sparkles,
   ChevronDown, ChevronUp,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -77,7 +77,10 @@ const EmailTab = () => {
   };
 
   useEffect(() => { fetchAccounts(); }, []);
-  useEffect(() => { fetchMessages(); }, [currentAccount, currentFolder]);
+  useEffect(() => {
+    const t = setTimeout(fetchMessages, 0);
+    return () => clearTimeout(t);
+  }, [currentAccount, currentFolder]);
   useEffect(() => {
     if (!search) return;
     const timer = setTimeout(fetchMessages, 300);
@@ -87,10 +90,8 @@ const EmailTab = () => {
   const openMessage = async (msg) => {
     setSelectedMsg(msg);
     if (!msg.isRead) {
-      try {
-        await API.get(`/email/messages/${msg._id}`);
-        setMessages((prev) => prev.map((m) => m._id === msg._id ? { ...m, isRead: true } : m));
-      } catch {}
+      await API.get(`/email/messages/${msg._id}`);
+      setMessages((prev) => prev.map((m) => m._id === msg._id ? { ...m, isRead: true } : m));
     }
   };
 

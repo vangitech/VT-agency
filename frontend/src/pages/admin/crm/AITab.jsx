@@ -8,7 +8,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import {
   Brain, Loader2, Lightbulb, Target,
   MessageSquare, FileText, TrendingUp,
-  ChevronRight, Sparkles, Zap,
+  Sparkles, Zap,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -32,7 +32,7 @@ const AITab = () => {
         ]);
         setSuggestions(Array.isArray(sugRes.data) ? sugRes.data : []);
         setInsights(insRes.data);
-      } catch (e) {
+      } catch {
         toast.error('Failed to load AI data');
       } finally {
         setLoading(false);

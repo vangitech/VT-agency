@@ -6,9 +6,9 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Label } from '../../../components/ui/label';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  Zap, Loader2, Plus, Trash2, Play, Pause,
-  Target, Users, BarChart3, Mail, Bell,
-  ToggleLeft, ToggleRight, Search,
+  Zap, Loader2, Plus, Trash2,
+  Target, Mail,
+  ToggleLeft, ToggleRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -88,15 +88,6 @@ const WorkflowsTab = () => {
   const deleteRule = async (id) => {
     if (!window.confirm('Delete this rule?')) return;
     try { await API.delete(`/workflows/rules/${id}`); toast.success('Deleted'); fetchRules(); } catch { toast.error('Failed to delete'); }
-  };
-
-  const recalculateScore = async (id) => {
-    try {
-      await API.post(`/workflows/lead-scores/${id}/recalculate`);
-      toast.success('Score recalculated');
-      fetchScores();
-      fetchScoreStats();
-    } catch { toast.error('Failed to recalculate'); }
   };
 
   const addStep = () => setFormData((p) => ({ ...p, steps: [...p.steps, { order: p.steps.length + 1, subject: '', body: '', delayDays: 0 }] }));

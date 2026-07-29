@@ -14,8 +14,7 @@ import {
   AtSign, Tags, Plus, Search, Merge, AlertTriangle,
   FileText, Calendar, MessageCircle, Smartphone,
   LayoutDashboard, FolderKanban, BarChart3, Zap,
-  DollarSign, TrendingUp, Target, PieChart, Activity,
-  SeparatorHorizontal,
+  DollarSign,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import EmailTab from './crm/EmailTab';
@@ -83,11 +82,11 @@ const TAB_GROUPS = [
 
 // ── Messages Tab ──
 
-const MessagesTab = ({ user }) => {
+const MessagesTab = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
-  const [stats, setStats] = useState({});
+  const [, setStats] = useState({});
   const [replyBody, setReplyBody] = useState('');
   const [sending, setSending] = useState(false);
 
@@ -109,7 +108,7 @@ const MessagesTab = ({ user }) => {
         await API.put(`/crm/messages/${msg._id}/read`);
         setMessages((prev) => prev.map((m) => m._id === msg._id ? { ...m, read: true } : m));
         fetchStats();
-      } catch {}
+      } catch { /* silent */ }
     }
   };
 
@@ -653,7 +652,7 @@ const DedupTab = () => {
     }
   };
 
-  useEffect(() => { findDuplicates(); }, []);
+  useEffect(() => { const t = setTimeout(findDuplicates, 0); return () => clearTimeout(t); }, []);
 
   const handleMerge = async (keepId, mergeId) => {
     setMerging(mergeId);
@@ -729,14 +728,15 @@ const DedupTab = () => {
 // ── Main CRMManager ──
 
 const CRMManager = () => {
-  const { user } = useAuth();
+  useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabParam || 'reports');
 
   useEffect(() => {
     if (tabParam && tabParam !== activeTab) {
-      setActiveTab(tabParam);
+      const t = setTimeout(() => setActiveTab(tabParam), 0);
+      return () => clearTimeout(t);
     }
   }, [tabParam]);
 
@@ -744,8 +744,6 @@ const CRMManager = () => {
     setActiveTab(id);
     setSearchParams({ tab: id });
   };
-
-  const allTabs = TAB_GROUPS.flatMap((g) => g.tabs);
 
   return (
     <div className="p-6 lg:p-8">
@@ -811,7 +809,7 @@ const CRMManager = () => {
         {activeTab === 'projects' && <ProjectsTab />}
         {activeTab === 'timesheets' && <TimesheetTab />}
         {activeTab === 'expenses' && <ExpensesTab />}
-        {activeTab === 'messages' && <MessagesTab user={user} />}
+        {activeTab === 'messages' && <MessagesTab />}
         {activeTab === 'email' && <EmailTab />}
         {activeTab === 'calendar' && <CalendarTab />}
         {activeTab === 'calls' && <CallsTab />}

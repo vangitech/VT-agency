@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SEO from '../components/SEO';
 import {
   Send, FileText, CheckCircle, Upload, Building2, Globe,
-  Users, CalendarClock, ChevronDown
+  ChevronDown
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import API from '../api';

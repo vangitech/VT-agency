@@ -6,7 +6,7 @@ import { Label } from '../../components/ui/label';
 import { Card, CardContent } from '../../components/ui/card';
 import { useAuth } from '../../context/AuthContext';
 import {
-  Users, Shield, ShieldCheck, ShieldAlert,
+  Shield, ShieldCheck, ShieldAlert,
   Trash2, Plus, X, Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -24,10 +24,6 @@ const UserManager = () => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'editor' });
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
   const fetchUsers = async () => {
     try {
       const res = await API.get('/auth/users');
@@ -38,6 +34,11 @@ const UserManager = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const t = setTimeout(fetchUsers, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));

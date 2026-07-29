@@ -30,19 +30,6 @@ const LegalPagesManager = () => {
     return () => { mountedRef.current = false; };
   }, []);
 
-  useEffect(() => {
-    currentPageRef.current = selectedPage;
-    fetchContent();
-  }, [selectedPage]);
-
-  const switchPage = (page) => {
-    if (page === selectedPage) return;
-    setError(null);
-    setLoading(true);
-    setSections(null);
-    setSelectedPage(page);
-  };
-
   const fetchContent = async () => {
     setLoading(true);
     setError(null);
@@ -76,6 +63,20 @@ const LegalPagesManager = () => {
       }
     }
   };
+
+  const switchPage = (page) => {
+    if (page === selectedPage) return;
+    setError(null);
+    setLoading(true);
+    setSections(null);
+    setSelectedPage(page);
+  };
+
+  useEffect(() => {
+    currentPageRef.current = selectedPage;
+    const t = setTimeout(fetchContent, 0);
+    return () => clearTimeout(t);
+  }, [selectedPage]);
 
   const handleSave = async () => {
     setSaving(true);

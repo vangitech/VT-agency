@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
 import API from '../../../api';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
 import { Card, CardContent } from '../../../components/ui/card';
 import {
-  Users, Loader2, AlertTriangle, CheckCircle,
+  Users, Loader2,
   Clock, Briefcase, Calendar,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
-
 const ResourcesTab = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,16 +25,6 @@ const ResourcesTab = () => {
       case 'full': return 'bg-amber-50 text-amber-600 border-amber-200';
       case 'overbooked': return 'bg-red-50 text-red-600 border-red-200';
       default: return 'bg-gray-50 text-gray-600 border-gray-200';
-    }
-  };
-
-  const getStatusDot = (status) => {
-    switch (status) {
-      case 'available': return 'bg-green-500';
-      case 'partial': return 'bg-blue-500';
-      case 'full': return 'bg-amber-500';
-      case 'overbooked': return 'bg-red-500';
-      default: return 'bg-gray-500';
     }
   };
 
