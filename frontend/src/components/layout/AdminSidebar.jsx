@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import logoSrc from '../../assets/images/Vangitech Logo.png';
 
 const navItems = [
-  { name: 'Dashboard', path: '/vaccess/dashboard', icon: LayoutDashboard },
+  { name: 'Dashboard', path: '/access/dashboard', icon: LayoutDashboard },
   { name: 'Hero Slides', path: '/vaccess/hero', icon: Image },
   { name: 'Testimonials', path: '/vaccess/testimonials', icon: Users },
   { name: 'News', path: '/vaccess/news', icon: Newspaper },
