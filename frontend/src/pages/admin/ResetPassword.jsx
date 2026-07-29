@@ -45,7 +45,7 @@ const ResetPassword = () => {
         <div className="absolute top-20 -left-20 w-80 h-80 bg-white/5 rounded-full" />
         <div className="absolute bottom-20 -right-20 w-96 h-96 bg-white/5 rounded-full" />
         <div className="relative z-10 text-center px-12">
-          <img src={logoSrc} alt="Vangitech" className="w-24 h-24 object-contain mx-auto mb-6" />
+          <img src={logoSrc} alt="Vangitech" className="w-28 h-28 object-contain mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-3">Set New Password</h2>
           <p className="text-white/70 text-lg max-w-sm mx-auto leading-relaxed">
             Choose a strong password for your admin account.
@@ -56,7 +56,7 @@ const ResetPassword = () => {
       <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
         <div className="w-full max-w-sm">
           <div className="lg:hidden text-center mb-8">
-            <img src={logoSrc} alt="Vangitech" className="w-16 h-16 object-contain mx-auto mb-4" />
+            <img src={logoSrc} alt="Vangitech" className="w-20 h-20 object-contain mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900">Set New Password</h1>
             <p className="text-gray-500 text-sm mt-1">Choose a strong password</p>
           </div>

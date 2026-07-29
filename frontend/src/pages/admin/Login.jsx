@@ -65,7 +65,7 @@ const Login = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/[0.03] rounded-full blur-3xl" />
 
         <div className="relative z-10 text-center px-12">
-          <img src={logoSrc} alt="Vangitech" className="w-24 h-24 object-contain mx-auto mb-6" />
+          <img src={logoSrc} alt="Vangitech" className="w-28 h-28 object-contain mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-3">Welcome Back</h2>
           <p className="text-white/70 text-lg max-w-sm mx-auto leading-relaxed">
             Sign in to your admin dashboard to manage your website content and settings.
@@ -78,7 +78,7 @@ const Login = () => {
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
-            <img src={logoSrc} alt="Vangitech" className="w-16 h-16 object-contain mx-auto mb-4" />
+            <img src={logoSrc} alt="Vangitech" className="w-20 h-20 object-contain mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
             <p className="text-gray-500 text-sm mt-1">Sign in to your dashboard</p>
           </div>

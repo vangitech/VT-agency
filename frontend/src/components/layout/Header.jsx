@@ -54,7 +54,7 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex flex-col items-center">
-            <img src={logoSrc} alt="Vangitech" className="w-9 h-9 md:w-10 md:h-10 object-contain" />
+            <img src={logoSrc} alt="Vangitech" className="w-10 h-10 md:w-12 md:h-12 object-contain" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">

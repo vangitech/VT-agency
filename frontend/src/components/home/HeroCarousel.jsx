@@ -39,7 +39,7 @@ const HeroCarousel = ({ slides }) => {
     return (
       <div className="h-screen bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
           <div className="text-center text-white px-4">
-            <img src={logoSrc} alt="Vangitech" className="w-20 h-20 object-contain mx-auto mb-6" />
+            <img src={logoSrc} alt="Vangitech" className="w-24 h-24 object-contain mx-auto mb-6" />
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4">Vangitech</h1>
             <p className="text-base sm:text-xl md:text-2xl text-brand-lightGreen">Innovating the Future</p>
           </div>
