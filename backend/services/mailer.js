@@ -14,6 +14,8 @@ const mailer = new Octomailer([
   new BrevoProvider(BREVO_API_KEY, 1),
 ]);
 
+const LOGO_URL = 'https://res.cloudinary.com/j4wdlgkd/image/upload/v1785335654/vangitech/email/vangitech-logo-hd.png';
+
 function buildTemplate({ name, recipientEmail, subject, messageBody, senderName, senderEmail }) {
   const year = new Date().getFullYear();
   const fromBlock = senderName ? `
@@ -42,14 +44,7 @@ function buildTemplate({ name, recipientEmail, subject, messageBody, senderName,
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
           <tr>
             <td style="background:linear-gradient(135deg,#1a56db,#059669);border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;">
-              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-                <tr>
-                  <td style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;">
-                    <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">VT</span>
-                    <span style="color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;letter-spacing:1px;display:block;margin-top:2px;">VANGITECH</span>
-                  </td>
-                </tr>
-              </table>
+              <img src="${LOGO_URL}" alt="Vangitech" width="180" style="display:block;margin:0 auto;max-width:180px;height:auto;border:0;outline:none;">
               <h1 style="color:#ffffff;font-size:24px;font-weight:700;margin:24px 0 0;line-height:1.3;">${subject}</h1>
             </td>
           </tr>
@@ -106,14 +101,7 @@ function buildReplyTemplate({ originalSubject, originalMessage, replyBody, admin
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
           <tr>
             <td style="background:linear-gradient(135deg,#1a56db,#059669);border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;">
-              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-                <tr>
-                  <td style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;">
-                    <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">VT</span>
-                    <span style="color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;letter-spacing:1px;display:block;margin-top:2px;">VANGITECH</span>
-                  </td>
-                </tr>
-              </table>
+              <img src="${LOGO_URL}" alt="Vangitech" width="180" style="display:block;margin:0 auto;max-width:180px;height:auto;border:0;outline:none;">
               <h1 style="color:#ffffff;font-size:24px;font-weight:700;margin:24px 0 0;line-height:1.3;">Re: ${originalSubject}</h1>
             </td>
           </tr>
