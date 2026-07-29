@@ -34,5 +34,9 @@ export function clear(pattern) {
 }
 
 export function size() {
+  const now = Date.now();
+  for (const [key, entry] of cache) {
+    if (entry.expiresAt <= now) cache.delete(key);
+  }
   return cache.size;
 }
