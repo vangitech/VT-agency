@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { useAuth } from '../../context/AuthContext';
 import { useLoading } from '../../context/LoadingContext';
 import { imageUrl } from '../../api';
+import logoSrc from '../../assets/images/Vangitech Logo.png';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,9 +55,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex flex-col items-center">
             <span className="text-[9px] text-gray-400 font-medium leading-tight tracking-wider">RC 1803640</span>
-            <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-green rounded-xl flex items-center justify-center shadow-sm">
-              <span className="text-white font-bold text-base leading-none tracking-tight">VT</span>
-            </div>
+            <img src={logoSrc} alt="Vangitech" className="w-9 h-9 md:w-10 md:h-10 object-contain" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">

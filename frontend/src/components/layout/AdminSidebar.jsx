@@ -7,6 +7,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { imageUrl } from '../../api';
 import { cn } from '@/lib/utils';
+import logoSrc from '../../assets/images/Vangitech Logo.png';
 
 const navItems = [
   { name: 'Dashboard', path: '/vaccess/dashboard', icon: LayoutDashboard },
@@ -42,9 +43,7 @@ const AdminSidebar = () => {
       <div className="flex items-center justify-between px-4 h-16 border-b border-gray-800/50">
         <Link to="/vaccess/dashboard" className="flex flex-col items-center">
           <span className="text-[8px] text-gray-500 font-medium leading-tight tracking-wider">RC 1803640</span>
-          <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-green rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-xs leading-none tracking-tight">VT</span>
-          </div>
+          <img src={logoSrc} alt="Vangitech" className="w-8 h-8 object-contain" />
         </Link>
         <button
           onClick={() => setCollapsed(!collapsed)}

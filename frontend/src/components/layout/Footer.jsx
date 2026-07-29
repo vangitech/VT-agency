@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, ChevronRight } from 'lucide-react';
 import { FaFacebook, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import API from '../../api';
 import { useLoading } from '../../context/LoadingContext';
+import logoSrc from '../../assets/images/Vangitech Logo.png';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -52,9 +53,7 @@ const Footer = () => {
           <div className="sm:col-span-2 xl:col-span-1">
             <div className="h-full bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 backdrop-blur-sm hover:bg-white/[0.05] transition-colors">
               <button onClick={() => navigateWithLoader('/')} className="inline-flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-green rounded-xl flex items-center justify-center shadow-lg shadow-brand-blue/20">
-                  <span className="text-white font-bold text-base leading-none tracking-tight">VT</span>
-                </div>
+                <img src={logoSrc} alt="Vangitech" className="w-10 h-10 object-contain" />
                 <span className="text-white font-semibold text-lg">{s('companyName', 'Vangitech')}</span>
               </button>
               <p className="text-sm text-gray-400 leading-relaxed mb-6">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { imageUrl } from '../../api';
+import logoSrc from '../../assets/images/Vangitech Logo.png';
 
 const FALLBACK_GRADIENTS = [
   'from-brand-darkBlue via-brand-blue to-brand-green',
@@ -37,13 +38,11 @@ const HeroCarousel = ({ slides }) => {
   if (!Array.isArray(slides) || slides.length === 0) {
     return (
       <div className="h-screen bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
-        <div className="text-center text-white px-4">
-          <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/20">
-            <span className="text-white font-bold text-2xl tracking-tight">VT</span>
+          <div className="text-center text-white px-4">
+            <img src={logoSrc} alt="Vangitech" className="w-20 h-20 object-contain mx-auto mb-6" />
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4">Vangitech</h1>
+            <p className="text-base sm:text-xl md:text-2xl text-brand-lightGreen">Innovating the Future</p>
           </div>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4">Vangitech</h1>
-          <p className="text-base sm:text-xl md:text-2xl text-brand-lightGreen">Innovating the Future</p>
-        </div>
       </div>
     );
   }

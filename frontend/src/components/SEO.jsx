@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 const defaultTitle = 'Vangitech — Software Development, Cybersecurity & IT Consulting';
 const defaultDescription = 'Custom software development, cybersecurity, compliance audits, and IT consulting. Empowering businesses with innovative technology solutions.';
 const siteUrl = 'https://vangitech.com';
-const defaultImage = `${siteUrl}/favicon.svg`;
+const defaultImage = `${siteUrl}/logo.png`;
 
 const SEO = ({ title, description, image, url, type = 'website' }) => {
   const pageTitle = title ? `${title} | Vangitech` : defaultTitle;

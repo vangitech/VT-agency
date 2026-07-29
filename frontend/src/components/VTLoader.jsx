@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import logoSrc from '../assets/images/Vangitech Logo.png';
 
 const VTLoader = ({ loading, onDone }) => {
   const [fadeOut, setFadeOut] = useState(false);
@@ -26,9 +27,7 @@ const VTLoader = ({ loading, onDone }) => {
     >
       <div className="flex flex-col items-center gap-3">
         <div className="relative">
-          <div className="w-16 h-16 bg-gradient-to-br from-brand-blue to-brand-green rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
-            <span className="text-white font-bold text-2xl leading-none tracking-tight">VT</span>
-          </div>
+          <img src={logoSrc} alt="Vangitech" className="w-16 h-16 object-contain" />
           <div className="absolute -inset-2 rounded-3xl border-2 border-brand-blue/20 animate-ping opacity-30" />
         </div>
         <div className="flex gap-1.5 mt-1">

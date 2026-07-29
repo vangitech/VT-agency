@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Mail, ArrowLeft, CheckCircle, ShieldAlert } from 'lucide-react';
 import toast from 'react-hot-toast';
+import logoSrc from '../../assets/images/Vangitech Logo.png';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -41,9 +42,7 @@ const ForgotPassword = () => {
         <div className="absolute top-20 -left-20 w-80 h-80 bg-white/5 rounded-full" />
         <div className="absolute bottom-20 -right-20 w-96 h-96 bg-white/5 rounded-full" />
         <div className="relative z-10 text-center px-12">
-          <div className="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl border border-white/20">
-            <span className="text-white font-bold text-3xl tracking-tight">VT</span>
-          </div>
+          <img src={logoSrc} alt="Vangitech" className="w-24 h-24 object-contain mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-3">Forgot Password?</h2>
           <p className="text-white/70 text-lg max-w-sm mx-auto leading-relaxed">
             No worries. Enter your email and we will send you a reset link.
@@ -54,9 +53,7 @@ const ForgotPassword = () => {
       <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
         <div className="w-full max-w-sm">
           <div className="lg:hidden text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-brand-blue to-brand-green rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-white font-bold text-xl tracking-tight">VT</span>
-            </div>
+            <img src={logoSrc} alt="Vangitech" className="w-16 h-16 object-contain mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900">Forgot Password?</h1>
             <p className="text-gray-500 text-sm mt-1">Enter your email to receive a reset link</p>
           </div>

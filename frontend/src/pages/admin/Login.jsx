@@ -7,6 +7,7 @@ import { Label } from '../../components/ui/label';
 import { Lock, Mail, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import API from '../../api';
 import toast from 'react-hot-toast';
+import logoSrc from '../../assets/images/Vangitech Logo.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -64,9 +65,7 @@ const Login = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/[0.03] rounded-full blur-3xl" />
 
         <div className="relative z-10 text-center px-12">
-          <div className="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl border border-white/20">
-            <span className="text-white font-bold text-3xl tracking-tight">VT</span>
-          </div>
+          <img src={logoSrc} alt="Vangitech" className="w-24 h-24 object-contain mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-3">Welcome Back</h2>
           <p className="text-white/70 text-lg max-w-sm mx-auto leading-relaxed">
             Sign in to your admin dashboard to manage your website content and settings.
@@ -79,9 +78,7 @@ const Login = () => {
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-brand-blue to-brand-green rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-white font-bold text-xl tracking-tight">VT</span>
-            </div>
+            <img src={logoSrc} alt="Vangitech" className="w-16 h-16 object-contain mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
             <p className="text-gray-500 text-sm mt-1">Sign in to your dashboard</p>
           </div>
