@@ -42,8 +42,8 @@ const AdminSidebar = () => {
       {/* Logo */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-gray-800/50">
         <Link to="/vaccess/dashboard" className="flex flex-col items-center">
-          <span className="text-[8px] text-gray-500 font-medium leading-tight tracking-wider">RC 1803640</span>
-          <img src={logoSrc} alt="Vangitech" className="w-8 h-8 object-contain" />
+          <span className="text-[8px] text-gray-500 font-medium leading-tight tracking-wider"></span>
+          <img src={logoSrc} alt="Vangitech" className="w-18 h-18 md:w-14 md:h-14 object-contain" />
         </Link>
         <button
           onClick={() => setCollapsed(!collapsed)}

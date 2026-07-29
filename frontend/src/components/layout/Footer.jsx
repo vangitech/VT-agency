@@ -53,7 +53,7 @@ const Footer = () => {
           <div className="sm:col-span-2 xl:col-span-1">
             <div className="h-full bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 backdrop-blur-sm hover:bg-white/[0.05] transition-colors">
               <button onClick={() => navigateWithLoader('/')} className="inline-flex items-center gap-3 mb-5">
-                <img src={logoSrc} alt="Vangitech" className="w-10 h-10 object-contain" />
+                <img src={logoSrc} alt="Vangitech" className="w-18 h-18 md:w-14 md:h-14 object-contain" />
                 <span className="text-white font-semibold text-lg">{s('companyName', 'Vangitech')}</span>
               </button>
               <p className="text-sm text-gray-400 leading-relaxed mb-6">
