@@ -5,8 +5,12 @@ import Timesheet from '../models/Timesheet.js';
 import Expense from '../models/Expense.js';
 import Interaction from '../models/Interaction.js';
 import ContactMessage from '../models/ContactMessage.js';
+import { get, set } from '../services/cache.js';
 
 export const getDashboard = async (req, res) => {
+  const cached = get('analytics:dashboard');
+  if (cached) return res.json(cached);
+
   try {
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -54,7 +58,7 @@ export const getDashboard = async (req, res) => {
       date: i.createdAt,
     }));
 
-    res.json({
+    const result = {
       kpis: {
         totalDeals, wonDeals, activeDeals, lostDeals,
         pipelineValue: Math.round(pipelineValue[0]?.total || 0),
@@ -65,7 +69,9 @@ export const getDashboard = async (req, res) => {
         mrr, winRate,
       },
       recentActivity,
-    });
+    };
+    set('analytics:dashboard', result);
+    res.json(result);
   } catch (error) {
     console.error('getDashboard error:', error);
     res.status(500).json({ message: error.message });
@@ -73,6 +79,9 @@ export const getDashboard = async (req, res) => {
 };
 
 export const getRevenueReport = async (req, res) => {
+  const cached = get('analytics:revenue');
+  if (cached) return res.json(cached);
+
   try {
     const wonDeals = await Deal.find({
       stage: { $in: ['Closed Won', 'closed_won'] },
@@ -106,13 +115,15 @@ export const getRevenueReport = async (req, res) => {
     const mrr = thisMonthRevenue[0]?.total || 0;
     const prevMrr = prevMonthRevenue[0]?.total || 0;
 
-    res.json({
+    const result = {
       monthlyRevenue: monthlyRevenue || [],
       totalRevenue: wonDeals.reduce((s, d) => s + d.value, 0),
       mrr: Math.round(mrr),
       mrrGrowth: prevMrr > 0 ? Math.round(((mrr - prevMrr) / prevMrr) * 100) : 0,
       dealCount: wonDeals.length,
-    });
+    };
+    set('analytics:revenue', result);
+    res.json(result);
   } catch (error) {
     console.error('[getRevenueReport]', error.message);
     res.status(500).json({ message: error.message });
@@ -120,6 +131,10 @@ export const getRevenueReport = async (req, res) => {
 };
 
 export const getActivityReport = async (req, res) => {
+  const cacheKey = `analytics:activity:${req.query.start || ''}:${req.query.end || ''}`;
+  const cached = get(cacheKey);
+  if (cached) return res.json(cached);
+
   try {
     const { start, end, userId } = req.query;
     const dateFilter = {};
@@ -144,11 +159,13 @@ export const getActivityReport = async (req, res) => {
       { $limit: 10 },
     ]);
 
-    res.json({
+    const result = {
       byType: interactions || [],
       topPerformers: topPerformers || [],
       total: interactions.reduce((s, i) => s + i.count, 0),
-    });
+    };
+    set(cacheKey, result);
+    res.json(result);
   } catch (error) {
     console.error('[getActivityReport]', error.message);
     res.status(500).json({ message: error.message });
@@ -156,6 +173,9 @@ export const getActivityReport = async (req, res) => {
 };
 
 export const getAttributionReport = async (req, res) => {
+  const cached = get('analytics:attribution');
+  if (cached) return res.json(cached);
+
   try {
     const bySource = await Deal.aggregate([
       { $match: { source: { $exists: true, $ne: '' } } },
@@ -173,11 +193,9 @@ export const getAttributionReport = async (req, res) => {
     const totalDeals = await Deal.countDocuments();
     const totalWon = await Deal.countDocuments({ stage: { $in: ['Closed Won', 'closed_won'] } });
 
-    res.json({
-      bySource: bySource || [],
-      totalDeals,
-      totalWon,
-    });
+    const result = { bySource: bySource || [], totalDeals, totalWon };
+    set('analytics:attribution', result);
+    res.json(result);
   } catch (error) {
     console.error('[getAttributionReport]', error.message);
     res.status(500).json({ message: error.message });
@@ -185,6 +203,9 @@ export const getAttributionReport = async (req, res) => {
 };
 
 export const getWinLossReport = async (req, res) => {
+  const cached = get('analytics:winloss');
+  if (cached) return res.json(cached);
+
   try {
     const byReason = await Deal.aggregate([
       { $match: { stage: { $in: ['Closed Lost', 'closed_lost'] }, lostReason: { $exists: true, $ne: '' } } },
@@ -197,12 +218,9 @@ export const getWinLossReport = async (req, res) => {
     const total = totalWon + totalLost;
     const winRate = total > 0 ? Math.round((totalWon / total) * 100) : 0;
 
-    res.json({
-      winRate,
-      totalWon,
-      totalLost,
-      byLostReason: byReason || [],
-    });
+    const result = { winRate, totalWon, totalLost, byLostReason: byReason || [] };
+    set('analytics:winloss', result);
+    res.json(result);
   } catch (error) {
     console.error('[getWinLossReport]', error.message);
     res.status(500).json({ message: error.message });
@@ -210,6 +228,9 @@ export const getWinLossReport = async (req, res) => {
 };
 
 export const getSalesVelocity = async (req, res) => {
+  const cached = get('analytics:velocity');
+  if (cached) return res.json(cached);
+
   try {
     const wonDeals = await Deal.find({
       stage: { $in: ['Closed Won', 'closed_won'] },
@@ -239,12 +260,14 @@ export const getSalesVelocity = async (req, res) => {
       ? Math.round(monthlyDeals.reduce((s, m) => s + m.count, 0) / monthlyDeals.length)
       : 0;
 
-    res.json({
+    const result = {
       avgCycleDays,
       avgMonthlyDeals,
       velocityScore: avgCycleDays > 0 ? Math.round((avgMonthlyDeals * 100) / avgCycleDays) : 0,
       monthlyHistory: monthlyDeals || [],
-    });
+    };
+    set('analytics:velocity', result);
+    res.json(result);
   } catch (error) {
     console.error('[getSalesVelocity]', error.message);
     res.status(500).json({ message: error.message });

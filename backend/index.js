@@ -26,6 +26,7 @@ import workflowRoutes from './routes/workflows.js';
 import aiRoutes from './routes/ai.js';
 import customObjectRoutes from './routes/customObjects.js';
 import securityRoutes from './routes/security.js';
+import mongoose from 'mongoose';
 import rateLimit from 'express-rate-limit';
 import PageContent from './models/PageContent.js';
 import User from './models/User.js';
@@ -209,8 +210,17 @@ app.use('/api/custom-objects', customObjectRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/public', publicRoutes);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Vangitech API is running' });
+app.get('/api/health', async (req, res) => {
+  const mongoState = mongoose.connection.readyState;
+  const healthy = mongoState === 1;
+  const stateMap = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+  res.status(healthy ? 200 : 503).json({
+    status: healthy ? 'OK' : 'DEGRADED',
+    message: 'Vangitech API is running',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    mongo: stateMap[mongoState] || 'unknown',
+  });
 });
 
 // Proxy external images (fix ERR_BLOCKED_BY_ORB)
@@ -448,6 +458,31 @@ const start = async () => {
     startKeepAlive();
   });
 };
+
+function shutdown(signal, err, exitCode = 1) {
+  if (err) {
+    console.error(`[${signal}]`, err?.stack || err?.message || err);
+  } else {
+    console.log(`[${signal}] Graceful shutdown initiated`);
+  }
+  server.close(() => {
+    mongoose.connection.close(false).then(() => {
+      process.exit(exitCode);
+    });
+  });
+  setTimeout(() => process.exit(exitCode), 5000).unref();
+}
+
+process.on('unhandledRejection', (reason) => {
+  shutdown('unhandledRejection', reason instanceof Error ? reason : new Error(String(reason)));
+});
+
+process.on('uncaughtException', (err) => {
+  shutdown('uncaughtException', err);
+});
+
+process.on('SIGTERM', () => shutdown('SIGTERM', null, 0));
+process.on('SIGINT', () => shutdown('SIGINT', null, 0));
 
 start().catch((err) => {
   console.error('Failed to start server:', err);
