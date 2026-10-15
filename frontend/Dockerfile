@@ -3,6 +3,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+# Baked into the bundle at build time by Vite. Coolify: set VITE_API_URL
+# explicitly; defaults to the production API for safety.
+ARG VITE_API_URL=https://api.vangitech.com/api
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 FROM nginx:alpine
