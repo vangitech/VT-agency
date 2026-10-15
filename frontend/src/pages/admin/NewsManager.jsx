@@ -257,7 +257,7 @@ const NewsManager = () => {
   }
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
@@ -579,7 +579,7 @@ const NewsManager = () => {
       {/* === TAB: Add Manual === */}
       {activeTab === 'add' && (
         <Card className="border border-gray-100 shadow-sm">
-          <CardContent className="p-6 lg:p-8">
+          <CardContent className="p-4 sm:p-6 lg:p-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-900">
                 {editingId ? 'Edit Article' : 'Create New Article'}

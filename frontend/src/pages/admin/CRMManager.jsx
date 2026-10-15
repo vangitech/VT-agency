@@ -746,7 +746,7 @@ const CRMManager = () => {
   };
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="flex items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight">CRM</h1>
@@ -772,7 +772,7 @@ const CRMManager = () => {
       </div>
 
       {/* Tab navigation */}
-      <div className="mb-6 overflow-x-auto">
+      <div className="mb-6 overflow-x-auto snap-x -mx-4 px-4 sm:mx-0 sm:px-0">
         <div className="flex gap-2 min-w-max pb-1">
           {TAB_GROUPS.map((group, gi) => (
             <div key={group.label} className="flex items-center gap-2">
@@ -786,7 +786,7 @@ const CRMManager = () => {
                   <button
                     key={tab.id}
                     onClick={() => handleTabChange(tab.id)}
-                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                    className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] snap-start rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       isActive
                         ? 'bg-brand-blue text-white shadow-sm shadow-brand-blue/20'
                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border border-transparent'

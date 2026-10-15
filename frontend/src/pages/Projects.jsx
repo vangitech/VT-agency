@@ -194,7 +194,7 @@ const Projects = () => {
                   variant={activeCategory === cat.value ? 'blue' : 'outline'}
                   size="sm"
                   onClick={() => setActiveCategory(cat.value)}
-                  className="rounded-lg"
+                  className="rounded-lg min-h-[44px] px-4 py-2.5"
                 >
                   {cat.label}
                 </Button>
@@ -262,7 +262,7 @@ const Projects = () => {
                           </span>
                         )}
                       </div>
-                      <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute bottom-4 right-4 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <span className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
                           <Code size={16} className="text-brand-blue" />
                         </span>

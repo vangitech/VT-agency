@@ -177,7 +177,7 @@ const ProjectsTab = () => {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
           <Card className="w-full max-w-lg mx-4 border border-gray-100 shadow-xl max-h-[90vh] overflow-y-auto">
             <CardContent className="p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4">{selected ? 'Edit Project' : 'New Project'}</h2>

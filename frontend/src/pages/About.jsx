@@ -184,7 +184,7 @@ const About = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 max-w-4xl mx-auto text-center">
             <div>
-              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1">50+</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1">50+</div>
               <div className="text-sm text-white/80 font-medium">Projects Delivered</div>
             </div>
             <div>

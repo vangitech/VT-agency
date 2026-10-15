@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Image, Users, Newspaper, Briefcase,
-  Settings, FileText, LogOut, ChevronLeft, Menu, ScrollText, Shield, MessageSquare,
+  Settings, FileText, ChevronLeft, ScrollText, Shield, MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { cn } from '@/lib/utils';
@@ -25,12 +25,18 @@ const AdminSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     const t = setTimeout(() => setMobileOpen(false), 0);
     return () => clearTimeout(t);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const open = () => setMobileOpen(true);
+    window.addEventListener('open-admin-sidebar', open);
+    return () => window.removeEventListener('open-admin-sidebar', open);
+  }, []);
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
@@ -38,7 +44,7 @@ const AdminSidebar = () => {
       <div className="flex items-center justify-between px-4 h-16 border-b border-gray-800/50">
         <Link to="/vaccess/dashboard" className="flex flex-col items-center">
           <span className="text-[8px] text-gray-500 font-medium leading-tight tracking-wider"></span>
-          <img src={logoSrc} alt="Vangitech" className="w-18 h-18 md:w-14 md:h-14 object-contain" />
+          <img src={logoSrc} alt="Vangitech" className="w-12 h-12 md:w-14 md:h-14 object-contain" />
         </Link>
         <button
           onClick={() => setCollapsed(!collapsed)}
@@ -69,21 +75,6 @@ const AdminSidebar = () => {
           );
         })}
       </nav>
-
-      {/* Logout */}
-      <div className="border-t border-gray-800/50 p-3">
-        <button
-          onClick={logout}
-          title="Logout"
-          className={cn(
-            'w-full flex items-center rounded-lg text-sm font-medium text-gray-400 hover:text-red-400 hover:bg-gray-800/50 transition-colors',
-            collapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'
-          )}
-        >
-          <LogOut size={18} className="flex-shrink-0" />
-          {!collapsed && <span>Logout</span>}
-        </button>
-      </div>
     </div>
   );
 
@@ -96,14 +87,6 @@ const AdminSidebar = () => {
           onClick={() => setMobileOpen(false)}
         />
       )}
-
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 w-10 h-10 rounded-xl bg-white shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-50"
-      >
-        <Menu size={20} />
-      </button>
 
       {/* Sidebar - mobile */}
       <aside

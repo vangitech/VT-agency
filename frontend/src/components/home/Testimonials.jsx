@@ -142,7 +142,7 @@ const Testimonials = ({ testimonials }) => {
               <button
                 onClick={prev}
                 disabled={currentIndex === 0}
-                className="w-10 h-10 rounded-full border border-gray-200 hover:border-brand-blue hover:bg-brand-blue/5 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+                className="w-11 h-11 rounded-full border border-gray-200 hover:border-brand-blue hover:bg-brand-blue/5 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center"
               >
                 <ChevronLeft size={18} className="text-gray-600" />
               </button>
@@ -152,7 +152,7 @@ const Testimonials = ({ testimonials }) => {
               <button
                 onClick={next}
                 disabled={currentIndex >= maxIndex}
-                className="w-10 h-10 rounded-full border border-gray-200 hover:border-brand-blue hover:bg-brand-blue/5 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+                className="w-11 h-11 rounded-full border border-gray-200 hover:border-brand-blue hover:bg-brand-blue/5 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center"
               >
                 <ChevronRight size={18} className="text-gray-600" />
               </button>

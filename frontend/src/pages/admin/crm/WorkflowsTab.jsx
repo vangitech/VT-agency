@@ -253,7 +253,7 @@ const WorkflowsTab = () => {
       )}
 
       {showForm && formMode === 'sequence' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
           <Card className="w-full max-w-2xl mx-4 border border-gray-100 shadow-xl max-h-[90vh] overflow-y-auto">
             <CardContent className="p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4">{formData._id ? 'Edit Sequence' : 'New Email Sequence'}</h2>
@@ -292,7 +292,7 @@ const WorkflowsTab = () => {
       )}
 
       {showForm && formMode === 'rule' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
           <Card className="w-full max-w-lg mx-4 border border-gray-100 shadow-xl max-h-[90vh] overflow-y-auto">
             <CardContent className="p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4">{ruleForm._id ? 'Edit Rule' : 'New Automation Rule'}</h2>

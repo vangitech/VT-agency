@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LogOut, ChevronDown } from 'lucide-react';
+import { LogOut, ChevronDown, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { imageUrl } from '../../api';
 import { cn } from '@/lib/utils';
@@ -37,7 +37,15 @@ const AdminTopbar = () => {
     : 'A';
 
   return (
-    <header className="sticky top-0 z-20 h-16 bg-white border-b border-gray-200 flex items-center justify-end px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-20 h-16 bg-white border-b border-gray-200 flex items-center justify-between pl-2 pr-4 sm:px-6 lg:px-8">
+      <button
+        onClick={() => window.dispatchEvent(new CustomEvent('open-admin-sidebar'))}
+        className="lg:hidden w-11 h-11 rounded-xl flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors"
+        aria-label="Open navigation menu"
+      >
+        <Menu size={22} />
+      </button>
+      <div className="hidden lg:block" aria-hidden="true" />
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setOpen((v) => !v)}

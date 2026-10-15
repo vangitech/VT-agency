@@ -115,7 +115,7 @@ const LegalPagesManager = () => {
   const currentPage = legalPages.find((p) => p.value === selectedPage);
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>

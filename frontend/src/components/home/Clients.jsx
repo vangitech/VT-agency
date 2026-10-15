@@ -37,7 +37,7 @@ const Clients = ({ clients }) => {
                 <img
                   src={imageUrl(client.logo)}
                   alt={client.name}
-                  className="max-w-full h-24 object-contain transition-all duration-300"
+                  className="max-w-full h-16 sm:h-20 object-contain transition-all duration-300"
                 />
               ) : (
                 <span className="text-sm font-semibold text-gray-500 group-hover:text-brand-blue transition-colors text-center">

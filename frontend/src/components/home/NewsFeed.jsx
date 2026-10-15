@@ -88,7 +88,7 @@ const NewsFeed = ({ news }) => {
                 </p>
                 <Link
                   to={`/news/${item._id}`}
-                  className="inline-flex items-center gap-1.5 text-brand-blue font-semibold text-sm hover:text-brand-darkBlue transition-colors"
+                  className="inline-flex items-center gap-1.5 text-brand-blue font-semibold text-sm hover:text-brand-darkBlue transition-colors min-h-[44px] py-2.5"
                 >
                   Read More <ArrowRight size={14} />
                 </Link>

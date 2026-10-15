@@ -125,7 +125,7 @@ const ProjectsSection = ({ projects = [] }) => {
                       </span>
                     )}
                   </div>
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute bottom-4 right-4 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
                     <span className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
                       <Code size={16} className="text-brand-blue" />
                     </span>

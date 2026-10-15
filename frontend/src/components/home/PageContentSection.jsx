@@ -103,7 +103,7 @@ const PageContentSection = ({ content }) => {
 
         {/* Stats bar */}
         <div className="bg-gradient-to-br from-brand-blue to-brand-green rounded-2xl p-8 lg:p-12 max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
               <div key={index}>
                 <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1">

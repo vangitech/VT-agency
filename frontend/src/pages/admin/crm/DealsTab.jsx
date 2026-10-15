@@ -178,20 +178,20 @@ const DealsTab = () => {
         </div>
       )}
 
-      <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-xs">
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search deals..." className="h-10 rounded-xl pl-3 border-gray-200" />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="relative flex-1 w-full sm:max-w-xs">
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search deals..." className="h-11 rounded-xl pl-3 border-gray-200" />
         </div>
-        <Button variant="blue" onClick={() => openForm()} className="rounded-xl"><Plus size={16} className="mr-1.5" /> New Deal</Button>
+        <Button variant="blue" onClick={() => openForm()} className="rounded-xl min-h-[44px] w-full sm:w-auto"><Plus size={16} className="mr-1.5" /> New Deal</Button>
       </div>
 
-      <div className="overflow-x-auto pb-4">
-        <div className="flex gap-4 min-w-[900px]">
+      <div className="overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-4 min-w-[900px] lg:min-w-0">
           {STAGES.map((stage) => {
             const stageDeals = getStageDeals(stage.id);
             const stageValue = stageDeals.reduce((s, d) => s + d.value, 0);
             return (
-              <div key={stage.id} className="flex-1 min-w-[140px]"
+              <div key={stage.id} className="flex-1 min-w-[260px] sm:min-w-[280px] lg:min-w-[140px] snap-start"
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={() => handleDrop(stage.id)}>
                 <div className="flex items-center justify-between mb-3 px-1">
@@ -205,10 +205,10 @@ const DealsTab = () => {
                 <div className="space-y-2 min-h-[200px] rounded-xl bg-gray-50/80 p-2 border border-gray-100">
                   {stageDeals.map((deal) => (
                     <div key={deal._id} draggable onDragStart={() => handleDragStart(deal)}
-                      className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow">
+                      className="group bg-white rounded-xl p-3 shadow-sm border border-gray-100 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <p className="text-sm font-semibold text-gray-900 leading-tight">{deal.title}</p>
-                        <button onClick={() => handleDelete(deal._id)} className="opacity-0 group-hover:opacity-100"><Trash2 size={12} className="text-gray-300 hover:text-red-500" /></button>
+                        <button onClick={() => handleDelete(deal._id)} aria-label="Delete deal" className="p-2 -m-1 min-w-[36px] min-h-[36px] flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100"><Trash2 size={14} className="text-gray-400 hover:text-red-500" /></button>
                       </div>
                       <p className="text-lg font-bold text-gray-900">{formatCurrency(deal.value)}</p>
                       <div className="flex items-center gap-1.5 mt-1.5">
@@ -222,8 +222,8 @@ const DealsTab = () => {
                         {deal.expectedCloseDate && <span className="flex items-center gap-1"><Calendar size={10} /> {formatDate(deal.expectedCloseDate)}</span>}
                       </div>
                       <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-50">
-                        <Button variant="ghost" size="sm" onClick={() => openForm(deal)} className="text-[10px] h-6 px-2 rounded-lg">Edit</Button>
-                        <Button variant="ghost" size="sm" onClick={() => openActivities(deal)} className="text-[10px] h-6 px-2 rounded-lg">Tasks</Button>
+                        <Button variant="ghost" size="sm" onClick={() => openForm(deal)} className="text-xs min-h-[44px] px-3 rounded-lg">Edit</Button>
+                        <Button variant="ghost" size="sm" onClick={() => openActivities(deal)} className="text-xs min-h-[44px] px-3 rounded-lg">Tasks</Button>
                       </div>
                     </div>
                   ))}
@@ -238,7 +238,7 @@ const DealsTab = () => {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}>
           <Card className="w-full max-w-lg mx-4 border border-gray-100 shadow-xl max-h-[90vh] overflow-y-auto">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
@@ -272,7 +272,7 @@ const DealsTab = () => {
       )}
 
       {editDeal && activities.length > 0 && !showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) { setActivities([]); } }}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) { setActivities([]); } }}>
           <Card className="w-full max-w-md mx-4 border border-gray-100 shadow-xl max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
@@ -306,7 +306,7 @@ const DealsTab = () => {
       )}
 
       {showActivityForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowActivityForm(false); }}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowActivityForm(false); }}>
           <Card className="w-full max-w-md mx-4 border border-gray-100 shadow-xl">
             <CardContent className="p-6">
               <h3 className="font-semibold text-gray-900 mb-4">Add Task</h3>

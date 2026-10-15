@@ -54,7 +54,7 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex flex-col items-center">
-            <img src={logoSrc} alt="Vangitech" className="w-18 h-18 md:w-14 md:h-14 object-contain" />
+            <img src={logoSrc} alt="Vangitech" className="w-12 h-12 md:w-14 md:h-14 object-contain" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -117,9 +117,10 @@ const Header = () => {
           </nav>
 
           <button
-            className="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors"
+            className="md:hidden w-11 h-11 rounded-xl flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -127,7 +128,7 @@ const Header = () => {
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
+        <div className="md:hidden bg-white border-t border-gray-100 shadow-lg max-h-[calc(100dvh-4rem)] overflow-y-auto">
           <div className="container mx-auto px-4 py-5 space-y-1">
             {navLinks.map((link) => (
               <button

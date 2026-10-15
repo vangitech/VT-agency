@@ -173,7 +173,7 @@ const CustomObjectsTab = () => {
         </Card>
 
         {showRecordForm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowRecordForm(false); }}>
+          <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowRecordForm(false); }}>
             <Card className="w-full max-w-lg mx-4 border border-gray-100 shadow-xl max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -256,7 +256,7 @@ const CustomObjectsTab = () => {
       </div>
 
       {showBuilder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowBuilder(false); }}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) setShowBuilder(false); }}>
           <Card className="w-full max-w-2xl mx-4 border border-gray-100 shadow-xl max-h-[90vh] overflow-y-auto">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">

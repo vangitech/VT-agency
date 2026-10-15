@@ -85,7 +85,7 @@ const RadioGroup = ({ label, options, value, onChange, name }) => (
         return (
           <label
             key={v}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 cursor-pointer transition-all ${
+            className={`flex items-center gap-2 px-4 py-3 min-h-[44px] rounded-xl border-2 cursor-pointer transition-all ${
               checked
                 ? 'border-brand-blue bg-brand-blue/5'
                 : 'border-gray-200 hover:border-gray-300 bg-white'
@@ -525,7 +525,7 @@ const QuoteRequest = () => {
                       type="file"
                       accept=".pdf,.docx,.zip,.png,.jpg,.jpeg"
                       onChange={handleFileChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className={`absolute inset-0 w-full h-full opacity-0 cursor-pointer ${file ? 'pointer-events-none' : ''}`}
                     />
                     <div className={`flex items-center gap-3 p-4 rounded-xl border-2 border-dashed transition-colors ${
                       file ? 'border-brand-blue bg-brand-blue/5' : 'border-gray-300 hover:border-gray-400 bg-gray-50'
@@ -545,7 +545,7 @@ const QuoteRequest = () => {
                         <button
                           type="button"
                           onClick={() => setFile(null)}
-                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                          className="relative z-10 text-xs text-red-500 hover:text-red-700 font-medium min-h-[44px] px-3 flex items-center"
                         >
                           Remove
                         </button>
@@ -569,12 +569,12 @@ const QuoteRequest = () => {
               </div>
 
               {/* === Submit === */}
-              <div className="flex justify-end">
+              <div className="flex justify-stretch sm:justify-end">
                 <Button
                   type="submit"
                   variant="blue"
                   size="lg"
-                  className="h-12 px-10 rounded-xl shadow-lg shadow-brand-blue/25"
+                  className="h-12 px-10 rounded-xl shadow-lg shadow-brand-blue/25 w-full sm:w-auto"
                   disabled={submitting}
                 >
                   {submitting ? (

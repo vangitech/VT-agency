@@ -106,17 +106,17 @@ const SettingsManager = () => {
   const unreadCount = messages.filter((m) => !m.read).length;
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="mb-8">
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Settings</h1>
         <p className="text-gray-500 mt-1">Manage website settings, social links, and contact messages</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-8">
+      <div className="flex gap-2 mb-8 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
         <button
           onClick={() => setActiveTab('settings')}
-          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+          className={`px-4 py-2.5 min-h-[44px] whitespace-nowrap rounded-xl text-sm font-medium transition-all ${
             activeTab === 'settings'
               ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/25'
               : 'bg-white text-gray-600 border border-gray-200 hover:border-brand-blue hover:text-brand-blue'
@@ -126,7 +126,7 @@ const SettingsManager = () => {
         </button>
         <button
           onClick={() => setActiveTab('messages')}
-          className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+          className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] whitespace-nowrap rounded-xl text-sm font-medium transition-all ${
             activeTab === 'messages'
               ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/25'
               : 'bg-white text-gray-600 border border-gray-200 hover:border-brand-blue hover:text-brand-blue'
@@ -143,7 +143,7 @@ const SettingsManager = () => {
 
       {activeTab === 'settings' ? (
         <Card className="border border-gray-200 shadow-sm">
-          <CardContent className="p-6 lg:p-8">
+          <CardContent className="p-4 sm:p-6 lg:p-8">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                 <div className="space-y-2">

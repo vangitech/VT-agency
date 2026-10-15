@@ -408,7 +408,7 @@ const EmailTab = () => {
 
       {/* Compose Modal */}
       {showCompose && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-[5vh] pb-8 bg-black/40 overflow-y-auto"
+        <div className="fixed inset-0 z-[70] flex items-start justify-center pt-[5vh] pb-8 bg-black/40 overflow-y-auto"
           onClick={(e) => { if (e.target === e.currentTarget) setShowCompose(false); }}>
           <Card className="w-full max-w-2xl mx-4 border border-gray-200 shadow-xl">
             <CardContent className="p-6">

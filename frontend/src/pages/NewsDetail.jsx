@@ -79,7 +79,7 @@ const NewsDetail = () => {
       />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Link to="/">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="min-h-[44px] px-4 py-2.5">
             <ArrowLeft size={16} className="mr-2" /> Back to News
           </Button>
         </Link>
@@ -123,7 +123,7 @@ const NewsDetail = () => {
 
           <div className="prose prose-gray max-w-none">
             {article.content ? (
-              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere] overflow-hidden">
                 {article.content}
               </div>
             ) : (

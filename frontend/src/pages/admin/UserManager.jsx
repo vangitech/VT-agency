@@ -104,7 +104,7 @@ const UserManager = () => {
   }
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Users</h1>
@@ -164,19 +164,21 @@ const UserManager = () => {
           const isSelf = u._id === currentUser?._id;
           return (
             <Card key={u._id} className="border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                    {u.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-semibold text-gray-900 text-sm truncate">{u.name}</span>
-                      {isSelf && <span className="text-[10px] text-brand-blue bg-brand-blue/5 px-1.5 py-0.5 rounded-full font-medium">You</span>}
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                      {u.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
                     </div>
-                    <p className="text-xs text-gray-500 truncate">{u.email}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-semibold text-gray-900 text-sm truncate">{u.name}</span>
+                        {isSelf && <span className="text-[10px] text-brand-blue bg-brand-blue/5 px-1.5 py-0.5 rounded-full font-medium">You</span>}
+                      </div>
+                      <p className="text-xs text-gray-500 truncate">{u.email}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
                     <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${roleConf.color}`}>
                       <RoleIcon size={12} />
                       {roleConf.label}
@@ -185,7 +187,8 @@ const UserManager = () => {
                       <select
                         value={u.role}
                         onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                        className="text-xs rounded-lg border border-gray-200 bg-white px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue"
+                        aria-label={`Role for ${u.name}`}
+                        className="text-sm rounded-lg border border-gray-200 bg-white px-3 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue"
                       >
                         <option value="editor">Editor</option>
                         <option value="admin">Admin</option>
@@ -193,13 +196,13 @@ const UserManager = () => {
                       </select>
                     )}
                     {!isSelf && u.role !== 'superadmin' && (
-                      <Button variant="outline" size="sm" onClick={() => { setResetTarget(u); setNewPassword(''); }}>
-                        <KeyRound size={12} />
+                      <Button variant="outline" size="sm" aria-label={`Reset password for ${u.name}`} onClick={() => { setResetTarget(u); setNewPassword(''); }} className="min-w-[44px] min-h-[44px]">
+                        <KeyRound size={14} />
                       </Button>
                     )}
                     {!isSelf && (
-                      <Button variant="destructive" size="sm" onClick={() => handleDelete(u._id)}>
-                        <Trash2 size={12} />
+                      <Button variant="destructive" size="sm" aria-label={`Delete ${u.name}`} onClick={() => handleDelete(u._id)} className="min-w-[44px] min-h-[44px]">
+                        <Trash2 size={14} />
                       </Button>
                     )}
                   </div>
@@ -211,7 +214,7 @@ const UserManager = () => {
       </div>
 
       {resetTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setResetTarget(null)}>
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40" onClick={() => setResetTarget(null)}>
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-gray-900">Reset Password</h3>

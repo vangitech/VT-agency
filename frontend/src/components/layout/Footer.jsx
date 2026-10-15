@@ -53,7 +53,7 @@ const Footer = () => {
           <div className="sm:col-span-2 xl:col-span-1">
             <div className="h-full bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 backdrop-blur-sm hover:bg-white/[0.05] transition-colors">
               <button onClick={() => navigateWithLoader('/')} className="inline-flex items-center gap-3 mb-5">
-                <img src={logoSrc} alt="Vangitech" className="w-18 h-18 md:w-14 md:h-14 object-contain" />
+                <img src={logoSrc} alt="Vangitech" className="w-12 h-12 md:w-14 md:h-14 object-contain" />
                 <span className="text-white font-semibold text-lg">{s('companyName', 'Vangitech')}</span>
               </button>
               <p className="text-sm text-gray-400 leading-relaxed mb-6">
@@ -66,7 +66,7 @@ const Footer = () => {
                       key={index}
                       href={social.href}
                       aria-label={social.label}
-                      className="w-9 h-9 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-brand-blue hover:shadow-lg hover:shadow-brand-blue/25 transition-all"
+                      className="w-11 h-11 rounded-xl bg-white/[0.06] flex items-center justify-center hover:bg-brand-blue hover:shadow-lg hover:shadow-brand-blue/25 transition-all"
                     >
                       <social.icon size={16} className="text-gray-400 group-hover:text-white" />
                     </a>
@@ -130,11 +130,11 @@ const Footer = () => {
                 Contact
               </h3>
               <div className="space-y-3 text-sm mb-6">
-                <p className="flex items-center gap-3">
+                <p className="flex items-center gap-3 min-w-0">
                   <span className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
                     <Mail size={14} className="text-brand-blue" />
                   </span>
-                  <a href={`mailto:${s('companyEmail', 'info@vangitech.com')}`} className="text-gray-400 hover:text-white transition-colors">
+                  <a href={`mailto:${s('companyEmail', 'info@vangitech.com')}`} className="text-gray-400 hover:text-white transition-colors break-all min-w-0 py-2">
                     {s('companyEmail', 'info@vangitech.com')}
                   </a>
                 </p>
@@ -179,11 +179,11 @@ const Footer = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
             <p>&copy; {currentYear} {s('companyName', 'Vangitech Limited')}. All rights reserved.</p>
-            <div className="flex gap-6">
-              <button onClick={() => navigateWithLoader('/privacy')} className="hover:text-white transition-colors">Privacy</button>
-              <button onClick={() => navigateWithLoader('/terms')} className="hover:text-white transition-colors">Terms</button>
-              <button onClick={() => navigateWithLoader('/faq')} className="hover:text-white transition-colors">FAQ</button>
-              <button onClick={() => navigateWithLoader('/policy')} className="hover:text-white transition-colors">Policy</button>
+            <div className="flex flex-wrap justify-center gap-x-2 gap-y-1">
+              <button onClick={() => navigateWithLoader('/privacy')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">Privacy</button>
+              <button onClick={() => navigateWithLoader('/terms')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">Terms</button>
+              <button onClick={() => navigateWithLoader('/faq')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">FAQ</button>
+              <button onClick={() => navigateWithLoader('/policy')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">Policy</button>
             </div>
           </div>
         </div>

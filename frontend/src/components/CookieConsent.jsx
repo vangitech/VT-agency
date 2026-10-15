@@ -84,7 +84,7 @@ const CookieConsent = () => {
     return (
       <button
         onClick={reopen}
-        className="fixed bottom-4 right-4 z-[60] w-10 h-10 bg-white rounded-xl shadow-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:text-brand-blue hover:border-brand-blue hover:shadow-xl transition-all group"
+        className="fixed bottom-24 md:bottom-4 right-4 z-[60] w-10 h-10 bg-white rounded-xl shadow-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:text-brand-blue hover:border-brand-blue hover:shadow-xl transition-all group"
         aria-label="Cookie settings"
       >
         <Cookie size={16} className="group-hover:scale-110 transition-transform" />

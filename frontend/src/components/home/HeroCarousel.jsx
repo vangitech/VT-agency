@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '../ui/button';
 import { imageUrl } from '../../api';
 import logoSrc from '../../assets/images/Vangitech Logo.png';
@@ -13,6 +13,7 @@ const HeroCarousel = ({ slides }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [failedImages, setFailedImages] = useState(new Set());
+  const touchStartX = useRef(null);
 
   const goToSlide = useCallback((index) => {
     if (isTransitioning) return;
@@ -35,9 +36,22 @@ const HeroCarousel = ({ slides }) => {
     return () => clearInterval(interval);
   }, [nextSlide, slides]);
 
+  const onTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e) => {
+    if (touchStartX.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0) nextSlide();
+    else prevSlide();
+  };
+
   if (!Array.isArray(slides) || slides.length === 0) {
     return (
-      <div className="h-screen bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
+      <div className="h-[100svh] min-h-[560px] bg-gradient-to-br from-brand-darkBlue via-brand-blue to-brand-green flex items-center justify-center">
           <div className="text-center text-white px-4">
             <img src={logoSrc} alt="Vangitech" className="w-24 h-24 object-contain mx-auto mb-6" />
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4">Vangitech</h1>
@@ -52,7 +66,11 @@ const HeroCarousel = ({ slides }) => {
   const gradientIndex = currentIndex % FALLBACK_GRADIENTS.length;
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div
+      className="relative w-full h-[100svh] min-h-[560px] overflow-hidden"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       {imageFailed ? (
         <div className={`absolute inset-0 bg-gradient-to-br ${FALLBACK_GRADIENTS[gradientIndex]}`} />
       ) : (
@@ -100,19 +118,19 @@ const HeroCarousel = ({ slides }) => {
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/70 hover:text-white transition-all active:scale-90"
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/70 hover:text-white transition-all active:scale-90"
             aria-label="Previous slide"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/70 hover:text-white transition-all active:scale-90"
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white/70 hover:text-white transition-all active:scale-90"
             aria-label="Next slide"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 md:w-5 md:h-5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </button>
@@ -120,18 +138,22 @@ const HeroCarousel = ({ slides }) => {
       )}
 
       {slides.length > 1 && (
-        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex items-center">
           {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`rounded-full transition-all ${
-                index === currentIndex
-                  ? 'w-8 h-2.5 bg-brand-green'
-                  : 'w-2.5 h-2.5 bg-white/50 hover:bg-white/80'
-              }`}
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label={`Go to slide ${index + 1}`}
-            />
+            >
+              <span
+                className={`rounded-full transition-all ${
+                  index === currentIndex
+                    ? 'w-8 h-2.5 bg-brand-green'
+                    : 'w-2.5 h-2.5 bg-white/50 hover:bg-white/80'
+                }`}
+              />
+            </button>
           ))}
         </div>
       )}
