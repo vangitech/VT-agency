@@ -5,7 +5,6 @@ import {
   Settings, FileText, LogOut, ChevronLeft, Menu, ScrollText, Shield, MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { imageUrl } from '../../api';
 import { cn } from '@/lib/utils';
 import logoSrc from '../../assets/images/Vangitech Logo.png';
 
@@ -32,10 +31,6 @@ const AdminSidebar = () => {
     const t = setTimeout(() => setMobileOpen(false), 0);
     return () => clearTimeout(t);
   }, [location.pathname]);
-
-  const initials = user?.name
-    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
-    : 'A';
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
@@ -75,41 +70,19 @@ const AdminSidebar = () => {
         })}
       </nav>
 
-      {/* User */}
+      {/* Logout */}
       <div className="border-t border-gray-800/50 p-3">
-        <div className="flex items-center gap-3 px-1">
-          {user?.avatar ? (
-            <img src={imageUrl(user.avatar)} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-              {initials}
-            </div>
+        <button
+          onClick={logout}
+          title="Logout"
+          className={cn(
+            'w-full flex items-center rounded-lg text-sm font-medium text-gray-400 hover:text-red-400 hover:bg-gray-800/50 transition-colors',
+            collapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'
           )}
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-200 truncate">{user?.name}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-            </div>
-          )}
-          {!collapsed && (
-            <button
-              onClick={logout}
-              className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-gray-800 transition-colors"
-              title="Logout"
-            >
-              <LogOut size={14} />
-            </button>
-          )}
-        </div>
-        {collapsed && (
-          <button
-            onClick={logout}
-            className="mt-2 w-full flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-red-400 hover:bg-gray-800 transition-colors"
-            title="Logout"
-          >
-            <LogOut size={16} />
-          </button>
-        )}
+        >
+          <LogOut size={18} className="flex-shrink-0" />
+          {!collapsed && <span>Logout</span>}
+        </button>
       </div>
     </div>
   );

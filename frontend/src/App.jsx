@@ -6,6 +6,7 @@ import { LoadingProvider } from './context/LoadingContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import AdminSidebar from './components/layout/AdminSidebar';
+import AdminTopbar from './components/layout/AdminTopbar';
 import CookieConsent from './components/CookieConsent';
 import ErrorBoundary from './components/ErrorBoundary';
 import useInactivityTimeout from './hooks/useInactivityTimeout';
@@ -55,6 +56,7 @@ const AdminLayout = ({ children }) => {
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
       <div className="lg:pl-64 transition-all duration-200">
+        <AdminTopbar />
         <div className="min-h-screen">
           {children}
         </div>
