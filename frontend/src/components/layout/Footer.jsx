@@ -178,7 +178,7 @@ const Footer = () => {
       </div>
 
       <div className="border-t border-white/[0.06]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5 md:pr-16 lg:pr-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5 md:pr-16 lg:pr-16 min-[1400px]:pr-8!">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
             <p>&copy; {currentYear} {s('companyName', 'Vangitech Limited')}. All rights reserved.</p>
             <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
@@ -191,7 +191,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Chat with Vangitech on WhatsApp"
-                className="ml-1 inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#25D366]/25 transition-colors hover:bg-[#1ebe5b] md:ml-auto"
+                className="ml-1 inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#25D366]/25 transition-colors hover:bg-[#1ebe5b] md:ml-auto min-[1400px]:hidden"
               >
                 <FaWhatsapp size={17} aria-hidden="true" />
                 WhatsApp

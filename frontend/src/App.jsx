@@ -8,6 +8,7 @@ import Footer from './components/layout/Footer';
 import AdminSidebar from './components/layout/AdminSidebar';
 import AdminTopbar from './components/layout/AdminTopbar';
 import MobileTabBar from './components/layout/MobileTabBar';
+import WhatsAppFloat from './components/layout/WhatsAppFloat';
 import CookieConsent from './components/CookieConsent';
 import ErrorBoundary from './components/ErrorBoundary';
 import useInactivityTimeout from './hooks/useInactivityTimeout';
@@ -71,6 +72,7 @@ const PublicLayout = ({ children }) => (
     <Header />
     <main className="pt-16 md:pt-20">{children}</main>
     <Footer />
+    <WhatsAppFloat />
     {/* Spacer so the fixed mobile tab bar never covers footer content */}
     <div className="md:hidden h-20 bg-gray-900" aria-hidden="true" />
     <MobileTabBar />
