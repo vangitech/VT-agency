@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Mail, Phone, MapPin, ChevronRight } from 'lucide-react';
-import { FaFacebook, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaLinkedin, FaYoutube, FaWhatsapp } from 'react-icons/fa';
 import API from '../../api';
 import { useLoading } from '../../context/LoadingContext';
 import logoSrc from '../../assets/images/Vangitech Logo.png';
@@ -17,6 +17,8 @@ const Footer = () => {
   }, []);
 
   const s = (key, fallback) => settings[key] || fallback;
+  const companyPhone = s('companyPhone', '+234 816 325 3159');
+  const whatsappHref = `https://wa.me/${companyPhone.replace(/\D/g, '')}`;
 
   const footerLinks = {
     company: [
@@ -142,8 +144,8 @@ const Footer = () => {
                   <span className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
                     <Phone size={14} className="text-brand-blue" />
                   </span>
-                  <a href={`tel:${s('companyPhone', '+1234567890')}`} className="text-gray-400 hover:text-white transition-colors">
-                    {s('companyPhone', '+1 (234) 567-890')}
+                  <a href={`tel:${companyPhone.replace(/[^\d+]/g, '')}`} className="text-gray-400 hover:text-white transition-colors">
+                    {companyPhone}
                   </a>
                 </p>
                 <p className="flex items-center gap-3">
@@ -176,14 +178,24 @@ const Footer = () => {
       </div>
 
       <div className="border-t border-white/[0.06]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5 md:pr-16 lg:pr-16">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
             <p>&copy; {currentYear} {s('companyName', 'Vangitech Limited')}. All rights reserved.</p>
-            <div className="flex flex-wrap justify-center gap-x-2 gap-y-1">
+            <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
               <button onClick={() => navigateWithLoader('/privacy')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">Privacy</button>
               <button onClick={() => navigateWithLoader('/terms')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">Terms</button>
               <button onClick={() => navigateWithLoader('/faq')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">FAQ</button>
               <button onClick={() => navigateWithLoader('/policy')} className="hover:text-white transition-colors px-2 py-2.5 min-h-[44px]">Policy</button>
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat with Vangitech on WhatsApp"
+                className="ml-1 inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#25D366]/25 transition-colors hover:bg-[#1ebe5b] md:ml-auto"
+              >
+                <FaWhatsapp size={17} aria-hidden="true" />
+                WhatsApp
+              </a>
             </div>
           </div>
         </div>

@@ -47,8 +47,8 @@ const Contact = () => {
     {
       icon: Phone,
       label: 'Phone',
-      value: '+234 806 975 2912',
-      href: 'tel:+2348069752912',
+      value: '+234 816 325 3159',
+      href: 'tel:+2348163253159',
     },
     {
       icon: MapPin,

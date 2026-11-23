@@ -305,7 +305,7 @@ GET /api/public/settings
 {
   "companyName": "Vangitech Limited",
   "companyEmail": "support@vangitech.com",
-  "companyPhone": "+234 806 975 2912",
+  "companyPhone": "+234 816 325 3159",
   "companyAddress": "House C18A FRSC Estate Lokogoma FCT-Abuja",
   "facebookUrl": "",
   "twitterUrl": "",

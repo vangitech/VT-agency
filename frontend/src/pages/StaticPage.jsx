@@ -38,7 +38,7 @@ const pageFallback = {
       },
       {
         heading: 'Contact Us',
-        body: 'If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us: Email: support@vangitech.com. Address: House C18A FRSC Estate Lokogoma, FCT-Abuja, Nigeria. Phone: +234 806 975 2912. We will respond to your request within a reasonable timeframe and in accordance with applicable data protection laws.',
+        body: 'If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us: Email: support@vangitech.com. Address: House C18A FRSC Estate Lokogoma, FCT-Abuja, Nigeria. Phone: +234 816 325 3159. We will respond to your request within a reasonable timeframe and in accordance with applicable data protection laws.',
       },
     ],
   },
